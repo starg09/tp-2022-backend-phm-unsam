@@ -1,8 +1,24 @@
-package ar.edu.unsam.phm.backendtp2022phmgrupo2.repository
+package difficult.repository
 
-import Entidad
+import difficult.domain.Usuario
+import org.springframework.stereotype.Repository
 
-class Repositorio<T : Entidad> {
+@Repository
+class RepoUsuarios {
+    val elementos = mutableSetOf<Usuario>()
+    var idAsignar: Int = 1
+
+    fun create(elemento: Usuario){
+        //validar(elemento)
+        elementos.add(elemento)
+        elemento.id = idAsignar
+        idAsignar++
+    }
+
+    fun getCantidadElementos() { elementos.size }
+}
+
+/*class Repositorio<T : Entidad> {
     val elementos = mutableSetOf<T>()
     var idAsignar: Int = 1
 
@@ -50,4 +66,4 @@ class Repositorio<T : Entidad> {
         }
     }*/
 
-}
+}*/

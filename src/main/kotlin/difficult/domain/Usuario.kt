@@ -1,10 +1,11 @@
-package ar.edu.unsam.phm.backendtp2022phmgrupo2.domain
+package difficult.domain
 
-import Entidad
 import java.time.LocalDate
 import java.time.Period
 
-class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double) : Entidad {
+class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double){
+
+    public var id = 0
 
     fun edad(): Int{
         return Period.between(fechaNacimiento, LocalDate.now()).years

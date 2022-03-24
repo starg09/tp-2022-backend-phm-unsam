@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.backendtp2022phmgrupo2.domain
+package difficult.domain
 
 open class Producto {
     var nombre: String = ""

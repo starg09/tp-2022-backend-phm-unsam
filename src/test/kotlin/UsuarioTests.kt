@@ -1,4 +1,4 @@
-import ar.edu.unsam.phm.backendtp2022phmgrupo2.domain.Usuario
+import difficult.domain.Usuario
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate

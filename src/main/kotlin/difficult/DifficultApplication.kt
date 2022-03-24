@@ -1,7 +1,8 @@
-package ar.edu.unsam.phm.backendtp2022phmgrupo2
+package difficult
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
 class BackendTp2022PhmGrupo2Application

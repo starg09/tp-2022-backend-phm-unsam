@@ -16,7 +16,7 @@ repositories {
     mavenCentral()
 }
 
-val kotestVersion = "5.1.0"
+val kotestVersion = "5.0.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")

@@ -4,7 +4,7 @@ import Entidad
 import java.time.LocalDate
 import java.time.Period
 
-class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Float) : Entidad {
+class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double) : Entidad {
 
     fun edad(): Int{
         return Period.between(fechaNacimiento, LocalDate.now()).years

@@ -1,18 +1,23 @@
 package difficult.domain
 
-open class Producto {
+abstract class Producto {
     var nombre: String = ""
     var descripcion: String= ""
     var puntaje: Int = 0
     var paisOrigen: String = ""
     var precioBase: Double = 0.0
+    lateinit var lote: Lote
 
     open fun precioTotal(): Double {
         return precioBase
     }
+
+    fun disminuirLote(cantidad: Int){
+        lote.cantidadDisponible -= cantidad
+    }
 }
 
-class Combo() {
+class Combo(): Producto() {
     var productos = mutableSetOf<Producto>()
 
     fun agregarProducto(unProducto: Producto){
@@ -20,10 +25,10 @@ class Combo() {
     }
 
     fun eliminarProducto(unProducto: Producto){
-        productos.add(unProducto)
+        productos.remove(unProducto)
     }
 
-    fun precioTotal(): Double {
+    override fun precioTotal(): Double {
         return ((productos.fold(0.0) { acum, producto -> acum + producto.precioTotal() }) + (productos.size * 20.0)) * 0.85
     }
 
@@ -41,7 +46,7 @@ class Piso : Producto() {
     }
 
     fun medidas(): String {
-        return medidaX.toString() + "X" + medidaZ.toString()
+        return "$medidaX X $medidaZ"
     }
 
 }
@@ -52,14 +57,13 @@ class Pintura: Producto(){
     lateinit var color: String
 
     override fun precioTotal(): Double {
-        return super.precioTotal()
+        return super.precioTotal() * this.rendimientoMayor()
     }
 
     fun rendimientoMayor(): Double {
-        if (rendimiento > 8) {
-            return 1.25
-        }
-        else return 1.0
+        return if (rendimiento > 8) {
+            1.25
+        } else 1.0
     }
 }
 

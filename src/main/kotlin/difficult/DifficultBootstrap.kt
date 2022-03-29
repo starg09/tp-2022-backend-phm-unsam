@@ -1,6 +1,7 @@
 package difficult
 
 import difficult.domain.*
+import difficult.repository.RepoProductos
 import java.time.LocalDate
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
@@ -14,6 +15,9 @@ class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var repoUsuarios: RepoUsuarios
 
+    @Autowired
+    private lateinit var repoProductos: RepoProductos
+
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
     private lateinit var chris: Usuario
@@ -24,6 +28,14 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var pisoAltoTransito: Piso
     private lateinit var pinturaMayorRendimiento: Pintura
     private lateinit var pinturaMenorRendimiento: Pintura
+
+    private lateinit var combo: Combo
+
+    private lateinit var lotePisoNormal: Lote
+    private lateinit var lotePisoAltoTransito: Lote
+    private lateinit var lotePinturaMayorRendimiento: Lote
+    private lateinit var lotePinturaMenorRendimiento: Lote
+    private lateinit var loteCombo: Lote
 
     fun initUsuarios(){
 
@@ -43,6 +55,33 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initProductos(){
+
+        lotePisoAltoTransito = Lote().apply {
+            cantidadDisponible = 2
+            fechaIngreso = LocalDate.now()
+            numeroLote = 2222
+        }
+        lotePisoNormal = Lote().apply {
+            cantidadDisponible = 6
+            fechaIngreso = LocalDate.now()
+            numeroLote = 1111
+        }
+        lotePinturaMayorRendimiento = Lote().apply {
+            cantidadDisponible = 5
+            fechaIngreso = LocalDate.now()
+            numeroLote = 3333
+        }
+        lotePinturaMenorRendimiento = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            numeroLote = 4444
+        }
+        loteCombo = Lote().apply {
+            cantidadDisponible = 2
+            fechaIngreso = LocalDate.now()
+            numeroLote = 5555
+        }
+
         pisoNormal = Piso().apply {
             nombre = "Acme rustico"
             descripcion = "una descripcion"
@@ -52,6 +91,8 @@ class DifficultBootstrap : InitializingBean {
             tipo = PisoNormal()
             medidaX = 50
             medidaZ = 30
+            terminacion = "satinado"
+            lote = lotePisoNormal
         }
 
         pisoAltoTransito = Piso().apply {
@@ -63,6 +104,8 @@ class DifficultBootstrap : InitializingBean {
             tipo = PisoAltoTransito()
             medidaX = 60
             medidaZ = 60
+            terminacion = "no satinado"
+            lote = lotePisoAltoTransito
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -74,6 +117,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
+            lote = lotePinturaMenorRendimiento
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -85,7 +129,20 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Blanco"
             litros = 10
+            lote = lotePinturaMayorRendimiento
         }
+
+        combo = Combo().apply {
+            agregarProducto(pisoNormal)
+            agregarProducto(pinturaMenorRendimiento)
+            lote = loteCombo
+        }
+
+        repoProductos.create(pisoNormal)
+        repoProductos.create(pisoAltoTransito)
+        repoProductos.create(pinturaMayorRendimiento)
+        repoProductos.create(pinturaMenorRendimiento)
+        repoProductos.create(combo)
     }
 
 
@@ -93,6 +150,7 @@ class DifficultBootstrap : InitializingBean {
 
     override fun afterPropertiesSet() {
         this.initUsuarios()
+        this.initProductos()
     }
 
 

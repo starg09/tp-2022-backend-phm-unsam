@@ -1,6 +1,8 @@
 package difficult.repository
 
+import difficult.domain.Producto
 import difficult.domain.Usuario
+import difficult.service.LoginDTO
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -13,6 +15,43 @@ class RepoUsuarios {
         elementos.add(elemento)
         elemento.id = idAsignar
         idAsignar++
+    }
+
+    fun loguear(loginDTO: LoginDTO): Usuario {
+        return elementos.first { it -> it.nombre + " " + it.apellido == loginDTO.userName && it.contrasenia == loginDTO.password }
+    }
+
+    fun getById(id:Int): Usuario {
+        return elementos.first {it -> it.id == id}
+    }
+
+    fun getCarritoUsuario(id:Int): MutableMap<Producto, Int> {
+        val usuario = getById(id)
+        return usuario.carrito
+    }
+
+    fun agregarCarritoUsuario(id: Int, producto: Producto, cantidad: Int){
+        val usuario = getById(id)
+        usuario.carrito[producto] = cantidad
+    }
+
+    fun getCantidadElementos() { elementos.size }
+}
+
+@Repository
+class RepoProductos {
+    val elementos = mutableSetOf<Producto>()
+    var idAsignar: Int = 1
+
+    fun create(elemento: Producto){
+        //validar(elemento)
+        elementos.add(elemento)
+        elemento.id = idAsignar
+        idAsignar++
+    }
+
+    fun getById(id:Int): Producto {
+        return elementos.first {it -> it.id == id}
     }
 
     fun getCantidadElementos() { elementos.size }

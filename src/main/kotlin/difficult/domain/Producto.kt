@@ -7,6 +7,7 @@ abstract class Producto {
     var paisOrigen: String = ""
     var precioBase: Double = 0.0
     lateinit var lote: Lote
+    var id: Int = 0
 
     open fun precioTotal(): Double {
         return precioBase

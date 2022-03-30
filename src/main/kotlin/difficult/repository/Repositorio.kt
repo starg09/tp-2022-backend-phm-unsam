@@ -25,15 +25,7 @@ class RepoUsuarios {
         return elementos.first {it -> it.id == id}
     }
 
-    fun getCarritoUsuario(id:Int): MutableMap<Producto, Int> {
-        val usuario = getById(id)
-        return usuario.carrito
-    }
 
-    fun agregarCarritoUsuario(id: Int, producto: Producto, cantidad: Int){
-        val usuario = getById(id)
-        usuario.carrito[producto] = cantidad
-    }
 
     fun getCantidadElementos() { elementos.size }
 }
@@ -41,6 +33,7 @@ class RepoUsuarios {
 @Repository
 class RepoProductos {
     val elementos = mutableSetOf<Producto>()
+    val filtros = mutableListOf<Filtro>()
     var idAsignar: Int = 1
 
     fun create(elemento: Producto){
@@ -54,7 +47,41 @@ class RepoProductos {
         return elementos.first {it -> it.id == id}
     }
 
+    fun filtrar(): List<Producto> {
+        return elementos.filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
+    }
+
     fun getCantidadElementos() { elementos.size }
+}
+
+abstract class Filtro {
+    open fun cumpleCondicion(producto: Producto): Boolean {
+        return true
+    }
+}
+
+class FiltroPais : Filtro() {
+    lateinit var paisFiltro: String
+
+    override fun cumpleCondicion(producto: Producto): Boolean {
+        return paisFiltro.lowercase() == producto.paisOrigen.lowercase()
+    }
+}
+
+class FiltroPuntuacion : Filtro() {
+    var puntuacionFiltro : Int = 0
+
+    override fun cumpleCondicion(producto: Producto): Boolean {
+        return producto.puntaje >= puntuacionFiltro
+    }
+}
+
+class FiltroBusqueda : Filtro() {
+    lateinit var textoFiltro : String
+
+    override fun cumpleCondicion(producto: Producto): Boolean {
+        return producto.nombre.contains(textoFiltro)
+    }
 }
 
 /*class Repositorio<T : Entidad> {

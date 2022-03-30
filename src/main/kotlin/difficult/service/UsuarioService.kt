@@ -1,18 +1,14 @@
 package difficult.service
 
+import difficult.domain.Compra
 import difficult.domain.Producto
 import difficult.domain.Usuario
 import difficult.repository.RepoProductos
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.server.ResponseStatusException
 import difficult.repository.RepoUsuarios
-import org.springframework.web.bind.annotation.ResponseStatus
+import java.time.LocalDate
 
 @Service
 class UsuarioService {
@@ -27,6 +23,14 @@ class UsuarioService {
         return repoUsuarios.elementos
     }
 
+    fun getUsuario(id: Int): UsuarioDTO {
+        return usuarioToDto(repoUsuarios.getById(id))
+    }
+
+    fun usuarioToDto(usuario: Usuario): UsuarioDTO {
+        return UsuarioDTO(usuario.nombre, usuario.apellido, usuario.fechaNacimiento, usuario.saldo, usuario.id)
+    }
+
     fun login(loginDTO: LoginDTO): Int {
         //try {
         var unUsuario: Usuario = repoUsuarios.loguear(loginDTO)
@@ -38,12 +42,36 @@ class UsuarioService {
     }
 
     fun carrito(id: Int): MutableMap<Producto, Int> {
-        return repoUsuarios.getCarritoUsuario(id)
+        val usuario =  repoUsuarios.getById(id)
+        return usuario.carrito
     }
 
     fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int){
         val producto = repoProductos.getById(productoId)
-        repoUsuarios.agregarCarritoUsuario(usuarioId, producto, cantidad)
+        val usuario = repoUsuarios.getById(usuarioId)
+        usuario.agregarAlCarrito(producto, cantidad)
+    }
+
+    fun eliminarCarrito(usuarioId: Int, productoId: Int){
+        val producto = repoProductos.getById(productoId)
+        val usuario = repoUsuarios.getById(usuarioId)
+        usuario.eliminarDelCarrito(producto)
+    }
+
+    fun comprasUsuario(id: Int): MutableSet<Compra> {
+        return repoUsuarios.getById(id).compras
+    }
+
+    fun vaciarCarrito(id: Int) {
+        repoUsuarios.getById(id).vaciarCarrito()
+    }
+
+    fun comprar(id: Int) {
+        repoUsuarios.getById(id).realizarCompra(numeroDeOrden())
+    }
+
+    fun numeroDeOrden(): Int {
+        return repoUsuarios.elementos.map{it -> it.compras.size}.fold(0) { acum, it -> acum + it } + 1
     }
 
 }
@@ -53,4 +81,6 @@ class LoginDTO {
     lateinit var password: String
 }
 
-//TODO AgregarCarritoDTO
+class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int) {}
+
+class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)

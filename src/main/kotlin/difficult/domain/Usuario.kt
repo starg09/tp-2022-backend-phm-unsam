@@ -37,8 +37,8 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         val compra = Compra().apply {
             ordenCompra = orden
             fechaCompra = LocalDate.now()
-            cantidad = 0
-            importe = 0.0
+            cantidad = cantidadProductosCarrito()
+            importe = importeTotalCarrito()
         }
         compras.add(compra)
         disminuirSaldo(importeTotalCarrito())

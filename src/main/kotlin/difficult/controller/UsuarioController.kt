@@ -1,8 +1,11 @@
 package difficult.controller
 
+import difficult.domain.Compra
 import difficult.domain.Producto
 import difficult.domain.Usuario
+import difficult.service.AgregarCarritoDTO
 import difficult.service.LoginDTO
+import difficult.service.UsuarioDTO
 import difficult.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -20,18 +23,43 @@ class UsuarioController {
         return usuarioService.getUsuarios()
     }
 
+    @GetMapping("/usuarios/{id}")
+    fun getUsuario(@PathVariable id: Int): UsuarioDTO {
+        return usuarioService.getUsuario(id)
+    }
+
     @PostMapping("/login")
     fun login(@RequestBody loginDTO: LoginDTO): Int {
         return usuarioService.login(loginDTO)
     }
 
-    @GetMapping("/carrito/{id}")
+    @PutMapping("/usuarios/{id}/comprar")
+    fun comprar(@PathVariable id: Int){
+        usuarioService.comprar(id)
+    }
+
+    @GetMapping("/usuarios/{id}/compras")
+    fun comprasUsuario(@PathVariable id: Int): MutableSet<Compra> {
+        return usuarioService.comprasUsuario(id)
+    }
+
+    @GetMapping("/usuarios/carrito/{id}")
     fun carrito(@PathVariable id: Int): MutableMap<Producto, Int> {
         return usuarioService.carrito(id)
     }
 
-    @PutMapping("/carrito/{usuarioId}/agregar/{productoId}")
-    fun agregarCarrito(@PathVariable usuarioId: Int, @PathVariable productoId: Int, @RequestBody cantidad: Int){
-        usuarioService.agregarCarrito(usuarioId, productoId, cantidad)
+    @PutMapping("/usuarios/carrito/agregar")
+    fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
+        usuarioService.agregarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad)
+    }
+
+    @DeleteMapping("/usuarios/carrito/eliminar")
+    fun eliminarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
+        usuarioService.eliminarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto)
+    }
+
+    @DeleteMapping("/usuarios/{id}/carrito/vaciar")
+    fun vaciarCarrito(@PathVariable id: Int){
+        usuarioService.vaciarCarrito(id)
     }
 }

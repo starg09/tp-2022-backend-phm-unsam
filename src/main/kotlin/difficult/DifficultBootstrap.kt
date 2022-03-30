@@ -96,10 +96,10 @@ class DifficultBootstrap : InitializingBean {
         }
 
         pisoAltoTransito = Piso().apply {
-            nombre = "Acme rustico"
+            nombre = "Acme arena"
             descripcion = "una descripcion"
             puntaje = 5
-            paisOrigen = "Argentina"
+            paisOrigen = "Brasil"
             precioBase = 1000.0
             tipo = PisoAltoTransito()
             medidaX = 60
@@ -109,7 +109,7 @@ class DifficultBootstrap : InitializingBean {
         }
 
         pinturaMenorRendimiento = Pintura().apply {
-            nombre = "Acme rustico"
+            nombre = "adla blanco"
             descripcion = "una descripcion"
             puntaje = 5
             paisOrigen = "Argentina"
@@ -121,13 +121,13 @@ class DifficultBootstrap : InitializingBean {
         }
 
         pinturaMayorRendimiento = Pintura().apply {
-            nombre = "Acme rustico"
+            nombre = "Adla negro"
             descripcion = "una descripcion"
             puntaje = 5
-            paisOrigen = "Argentina"
+            paisOrigen = "Chile"
             precioBase = 1000.0
             rendimiento = 9
-            color = "Blanco"
+            color = "Negro"
             litros = 10
             lote = lotePinturaMayorRendimiento
         }
@@ -143,6 +143,9 @@ class DifficultBootstrap : InitializingBean {
         repoProductos.create(pinturaMayorRendimiento)
         repoProductos.create(pinturaMenorRendimiento)
         repoProductos.create(combo)
+
+        dami.agregarAlCarrito(combo, 2)
+        dami.realizarCompra(1)
     }
 
 

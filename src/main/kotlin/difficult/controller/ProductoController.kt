@@ -20,4 +20,9 @@ class ProductoController {
         return productoService.getProductos()
     }
 
+    @GetMapping("/productos/filtro")
+    fun getProductosFiltrados(): List<Producto> {
+        return productoService.getProductosFiltrados()
+    }
+
 }

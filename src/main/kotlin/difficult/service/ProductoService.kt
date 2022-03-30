@@ -23,4 +23,8 @@ class ProductoService {
         return repoProductos.elementos
     }
 
+    fun getProductosFiltrados(): List<Producto> {
+        return repoProductos.filtrar()
+    }
+
 }

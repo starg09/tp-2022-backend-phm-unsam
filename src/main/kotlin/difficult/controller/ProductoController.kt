@@ -1,5 +1,6 @@
 package difficult.controller
 
+import difficult.domain.Lote
 import difficult.domain.Producto
 import difficult.domain.Usuario
 import difficult.service.FiltroDTO
@@ -22,6 +23,11 @@ class ProductoController {
         return productoService.getProductos()
     }
 
+    @GetMapping("/productos/lotes")
+    fun getLotes(): List<Lote> {
+        return productoService.getLotes()
+    }
+
     @GetMapping("/productos/filtro")
     fun getProductosFiltrados(): List<ProductoDTO> {
         return productoService.getProductosFiltrados()
@@ -30,6 +36,11 @@ class ProductoController {
     @PutMapping("/productos/establecerFiltros")
     fun establecerFiltros(@RequestBody filtrosDTO: List<FiltroDTO>){
         productoService.establecerFiltros(filtrosDTO)
+    }
+
+    @GetMapping("/productos/{id}/detalles")
+    fun productoDetalles(@PathVariable id: Int): ProductoDTO {
+        return productoService.productoDetalles(id)
     }
 
 }

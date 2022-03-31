@@ -33,7 +33,7 @@ class UsuarioService {
 
     fun login(loginDTO: LoginDTO): Int {
         //try {
-        var unUsuario: Usuario = repoUsuarios.loguear(loginDTO)
+        val unUsuario: Usuario = repoUsuarios.loguear(loginDTO)
         /*}
         catch () {
             ResponseStatusException(HttpStatus.NOT_FOUND, "el nombre y/o la contraseña no son correctos")
@@ -41,15 +41,31 @@ class UsuarioService {
         return unUsuario.id
     }
 
-    fun carrito(id: Int): MutableMap<Producto, Int> {
-        val usuario =  repoUsuarios.getById(id)
-        return usuario.carrito
+    fun agregarSaldo(cantidad: Double, id: Int){
+        repoUsuarios.getById(id).aumentarSaldo(cantidad)
     }
 
-    fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int){
+    fun carrito(id: Int): List<CarritoDTO> {
+        val usuario =  repoUsuarios.getById(id)
+        return usuario.carrito.map { toCarritoDTO(it) }
+    }
+
+    fun toCarritoDTO(entry: Map.Entry<Producto, List<Int>>): CarritoDTO {
+        val producto = entry.key
+        return CarritoDTO().apply {
+            nombre = producto.nombre
+            descripcion = producto.descripcion
+            lote = entry.value[1]
+            cantidad = entry.value[0]
+            precio = producto.precioTotal()
+            id = producto.id
+        }
+    }
+
+    fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = repoProductos.getById(productoId)
         val usuario = repoUsuarios.getById(usuarioId)
-        usuario.agregarAlCarrito(producto, cantidad)
+        usuario.agregarAlCarrito(producto, cantidad, loteNumero)
     }
 
     fun eliminarCarrito(usuarioId: Int, productoId: Int){
@@ -77,10 +93,19 @@ class UsuarioService {
 }
 
 class LoginDTO {
-    lateinit var username: String
+    lateinit var email: String
     lateinit var password: String
 }
 
-class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int) {}
+class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int, var loteNumero: Int) {}
+
+class CarritoDTO {
+    lateinit var nombre: String
+    lateinit var descripcion: String
+    var lote: Int = 0
+    var cantidad: Int = 0
+    var precio: Double = 0.0
+    var id: Int = 0
+}
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)

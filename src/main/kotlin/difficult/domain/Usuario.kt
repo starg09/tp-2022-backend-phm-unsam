@@ -3,9 +3,9 @@ package difficult.domain
 import java.time.LocalDate
 import java.time.Period
 
-class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var contrasenia: String){
+class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var email: String, var contrasenia: String){
 
-    val carrito = mutableMapOf<Producto, Int>()
+    val carrito = mutableMapOf<Producto, List<Int>>() // el primer entero es para la cantidad y el segundo para el lote
     val compras = mutableSetOf<Compra>()
     var id = 0
 
@@ -21,8 +21,8 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         saldo -= monto
     }
 
-    fun agregarAlCarrito(producto: Producto, cantidad: Int){
-        carrito[producto] = cantidad
+    fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Int){
+        carrito[producto] = listOf(cantidad, lote)
     }
 
     fun eliminarDelCarrito(producto: Producto){
@@ -47,10 +47,10 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
     }
 
     fun cantidadProductosCarrito(): Int {
-        return carrito.values.fold(0) { acum, cantidad -> acum + cantidad }
+        return carrito.values.fold(0) { acum, it -> acum + it[0] }
     }
 
     fun importeTotalCarrito(): Double{
-        return carrito.keys.fold(0.0) { acum, producto -> acum + producto.precioTotal() * carrito[producto]!! }
+        return carrito.keys.fold(0.0) { acum, producto -> acum + producto.precioTotal() * carrito[producto]!![0] }
     }
 }

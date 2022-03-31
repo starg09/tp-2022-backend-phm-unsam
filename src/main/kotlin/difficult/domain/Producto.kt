@@ -20,15 +20,18 @@ abstract class Producto {
     var puntaje: Int = 0
     var paisOrigen: String = ""
     var precioBase: Double = 0.0
-    lateinit var lote: Lote
+    var lotes = listOf<Lote>()
     var id: Int = 0
 
     open fun precioTotal(): Double {
         return precioBase
     }
 
-    fun disminuirLote(cantidad: Int){
-        lote.cantidadDisponible -= cantidad
+    fun disminuirLote(cantidadYLote: List<Int>){
+        val cantidad = cantidadYLote[0]!!
+        val loteNumero = cantidadYLote[1]!!
+        val lote = lotes.find { it.numeroLote == loteNumero }
+        lote!!.cantidadDisponible -= cantidad
     }
 }
 

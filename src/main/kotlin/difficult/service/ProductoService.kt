@@ -49,7 +49,7 @@ class ProductoService {
             puntaje = pintura.puntaje
             paisOrigen = pintura.paisOrigen
             precio = pintura.precioTotal()
-            lote = pintura.lote.numeroLote
+            lotes = pintura.lotes.map { toLoteDTO(it) }
             id = pintura.id
             rendimiento = pintura.rendimiento
             color = pintura.color
@@ -64,7 +64,7 @@ class ProductoService {
             puntaje = piso.puntaje
             paisOrigen = piso.paisOrigen
             precio = piso.precioTotal()
-            lote = piso.lote.numeroLote
+            lotes = piso.lotes.map { toLoteDTO(it) }
             id = piso.id
             terminacion = piso.terminacion
             medidas = piso.medidas()
@@ -79,9 +79,16 @@ class ProductoService {
             puntaje = combo.puntaje
             paisOrigen = combo.paisOrigen
             precio = combo.precioTotal()
-            lote = combo.lote.numeroLote
+            lotes = combo.lotes.map { toLoteDTO(it) }
             id = combo.id
             productos = combo.productos.map { toProductoDTO(it) }
+        }
+    }
+
+    fun toLoteDTO(lote: Lote): LoteDTO {
+        return LoteDTO().apply {
+            cantidadDisponible = lote.cantidadDisponible
+            numeroLote = lote.numeroLote
         }
     }
 
@@ -102,6 +109,14 @@ class ProductoService {
         return  filtro
     }
 
+    fun getLotes(): List<Lote>{
+        return repoProductos.elementos.map { it.lotes }.flatten()
+    }
+
+    fun productoDetalles(id: Int): ProductoDTO {
+        return toProductoDTO(repoProductos.getById(id))
+    }
+
 }
 
 abstract class ProductoDTO {
@@ -110,7 +125,7 @@ abstract class ProductoDTO {
     var puntaje: Int = 0
     var paisOrigen: String = ""
     var precio: Double = 0.0
-    var lote: Int = 1000
+    var lotes = listOf<LoteDTO>()
     var id: Int = 0
 }
 
@@ -128,6 +143,11 @@ class PisoDTO : ProductoDTO() {
 
 class ComboDTO : ProductoDTO() {
     var productos = listOf<ProductoDTO>()
+}
+
+class LoteDTO {
+    var cantidadDisponible: Int = 0
+    var numeroLote: Int = 0
 }
 
 class FiltroDTO {

@@ -20,7 +20,7 @@ class RepoUsuarios {
     }
 
     fun loguear(loginDTO: LoginDTO): Usuario {
-        return elementos.first { it -> it.nombre + " " + it.apellido == loginDTO.username && it.contrasenia == loginDTO.password }
+        return elementos.first { it -> it.email == loginDTO.email && it.contrasenia == loginDTO.password }
     }
 
     fun getById(id:Int): Usuario {

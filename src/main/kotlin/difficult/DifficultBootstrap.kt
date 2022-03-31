@@ -44,11 +44,11 @@ class DifficultBootstrap : InitializingBean {
 
     fun initUsuarios(){
 
-        dami = Usuario("Dami", "Lescano", LocalDate.of(2000, 6, 5), 1000000.0, "1234567890")
-        jill = Usuario("Jill", "Valentine", LocalDate.of(1974, 6, 5), 1000000.0, "1234567890")
-        chris = Usuario("Chris", "Redfield", LocalDate.of(1973, 6, 5), 1000000.0, "1234567890")
-        leon = Usuario("Leon Scott", "Kennedy", LocalDate.of(1977, 6, 5), 1000000.0, "1234567890")
-        claire = Usuario("Claire", "Redfield", LocalDate.of(1979, 6, 5), 1000000.0, "1234567890")
+        dami = Usuario("Dami", "Lescano", LocalDate.of(2000, 6, 5), 1000000.0, "lescano5600@gmail.com","1234567890")
+        jill = Usuario("Jill", "Valentine", LocalDate.of(1974, 6, 5), 1000000.0, "jill@gmail.com","1234567890")
+        chris = Usuario("Chris", "Redfield", LocalDate.of(1973, 6, 5), 1000000.0, "chris@gmail.com","1234567890")
+        leon = Usuario("Leon Scott", "Kennedy", LocalDate.of(1977, 6, 5), 1000000.0, "leon@gmail.com","1234567890")
+        claire = Usuario("Claire", "Redfield", LocalDate.of(1979, 6, 5), 1000000.0, "claire@gmail.com","1234567890")
 
 
         repoUsuarios.create(dami)
@@ -97,7 +97,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
-            lote = lotePisoNormal
+            lotes = listOf(lotePisoNormal)
         }
 
         pisoAltoTransito = Piso().apply {
@@ -110,7 +110,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
-            lote = lotePisoAltoTransito
+            lotes = listOf(lotePisoAltoTransito)
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -122,7 +122,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
-            lote = lotePinturaMenorRendimiento
+            lotes = listOf(lotePinturaMenorRendimiento)
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -134,7 +134,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Negro"
             litros = 10
-            lote = lotePinturaMayorRendimiento
+            lotes = listOf(lotePinturaMayorRendimiento)
         }
 
         combo = Combo().apply {
@@ -144,7 +144,7 @@ class DifficultBootstrap : InitializingBean {
             paisOrigen = "Urawey"
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            lote = loteCombo
+            lotes = listOf(loteCombo)
         }
 
         repoProductos.create(pisoNormal)
@@ -152,9 +152,6 @@ class DifficultBootstrap : InitializingBean {
         repoProductos.create(pinturaMayorRendimiento)
         repoProductos.create(pinturaMenorRendimiento)
         repoProductos.create(combo)
-
-        dami.agregarAlCarrito(combo, 2)
-        dami.realizarCompra(1)
 
         //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }

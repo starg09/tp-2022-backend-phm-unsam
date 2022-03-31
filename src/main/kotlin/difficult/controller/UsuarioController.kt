@@ -3,10 +3,7 @@ package difficult.controller
 import difficult.domain.Compra
 import difficult.domain.Producto
 import difficult.domain.Usuario
-import difficult.service.AgregarCarritoDTO
-import difficult.service.LoginDTO
-import difficult.service.UsuarioDTO
-import difficult.service.UsuarioService
+import difficult.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -33,6 +30,11 @@ class UsuarioController {
         return usuarioService.login(loginDTO)
     }
 
+    @PutMapping("/usuarios/{id}/agregarSaldo")
+    fun agregarSaldo(@RequestBody cantidad: Double, @PathVariable id: Int){
+        usuarioService.agregarSaldo(cantidad, id)
+    }
+
     @PutMapping("/usuarios/{id}/comprar")
     fun comprar(@PathVariable id: Int){
         usuarioService.comprar(id)
@@ -44,13 +46,13 @@ class UsuarioController {
     }
 
     @GetMapping("/usuarios/carrito/{id}")
-    fun carrito(@PathVariable id: Int): MutableMap<Producto, Int> {
+    fun carrito(@PathVariable id: Int): List<CarritoDTO> {
         return usuarioService.carrito(id)
     }
 
     @PutMapping("/usuarios/carrito/agregar")
     fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
-        usuarioService.agregarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad)
+        usuarioService.agregarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/carrito/eliminar")

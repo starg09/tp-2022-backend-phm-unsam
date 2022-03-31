@@ -1,12 +1,14 @@
 package difficult
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator
 import difficult.domain.*
-import difficult.repository.RepoProductos
+import difficult.repository.*
 import java.time.LocalDate
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
-import difficult.repository.RepoUsuarios
 
 
 @Service
@@ -17,6 +19,9 @@ class DifficultBootstrap : InitializingBean {
 
     @Autowired
     private lateinit var repoProductos: RepoProductos
+
+    private lateinit var mapperObject: ObjectMapper
+    private lateinit var ptv: PolymorphicTypeValidator
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -85,7 +90,7 @@ class DifficultBootstrap : InitializingBean {
         pisoNormal = Piso().apply {
             nombre = "Acme rustico"
             descripcion = "una descripcion"
-            puntaje = 5
+            puntaje = 3
             paisOrigen = "Argentina"
             precioBase = 2500.0
             tipo = PisoNormal()
@@ -98,7 +103,7 @@ class DifficultBootstrap : InitializingBean {
         pisoAltoTransito = Piso().apply {
             nombre = "Acme arena"
             descripcion = "una descripcion"
-            puntaje = 5
+            puntaje = 4
             paisOrigen = "Brasil"
             precioBase = 1000.0
             tipo = PisoAltoTransito()
@@ -111,8 +116,8 @@ class DifficultBootstrap : InitializingBean {
         pinturaMenorRendimiento = Pintura().apply {
             nombre = "adla blanco"
             descripcion = "una descripcion"
-            puntaje = 5
-            paisOrigen = "Argentina"
+            puntaje = 1
+            paisOrigen = "Rand McNally"
             precioBase = 1000.0
             rendimiento = 4
             color = "Blanco"
@@ -123,8 +128,8 @@ class DifficultBootstrap : InitializingBean {
         pinturaMayorRendimiento = Pintura().apply {
             nombre = "Adla negro"
             descripcion = "una descripcion"
-            puntaje = 5
-            paisOrigen = "Chile"
+            puntaje = 3
+            paisOrigen = "Argentina"
             precioBase = 1000.0
             rendimiento = 9
             color = "Negro"
@@ -133,6 +138,10 @@ class DifficultBootstrap : InitializingBean {
         }
 
         combo = Combo().apply {
+            nombre = "combo"
+            descripcion = "una descripcion"
+            puntaje = 5
+            paisOrigen = "Urawey"
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
             lote = loteCombo
@@ -146,14 +155,22 @@ class DifficultBootstrap : InitializingBean {
 
         dami.agregarAlCarrito(combo, 2)
         dami.realizarCompra(1)
+
+        //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }
 
+    fun crearMapperObject(){
+        ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
+        mapperObject = ObjectMapper()
+                mapperObject.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
+    }
 
 
 
     override fun afterPropertiesSet() {
         this.initUsuarios()
         this.initProductos()
+        this.crearMapperObject()
     }
 
 

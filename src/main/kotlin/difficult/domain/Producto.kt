@@ -1,5 +1,19 @@
 package difficult.domain
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+
+
+/*@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type"
+)
+@JsonSubTypes(
+    @JsonSubTypes.Type(value = typeof(Pintura), name = "Pintura"),
+    @JsonSubTypes.Type(value = typeof(Piso), name = "Piso"),
+    @JsonSubTypes.Type(value = typeof(Combo), name = "Combo")
+)*/
 abstract class Producto {
     var nombre: String = ""
     var descripcion: String= ""
@@ -68,12 +82,22 @@ class Pintura: Producto(){
     }
 }
 
-open class TipoPiso {
+abstract class TipoPiso {
     open val porcentajeIncremento: Double = 1.0
+
+    abstract fun tipoNombre(): String
 }
 
 class PisoAltoTransito : TipoPiso() {
     override val porcentajeIncremento = 1.20
+
+    override fun tipoNombre(): String {
+        return "Alto Transito"
+    }
 }
 
-class PisoNormal : TipoPiso() {}
+class PisoNormal : TipoPiso() {
+    override fun tipoNombre(): String {
+        return "Normal"
+    }
+}

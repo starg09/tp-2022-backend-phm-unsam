@@ -2,6 +2,8 @@ package difficult.controller
 
 import difficult.domain.Producto
 import difficult.domain.Usuario
+import difficult.service.FiltroDTO
+import difficult.service.ProductoDTO
 import difficult.service.ProductoService
 import difficult.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,13 +18,18 @@ class ProductoController {
 
 
     @GetMapping("/productos")
-    fun getProductos(): MutableSet<Producto> {
+    fun getProductos(): List<ProductoDTO> {
         return productoService.getProductos()
     }
 
     @GetMapping("/productos/filtro")
-    fun getProductosFiltrados(): List<Producto> {
+    fun getProductosFiltrados(): List<ProductoDTO> {
         return productoService.getProductosFiltrados()
+    }
+
+    @PutMapping("/productos/establecerFiltros")
+    fun establecerFiltros(@RequestBody filtrosDTO: List<FiltroDTO>){
+        productoService.establecerFiltros(filtrosDTO)
     }
 
 }

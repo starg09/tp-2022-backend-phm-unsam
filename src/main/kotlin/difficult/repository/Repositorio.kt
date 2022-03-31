@@ -1,5 +1,7 @@
 package difficult.repository
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
 import difficult.domain.Usuario
 import difficult.service.LoginDTO
@@ -18,7 +20,7 @@ class RepoUsuarios {
     }
 
     fun loguear(loginDTO: LoginDTO): Usuario {
-        return elementos.first { it -> it.nombre + " " + it.apellido == loginDTO.userName && it.contrasenia == loginDTO.password }
+        return elementos.first { it -> it.nombre + " " + it.apellido == loginDTO.username && it.contrasenia == loginDTO.password }
     }
 
     fun getById(id:Int): Usuario {
@@ -33,7 +35,7 @@ class RepoUsuarios {
 @Repository
 class RepoProductos {
     val elementos = mutableSetOf<Producto>()
-    val filtros = mutableListOf<Filtro>()
+    var filtros = listOf<Filtro>()
     var idAsignar: Int = 1
 
     fun create(elemento: Producto){
@@ -51,36 +53,47 @@ class RepoProductos {
         return elementos.filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
     }
 
+    fun establecerFiltros(filtrosNuevos: List<Filtro>){
+        filtros = filtrosNuevos
+    }
+
     fun getCantidadElementos() { elementos.size }
 }
 
-abstract class Filtro {
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type"
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = FiltroPais::class, name = "pais"),
+    JsonSubTypes.Type(value = FiltroPuntuacion::class, name = "puntuacion"),
+    JsonSubTypes.Type(value = FiltroBusqueda::class, name = "busqueda")
+)
+abstract class Filtro() {
+    var valor: String = ""
+
     open fun cumpleCondicion(producto: Producto): Boolean {
         return true
     }
 }
 
-class FiltroPais : Filtro() {
-    lateinit var paisFiltro: String
-
+class FiltroPais() : Filtro()  {
     override fun cumpleCondicion(producto: Producto): Boolean {
-        return paisFiltro.lowercase() == producto.paisOrigen.lowercase()
+        return valor.contentEquals(producto.paisOrigen, ignoreCase = true)
     }
 }
 
-class FiltroPuntuacion : Filtro() {
-    var puntuacionFiltro : Int = 0
-
+class FiltroPuntuacion() : Filtro() {
     override fun cumpleCondicion(producto: Producto): Boolean {
-        return producto.puntaje >= puntuacionFiltro
+        return producto.puntaje.toString() == valor
     }
 }
 
-class FiltroBusqueda : Filtro() {
-    lateinit var textoFiltro : String
-
+class FiltroBusqueda() : Filtro() {
     override fun cumpleCondicion(producto: Producto): Boolean {
-        return producto.nombre.contains(textoFiltro)
+        return producto.nombre.contains(valor, ignoreCase = true)
     }
 }
 

@@ -1,10 +1,11 @@
 package difficult.domain
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
+import CantidadInsuficienteLoteException
+
+/*import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 
-
-/*@JsonTypeInfo(
+@JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
     property = "type"
@@ -27,11 +28,22 @@ abstract class Producto {
         return precioBase
     }
 
+    fun elegirUnLote(loteNumber: Int): Lote? {
+        return lotes.find { it.numeroLote == loteNumber }
+    }
+
     fun disminuirLote(cantidadYLote: List<Int>){
-        val cantidad = cantidadYLote[0]!!
-        val loteNumero = cantidadYLote[1]!!
-        val lote = lotes.find { it.numeroLote == loteNumero }
-        lote!!.cantidadDisponible -= cantidad
+        val cantidad = cantidadYLote[0]
+        val loteNumero = cantidadYLote[1]
+        val lote = elegirUnLote(loteNumero)
+        cantidadLoteSuficiente(lote!!, cantidad)
+        lote.cantidadDisponible -= cantidad
+    }
+
+    fun cantidadLoteSuficiente(lote: Lote, cantidad: Int){
+        if (lote.cantidadDisponible < cantidad){
+            throw CantidadInsuficienteLoteException()
+        }
     }
 }
 

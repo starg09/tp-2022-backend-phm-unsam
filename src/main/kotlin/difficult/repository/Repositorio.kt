@@ -1,5 +1,7 @@
 package difficult.repository
 
+import LoginException
+import UsuarioNoEncontradoException
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
@@ -20,11 +22,21 @@ class RepoUsuarios {
     }
 
     fun loguear(loginDTO: LoginDTO): Usuario {
-        return elementos.first { it -> it.email == loginDTO.email && it.contrasenia == loginDTO.password }
+        try {
+            return elementos.first { it -> it.email == loginDTO.email && it.contrasenia == loginDTO.password }
+        }
+        catch (e:Exception){
+            throw LoginException()
+        }
     }
 
     fun getById(id:Int): Usuario {
-        return elementos.first {it -> it.id == id}
+        try {
+            return elementos.first {it -> it.id == id}
+        }
+        catch (e:Exception){
+            throw UsuarioNoEncontradoException()
+        }
     }
 
 

@@ -59,8 +59,7 @@ class DifficultBootstrap : InitializingBean {
 
     }
 
-    fun initProductos(){
-
+    fun initLotes(){
         lotePisoAltoTransito = Lote().apply {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
@@ -86,6 +85,11 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
         }
+    }
+
+    fun initProductos(){
+
+
 
         pisoNormal = Piso().apply {
             nombre = "Acme rustico"
@@ -166,6 +170,7 @@ class DifficultBootstrap : InitializingBean {
 
     override fun afterPropertiesSet() {
         this.initUsuarios()
+        this.initLotes()
         this.initProductos()
         this.crearMapperObject()
     }

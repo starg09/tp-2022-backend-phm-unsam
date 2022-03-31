@@ -1,5 +1,6 @@
 package difficult.domain
 
+import YaEstaEnElCarritoException
 import java.time.LocalDate
 import java.time.Period
 
@@ -22,7 +23,16 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
     }
 
     fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Int){
+        if (carrito.containsKey(producto)){
+            throw YaEstaEnElCarritoException()
+        }
+        chequearCantidad(producto, cantidad, lote)
         carrito[producto] = listOf(cantidad, lote)
+    }
+
+    fun chequearCantidad(producto: Producto, cantidad: Int, lote: Int){
+        val unLote = producto.elegirUnLote(lote)
+        producto.cantidadLoteSuficiente(unLote!!, cantidad)
     }
 
     fun eliminarDelCarrito(producto: Producto){

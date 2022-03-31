@@ -32,12 +32,7 @@ class UsuarioService {
     }
 
     fun login(loginDTO: LoginDTO): Int {
-        //try {
         val unUsuario: Usuario = repoUsuarios.loguear(loginDTO)
-        /*}
-        catch () {
-            ResponseStatusException(HttpStatus.NOT_FOUND, "el nombre y/o la contraseña no son correctos")
-        }*/
         return unUsuario.id
     }
 

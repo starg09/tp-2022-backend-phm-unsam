@@ -1,12 +1,9 @@
 package difficult.controller
 
 import difficult.domain.Lote
-import difficult.domain.Producto
-import difficult.domain.Usuario
 import difficult.service.FiltroDTO
 import difficult.service.ProductoDTO
 import difficult.service.ProductoService
-import difficult.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

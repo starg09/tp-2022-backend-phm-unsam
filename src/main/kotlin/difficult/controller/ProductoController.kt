@@ -1,8 +1,8 @@
 package difficult.controller
 
 import difficult.domain.Lote
+import difficult.domain.ProductoDTO
 import difficult.service.FiltroDTO
-import difficult.service.ProductoDTO
 import difficult.service.ProductoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -13,7 +13,6 @@ class ProductoController {
 
     @Autowired
     private lateinit var productoService: ProductoService
-
 
     @GetMapping("/productos")
     fun getProductos(): List<ProductoDTO> {

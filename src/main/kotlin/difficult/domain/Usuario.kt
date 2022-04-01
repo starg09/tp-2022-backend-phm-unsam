@@ -24,7 +24,7 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
 
     fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Int){
         if (carrito.containsKey(producto)){
-            throw YaEstaEnElCarritoException()
+            throw YaEstaEnElCarritoException(" ")
         }
         chequearCantidad(producto, cantidad, lote)
         carrito[producto] = listOf(cantidad, lote)
@@ -54,6 +54,7 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         disminuirSaldo(importeTotalCarrito())
         carrito.keys.forEach(){ producto -> producto.disminuirLote(carrito[producto]!!) }
         vaciarCarrito()
+        //TODO agregar excepcion de saldo
     }
 
     fun cantidadProductosCarrito(): Int {

@@ -82,7 +82,7 @@ class UsuarioService {
     }
 
     fun numeroDeOrden(): Int {
-        return repoUsuarios.elementos.map{it -> it.compras.size}.fold(0) { acum, it -> acum + it } + 1
+        return repoUsuarios.elementos.map{ it.compras.size}.fold(0) { acum, it -> acum + it } + 1
     }
 
 }

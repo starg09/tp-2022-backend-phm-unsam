@@ -45,6 +45,8 @@ abstract class Producto {
             throw CantidadInsuficienteLoteException()
         }
     }
+
+    abstract fun toProductoDTO() : ProductoDTO
 }
 
 class Combo(): Producto() {
@@ -59,9 +61,21 @@ class Combo(): Producto() {
     }
 
     override fun precioTotal(): Double {
-        return ((productos.fold(0.0) { acum, producto -> acum + producto.precioTotal() }) + (productos.size * 20.0)) * 0.85
+        return ((productos.fold(0.0) { acum, producto -> acum + producto.precioTotal() + 20.0 })  * 0.85)
     }
 
+    override fun toProductoDTO(): ComboDTO {
+        return ComboDTO().apply {
+            nombreDto = nombre
+            descripcionDto = descripcion
+            puntajeDto = puntaje
+            paisOrigenDto = paisOrigen
+            precioDto = precioTotal()
+            lotesDto = lotes.map { it.toLoteDTO() }
+            idDto = id
+            productosDto = productos.map { it.toProductoDTO() }
+        }
+    }
 
 }
 
@@ -70,6 +84,7 @@ class Piso : Producto() {
     lateinit var terminacion : String
     var medidaX: Int = 0
     var medidaZ: Int = 0
+    // TODO: var pair: Pair<Int, Int> = 0 to 0
 
     override fun precioTotal(): Double {
         return super.precioTotal() * tipo.porcentajeIncremento
@@ -77,6 +92,21 @@ class Piso : Producto() {
 
     fun medidas(): String {
         return "$medidaX X $medidaZ"
+    }
+
+    override fun toProductoDTO(): PisoDTO {
+        return PisoDTO().apply {
+            nombreDto = nombre
+            descripcionDto = descripcion
+            puntajeDto = puntaje
+            paisOrigenDto = paisOrigen
+            precioDto = precioTotal()
+            lotesDto = lotes.map { it.toLoteDTO() }
+            idDto = id
+            terminacionDto = terminacion
+            medidasDto = medidas()
+            tipoDto = tipo.tipoNombre()
+        }
     }
 
 }
@@ -94,6 +124,21 @@ class Pintura: Producto(){
         return if (rendimiento > 8) {
             1.25
         } else 1.0
+    }
+
+    override fun toProductoDTO(): PinturaDTO {
+        return PinturaDTO().apply {
+            nombreDto = nombre
+            descripcionDto = descripcion
+            puntajeDto = puntaje
+            paisOrigenDto = paisOrigen
+            precioDto = precioTotal()
+            lotesDto = lotes.map { it.toLoteDTO() }
+            idDto = id
+            rendimientoDto = rendimiento
+            colorDto = color
+            litrosDto = litros
+        }
     }
 }
 
@@ -116,3 +161,30 @@ class PisoNormal : TipoPiso() {
         return "Normal"
     }
 }
+
+abstract class ProductoDTO {
+    var nombreDto: String = ""
+    var descripcionDto: String= ""
+    var puntajeDto: Int = 0
+    var paisOrigenDto: String = ""
+    var precioDto: Double = 0.0
+    var lotesDto = listOf<LoteDTO>()
+    var idDto: Int = 0
+}
+
+class PinturaDTO : ProductoDTO() {
+    var rendimientoDto: Int = 0
+    var colorDto: String = ""
+    var litrosDto: Int = 0
+}
+
+class PisoDTO : ProductoDTO() {
+    var terminacionDto: String = ""
+    var medidasDto: String = ""
+    var tipoDto: String = ""
+}
+
+class ComboDTO : ProductoDTO() {
+    var productosDto = listOf<ProductoDTO>()
+}
+

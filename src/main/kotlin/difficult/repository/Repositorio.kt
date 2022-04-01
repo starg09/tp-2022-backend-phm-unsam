@@ -23,31 +23,27 @@ class RepoUsuarios {
 
     fun loguear(loginDTO: LoginDTO): Usuario {
         try {
-            return elementos.first { it -> it.email == loginDTO.email && it.contrasenia == loginDTO.password }
+            return elementos.first { it.email == loginDTO.email && it.contrasenia == loginDTO.password }
         }
         catch (e:Exception){
-            throw LoginException()
+            throw LoginException("Error al loguear")
         }
     }
 
     fun getById(id:Int): Usuario {
         try {
-            return elementos.first {it -> it.id == id}
+            return elementos.first { it.id == id}
         }
         catch (e:Exception){
-            throw UsuarioNoEncontradoException()
+            throw UsuarioNoEncontradoException("no se ha encontrado al usuario")
         }
     }
 
-
-
-    fun getCantidadElementos() { elementos.size }
 }
 
 @Repository
 class RepoProductos {
     val elementos = mutableSetOf<Producto>()
-    var filtros = listOf<Filtro>()
     var idAsignar: Int = 1
 
     fun create(elemento: Producto){
@@ -58,18 +54,13 @@ class RepoProductos {
     }
 
     fun getById(id:Int): Producto {
-        return elementos.first {it -> it.id == id}
+        return elementos.first { it.id == id}
     }
 
-    fun filtrar(): List<Producto> {
+    fun filtrar(filtros : List<Filtro>): List<Producto> {
         return elementos.filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
     }
 
-    fun establecerFiltros(filtrosNuevos: List<Filtro>){
-        filtros = filtrosNuevos
-    }
-
-    fun getCantidadElementos() { elementos.size }
 }
 
 
@@ -83,7 +74,7 @@ class RepoProductos {
     JsonSubTypes.Type(value = FiltroPuntuacion::class, name = "puntuacion"),
     JsonSubTypes.Type(value = FiltroBusqueda::class, name = "busqueda")
 )
-abstract class Filtro() {
+abstract class Filtro {
     var valor: String = ""
 
     open fun cumpleCondicion(producto: Producto): Boolean {
@@ -91,19 +82,19 @@ abstract class Filtro() {
     }
 }
 
-class FiltroPais() : Filtro()  {
+class FiltroPais : Filtro()  {
     override fun cumpleCondicion(producto: Producto): Boolean {
         return valor.contentEquals(producto.paisOrigen, ignoreCase = true)
     }
 }
 
-class FiltroPuntuacion() : Filtro() {
+class FiltroPuntuacion : Filtro() {
     override fun cumpleCondicion(producto: Producto): Boolean {
         return producto.puntaje.toString() == valor
     }
 }
 
-class FiltroBusqueda() : Filtro() {
+class FiltroBusqueda : Filtro() {
     override fun cumpleCondicion(producto: Producto): Boolean {
         return producto.nombre.contains(valor, ignoreCase = true)
     }

@@ -2,19 +2,6 @@ package difficult.domain
 
 import CantidadInsuficienteLoteException
 
-/*import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type"
-)
-@JsonSubTypes(
-    @JsonSubTypes.Type(value = typeof(Pintura), name = "Pintura"),
-    @JsonSubTypes.Type(value = typeof(Piso), name = "Piso"),
-    @JsonSubTypes.Type(value = typeof(Combo), name = "Combo")
-)*/
 abstract class Producto {
     var nombre: String = ""
     var descripcion: String= ""
@@ -28,36 +15,20 @@ abstract class Producto {
         return precioBase
     }
 
-    fun elegirUnLote(loteNumber: Int): Lote? {
-        return lotes.find { it.numeroLote == loteNumber }
+    fun elegirUnLote(loteNumber: Int): Lote {
+        return lotes.first { it.numeroLote == loteNumber }
     }
 
-    fun disminuirLote(cantidadYLote: List<Int>){
-        val cantidad = cantidadYLote[0]
-        val loteNumero = cantidadYLote[1]
-        val lote = elegirUnLote(loteNumero)
-        cantidadLoteSuficiente(lote!!, cantidad)
-        lote.cantidadDisponible -= cantidad
-    }
 
-    fun cantidadLoteSuficiente(lote: Lote, cantidad: Int){
-        if (lote.cantidadDisponible < cantidad){
-            throw CantidadInsuficienteLoteException()
-        }
-    }
 
     abstract fun toProductoDTO() : ProductoDTO
 }
 
-class Combo(): Producto() {
+class Combo : Producto() {
     var productos = mutableSetOf<Producto>()
 
     fun agregarProducto(unProducto: Producto){
         productos.add(unProducto)
-    }
-
-    fun eliminarProducto(unProducto: Producto){
-        productos.remove(unProducto)
     }
 
     override fun precioTotal(): Double {

@@ -4,4 +4,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "no se ha encontrado al usuario")
-internal class UsuarioNoEncontradoException() : RuntimeException()
+internal class UsuarioNoEncontradoException(mensaje: String) : RuntimeException(mensaje)

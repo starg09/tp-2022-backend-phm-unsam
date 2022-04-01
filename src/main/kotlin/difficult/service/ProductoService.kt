@@ -21,17 +21,13 @@ class ProductoService {
         return toProductosDTO(repoProductos.elementos.toList())
     }
 
-    fun getProductosFiltrados(): List<ProductoDTO> {
-        return toProductosDTO(repoProductos.filtrar())
+    fun filtrar(filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
+        val filtros = toFiltros(filtrosDTO)
+        return toProductosDTO(repoProductos.filtrar(filtros))
     }
 
     fun toProductosDTO(productos: List<Producto>): List<ProductoDTO> {
         return productos.map { it.toProductoDTO() }
-    }
-
-    fun establecerFiltros(filtrosDTO: List<FiltroDTO>) {
-        val filtros = toFiltros(filtrosDTO)
-        repoProductos.filtros = filtros
     }
 
     fun toFiltros(filtrosDTO: List<FiltroDTO>): List<Filtro> {

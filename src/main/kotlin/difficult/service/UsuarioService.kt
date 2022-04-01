@@ -1,6 +1,7 @@
 package difficult.service
 
 import difficult.domain.Compra
+import difficult.domain.Lote
 import difficult.domain.Producto
 import difficult.domain.Usuario
 import difficult.repository.RepoProductos
@@ -42,16 +43,16 @@ class UsuarioService {
 
     fun carrito(id: Int): List<CarritoDTO> {
         val usuario =  repoUsuarios.getById(id)
-        return usuario.carrito.map { toCarritoDTO(it) }
+        return usuario.carrito.productosEnCarrito.map { toCarritoDTO(it) }
     }
 
-    fun toCarritoDTO(entry: Map.Entry<Producto, List<Int>>): CarritoDTO {
-        val producto = entry.key
+    fun toCarritoDTO(entry: Triple<Producto, Int, Lote>): CarritoDTO {
+        val producto = entry.first
         return CarritoDTO().apply {
             nombre = producto.nombre
             descripcion = producto.descripcion
-            lote = entry.value[1]
-            cantidad = entry.value[0]
+            lote = entry.third.numeroLote
+            cantidad = entry.second
             precio = producto.precioTotal()
             id = producto.id
         }
@@ -92,7 +93,7 @@ class LoginDTO {
     lateinit var password: String
 }
 
-class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int, var loteNumero: Int) {}
+class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int, var loteNumero: Int)
 
 class CarritoDTO {
     lateinit var nombre: String

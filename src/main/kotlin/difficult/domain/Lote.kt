@@ -1,5 +1,6 @@
 package difficult.domain
 
+import CantidadInsuficienteLoteException
 import java.time.LocalDate
 
 class Lote {
@@ -12,6 +13,16 @@ class Lote {
             cantidadDisponibleDto = cantidadDisponible
             numeroLoteDto = numeroLote
         }
+    }
+
+    fun chequearCantidadDisponible(cantidad: Int){
+        if (cantidadDisponible < cantidad){
+            throw CantidadInsuficienteLoteException("la cantidad disponible de este lote no essuficiente")
+        }
+    }
+
+    fun disminuirCantidadDisponible(cantidad: Int){
+        cantidadDisponible -= cantidad
     }
 }
 

@@ -1,12 +1,12 @@
 package difficult.domain
 
-import YaEstaEnElCarritoException
+import SaldoInsuficienteException
 import java.time.LocalDate
 import java.time.Period
 
 class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var email: String, var contrasenia: String){
 
-    val carrito = mutableMapOf<Producto, List<Int>>() // el primer entero es para la cantidad y el segundo para el lote
+    val carrito = Carrito()
     val compras = mutableSetOf<Compra>()
     var id = 0
 
@@ -22,28 +22,21 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         saldo -= monto
     }
 
-    fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Int){
-        if (carrito.containsKey(producto)){
-            throw YaEstaEnElCarritoException(" ")
-        }
-        chequearCantidad(producto, cantidad, lote)
-        carrito[producto] = listOf(cantidad, lote)
-    }
-
-    fun chequearCantidad(producto: Producto, cantidad: Int, lote: Int){
-        val unLote = producto.elegirUnLote(lote)
-        producto.cantidadLoteSuficiente(unLote!!, cantidad)
+    fun agregarAlCarrito(producto: Producto, cantidad: Int, numeroLote: Int){
+        val lote = producto.elegirUnLote(numeroLote)
+        carrito.agregarProducto(producto, cantidad, lote)
     }
 
     fun eliminarDelCarrito(producto: Producto){
-        carrito.remove(producto)
+        carrito.eliminarProducto(producto)
     }
 
     fun vaciarCarrito(){
-        carrito.clear()
+        carrito.vaciar()
     }
 
     fun realizarCompra(orden: Int){
+        saldoInsuficiente()
         val compra = Compra().apply {
             ordenCompra = orden
             fechaCompra = LocalDate.now()
@@ -52,16 +45,21 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         }
         compras.add(compra)
         disminuirSaldo(importeTotalCarrito())
-        carrito.keys.forEach(){ producto -> producto.disminuirLote(carrito[producto]!!) }
+        carrito.disminurLotes()
         vaciarCarrito()
-        //TODO agregar excepcion de saldo
+    }
+
+    fun saldoInsuficiente(){
+        if (importeTotalCarrito() > saldo) {
+            throw SaldoInsuficienteException("El saldo es insuficiente")
+        }
     }
 
     fun cantidadProductosCarrito(): Int {
-        return carrito.values.fold(0) { acum, it -> acum + it[0] }
+        return carrito.catidadProductos()
     }
 
     fun importeTotalCarrito(): Double{
-        return carrito.keys.fold(0.0) { acum, producto -> acum + producto.precioTotal() * carrito[producto]!![0] }
+        return carrito.precioTotal()
     }
 }

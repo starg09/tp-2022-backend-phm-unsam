@@ -24,14 +24,9 @@ class ProductoController {
         return productoService.getLotes()
     }
 
-    @GetMapping("/productos/filtro")
-    fun getProductosFiltrados(): List<ProductoDTO> {
-        return productoService.getProductosFiltrados()
-    }
-
-    @PutMapping("/productos/establecerFiltros")
-    fun establecerFiltros(@RequestBody filtrosDTO: List<FiltroDTO>){
-        productoService.establecerFiltros(filtrosDTO)
+    @GetMapping("/productos/filtrar")
+    fun filtrar(@RequestBody filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
+        return productoService.filtrar(filtrosDTO)
     }
 
     @GetMapping("/productos/{id}/detalles")

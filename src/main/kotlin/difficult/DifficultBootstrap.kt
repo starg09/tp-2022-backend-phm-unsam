@@ -23,6 +23,10 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var mapperObject: ObjectMapper
     private lateinit var ptv: PolymorphicTypeValidator
 
+    private lateinit var compra1: Compra
+    private lateinit var compra2: Compra
+    private lateinit var compra3: Compra
+
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
     private lateinit var chris: Usuario
@@ -49,6 +53,28 @@ class DifficultBootstrap : InitializingBean {
         chris = Usuario("Chris", "Redfield", LocalDate.of(1973, 6, 5), 1000000.0, "chris@gmail.com","1234567890")
         leon = Usuario("Leon Scott", "Kennedy", LocalDate.of(1977, 6, 5), 1000000.0, "leon@gmail.com","1234567890")
         claire = Usuario("Claire", "Redfield", LocalDate.of(1979, 6, 5), 1000000.0, "claire@gmail.com","1234567890")
+
+        compra1 = Compra().apply {
+            ordenCompra = 1
+            fechaCompra = LocalDate.now()
+            cantidad = 1
+            importe = 2000.0
+        }
+        compra2 = Compra().apply {
+            ordenCompra = 2
+            fechaCompra = LocalDate.now()
+            cantidad = 2
+            importe = 3600.0
+        }
+        compra3 = Compra().apply {
+            ordenCompra = 3
+            fechaCompra = LocalDate.now()
+            cantidad = 1
+            importe = 2400.0
+        }
+        dami.compras.add(compra1)
+        dami.compras.add(compra2)
+        dami.compras.add(compra3)
 
 
         repoUsuarios.create(dami)

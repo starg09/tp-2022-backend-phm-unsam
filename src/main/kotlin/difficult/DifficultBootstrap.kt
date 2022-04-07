@@ -72,6 +72,7 @@ class DifficultBootstrap : InitializingBean {
             cantidad = 1
             importe = 2400.0
         }
+        
         dami.compras.add(compra1)
         dami.compras.add(compra2)
         dami.compras.add(compra3)
@@ -186,6 +187,11 @@ class DifficultBootstrap : InitializingBean {
         //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }
 
+    fun initCarrito(){
+        dami.agregarAlCarrito(pisoNormal, 1, 1111)
+        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, 4444)
+    }
+
     fun crearMapperObject(){
         ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
         mapperObject = ObjectMapper()
@@ -199,6 +205,7 @@ class DifficultBootstrap : InitializingBean {
         this.initLotes()
         this.initProductos()
         this.crearMapperObject()
+        this.initCarrito()
     }
 
 

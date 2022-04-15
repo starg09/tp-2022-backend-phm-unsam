@@ -70,8 +70,8 @@ class UsuarioService {
         usuario.eliminarDelCarrito(producto)
     }
 
-    fun comprasUsuario(id: Int): MutableSet<Compra> {
-        return repoUsuarios.getById(id).compras
+    fun comprasUsuario(id: Int): List<CompraDTO> {
+        return repoUsuarios.getById(id).compras.map { toCompraDTO(it) }
     }
 
     fun vaciarCarrito(id: Int) {
@@ -84,6 +84,19 @@ class UsuarioService {
 
     fun numeroDeOrden(): Int {
         return repoUsuarios.elementos.map{ it.compras.size}.fold(0) { acum, it -> acum + it } + 1
+    }
+
+    fun toCompraDTO(compra: Compra): CompraDTO {
+        return CompraDTO().apply {
+            ordenCompra = compra.ordenCompra
+            fechaCompra = compra.fechaCompra
+            cantidad = compra.cantidad
+            importe = compra.importe
+        }
+    }
+
+    fun productosComprados(id: Int): Set<String> {
+        return repoUsuarios.getById(id).productosComprados()
     }
 
 }
@@ -105,3 +118,10 @@ class CarritoDTO {
 }
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)
+
+class CompraDTO {
+    var ordenCompra: Int = 0
+    lateinit var fechaCompra: LocalDate
+    var cantidad : Int = 0
+    var importe : Double = 0.0
+}

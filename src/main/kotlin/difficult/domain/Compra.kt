@@ -7,4 +7,10 @@ class Compra {
     lateinit var fechaCompra: LocalDate
     var cantidad : Int = 0
     var importe : Double = 0.0
+
+    var productosComprados = mutableListOf<Producto>()
+
+    fun nombreProductos(): List<String> {
+        return productosComprados.map { it.nombre }
+    }
 }

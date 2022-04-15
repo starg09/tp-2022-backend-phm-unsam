@@ -42,6 +42,7 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
             fechaCompra = LocalDate.now()
             cantidad = cantidadProductosCarrito()
             importe = importeTotalCarrito()
+            productosComprados.addAll(carrito.productosEnCarrito.map { it.first })
         }
         compras.add(compra)
         disminuirSaldo(importeTotalCarrito())
@@ -61,5 +62,9 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
 
     fun importeTotalCarrito(): Double{
         return carrito.precioTotal()
+    }
+
+    fun productosComprados(): Set<String> {
+        return compras.map { it.nombreProductos() }.flatten().toSet()
     }
 }

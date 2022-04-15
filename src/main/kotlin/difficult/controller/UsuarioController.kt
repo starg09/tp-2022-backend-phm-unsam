@@ -40,7 +40,7 @@ class UsuarioController {
     }
 
     @GetMapping("/usuarios/{id}/compras")
-    fun comprasUsuario(@PathVariable id: Int): MutableSet<Compra> {
+    fun comprasUsuario(@PathVariable id: Int): List<CompraDTO> {
         return usuarioService.comprasUsuario(id)
     }
 
@@ -62,5 +62,10 @@ class UsuarioController {
     @DeleteMapping("/usuarios/{id}/carrito/vaciar")
     fun vaciarCarrito(@PathVariable id: Int){
         usuarioService.vaciarCarrito(id)
+    }
+
+    @GetMapping("/usuarios/{id}/productosComprados")
+    fun productosComprados(@PathVariable id: Int): Set<String> {
+        return usuarioService.productosComprados(id)
     }
 }

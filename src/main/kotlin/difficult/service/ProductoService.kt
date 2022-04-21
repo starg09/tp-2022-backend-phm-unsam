@@ -18,7 +18,7 @@ class ProductoService {
     private lateinit var mapperObject: ObjectMapper
 
     fun getProductos(): List<ProductoDTO> {
-        return toProductosDTO(repoProductos.elementos.toList())
+        return toProductosDTO(repoProductos.findAll().toList())
     }
 
     fun filtrar(filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
@@ -43,11 +43,15 @@ class ProductoService {
     }
 
     fun getLotes(): List<Lote>{
-        return repoProductos.elementos.map { it.lotes }.flatten()
+        return repoProductos.findAll().map { it.lotes }.flatten()
     }
 
     fun productoDetalles(id: Int): ProductoDTO {
-        return repoProductos.getById(id).toProductoDTO()
+        return getById(id).toProductoDTO()
+    }
+
+    fun getById(productoId: Int): Producto {
+        return repoProductos.findById(productoId).get()
     }
 
 }

@@ -2,8 +2,11 @@ package difficult.domain
 
 import CantidadInsuficienteLoteException
 import java.time.LocalDate
+import javax.persistence.*
 
+@Entity
 class Lote {
+    @Id
     var numeroLote: Int = 0
     lateinit var fechaIngreso: LocalDate
     var cantidadDisponible: Int = 0

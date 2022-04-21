@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
 import difficult.domain.Usuario
 import difficult.service.LoginDTO
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -42,24 +43,15 @@ class RepoUsuarios {
 }
 
 @Repository
-class RepoProductos {
-    val elementos = mutableSetOf<Producto>()
-    var idAsignar: Int = 1
-
-    fun create(elemento: Producto){
-        //validar(elemento)
-        elementos.add(elemento)
-        elemento.id = idAsignar
-        idAsignar++
-    }
-
-    fun getById(id:Int): Producto {
-        return elementos.first { it.id == id}
-    }
+interface RepoProductos : CrudRepository<Producto, Int> {
 
     fun filtrar(filtros : List<Filtro>): List<Producto> {
-        return elementos.filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
+        return this.findAll().filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
     }
+
+    //fun findByPaisOrNombre
+
+            //TODO: dinamic query repos
 
 }
 

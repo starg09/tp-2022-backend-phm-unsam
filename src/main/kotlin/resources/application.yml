@@ -1,0 +1,16 @@
+spring:
+  #   base de datos posta
+  datasource:
+    url: ...?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: ...
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true

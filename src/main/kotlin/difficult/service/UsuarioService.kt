@@ -59,13 +59,13 @@ class UsuarioService {
     }
 
     fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
-        val producto = repoProductos.getById(productoId)
+        val producto = getById(productoId)
         val usuario = repoUsuarios.getById(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, loteNumero)
     }
 
     fun eliminarCarrito(usuarioId: Int, productoId: Int){
-        val producto = repoProductos.getById(productoId)
+        val producto = getById(productoId)
         val usuario = repoUsuarios.getById(usuarioId)
         usuario.eliminarDelCarrito(producto)
     }
@@ -84,6 +84,10 @@ class UsuarioService {
 
     fun numeroDeOrden(): Int {
         return repoUsuarios.elementos.map{ it.compras.size}.fold(0) { acum, it -> acum + it } + 1
+    }
+
+    fun getById(productoId: Int): Producto {
+        return repoProductos.findById(productoId).get()
     }
 
 }

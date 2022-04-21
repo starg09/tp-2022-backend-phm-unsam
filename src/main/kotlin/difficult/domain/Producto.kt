@@ -4,10 +4,11 @@ import CantidadInsuficienteLoteException
 
 abstract class Producto {
     var nombre: String = ""
-    var descripcion: String= ""
+    var descripcion: String = ""
     var puntaje: Int = 0
     var paisOrigen: String = ""
     var precioBase: Double = 0.0
+    var urlImagen: String = ""
     var lotes = listOf<Lote>()
     var id: Int = 0
 
@@ -39,6 +40,7 @@ class Combo : Producto() {
         return ComboDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -69,6 +71,7 @@ class Piso : Producto() {
         return PisoDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -101,6 +104,7 @@ class Pintura: Producto(){
         return PinturaDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -135,7 +139,8 @@ class PisoNormal : TipoPiso() {
 
 abstract class ProductoDTO {
     var nombreDto: String = ""
-    var descripcionDto: String= ""
+    var descripcionDto: String = ""
+    var urlImagenDto: String = ""
     var puntajeDto: Int = 0
     var paisOrigenDto: String = ""
     var precioDto: Double = 0.0

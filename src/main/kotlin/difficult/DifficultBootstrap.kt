@@ -121,6 +121,7 @@ class DifficultBootstrap : InitializingBean {
         pisoNormal = Piso().apply {
             nombre = "Acme rustico"
             descripcion = "una descripcion"
+            urlImagen = "productos/acme_rustico.webp"
             puntaje = 3
             paisOrigen = "Argentina"
             precioBase = 2500.0
@@ -134,6 +135,7 @@ class DifficultBootstrap : InitializingBean {
         pisoAltoTransito = Piso().apply {
             nombre = "Acme arena"
             descripcion = "una descripcion"
+            urlImagen = "productos/acme_arena.webp"
             puntaje = 4
             paisOrigen = "Brasil"
             precioBase = 1000.0
@@ -147,6 +149,7 @@ class DifficultBootstrap : InitializingBean {
         pinturaMenorRendimiento = Pintura().apply {
             nombre = "adla blanco"
             descripcion = "una descripcion"
+            urlImagen = "productos/adla_blanca.jpg"
             puntaje = 1
             paisOrigen = "Rand McNally"
             precioBase = 1000.0
@@ -159,6 +162,7 @@ class DifficultBootstrap : InitializingBean {
         pinturaMayorRendimiento = Pintura().apply {
             nombre = "Adla negro"
             descripcion = "una descripcion"
+            urlImagen = "productos/adla_negra.jpg"
             puntaje = 3
             paisOrigen = "Argentina"
             precioBase = 1000.0

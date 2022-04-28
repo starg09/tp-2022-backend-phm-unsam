@@ -1,10 +1,10 @@
 spring:
-  #   base de datos posta
   datasource:
-    url: ...?createDatabaseIfNotExist=true
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost/difficult?createDatabaseIfNotExist=true
     username: root
     password:
-    driver-class-name: ...
+    platform: mssql
 
   jpa:
     open-in-view: false

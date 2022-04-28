@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired
 
 @Service
 class DifficultBootstrap : InitializingBean {
-
+    @Autowired
+    private lateinit var repoProductos: RepoProductos
     @Autowired
     private lateinit var repoUsuarios: RepoUsuarios
 
-    @Autowired
-    private lateinit var repoProductos: RepoProductos
+
 
     private lateinit var mapperObject: ObjectMapper
     private lateinit var ptv: PolymorphicTypeValidator
@@ -48,11 +48,46 @@ class DifficultBootstrap : InitializingBean {
 
     fun initUsuarios(){
 
-        dami = Usuario("Dami", "Lescano", LocalDate.of(2000, 6, 5), 1000000.0, "lescano5600@gmail.com","1234567890")
-        jill = Usuario("Jill", "Valentine", LocalDate.of(1974, 6, 5), 1000000.0, "jill@gmail.com","1234567890")
-        chris = Usuario("Chris", "Redfield", LocalDate.of(1973, 6, 5), 1000000.0, "chris@gmail.com","1234567890")
-        leon = Usuario("Leon Scott", "Kennedy", LocalDate.of(1977, 6, 5), 1000000.0, "leon@gmail.com","1234567890")
-        claire = Usuario("Claire", "Redfield", LocalDate.of(1979, 6, 5), 1000000.0, "claire@gmail.com","1234567890")
+        dami = Usuario().apply {
+            nombre = "Dami"
+            apellido = "Lescano"
+            fechaNacimiento = LocalDate.of(2000, 6, 5)
+            saldo = 1000000.0
+            email = "lescano5600@gmail.com"
+            contrasenia = "1234567890"
+        }
+        jill = Usuario().apply {
+            nombre = "Jill"
+            apellido = "Valentine"
+            fechaNacimiento = LocalDate.of(1974, 6, 5)
+            saldo = 1000000.0
+            email = "jill@gmail.com"
+            contrasenia = "1234567890"
+        }
+        chris = Usuario().apply {
+            nombre = "Chris"
+            apellido = "Redfield"
+            fechaNacimiento = LocalDate.of(1973, 6, 5)
+            saldo = 1000000.0
+            email = "chris@gmail.com"
+            contrasenia = "1234567890"
+        }
+        leon = Usuario().apply {
+            nombre = "Leon Scott"
+            apellido = "Kennedy"
+            fechaNacimiento = LocalDate.of(1977, 6, 5)
+            saldo = 1000000.0
+            email = "leon@gmail.com"
+            contrasenia = "1234567890"
+        }
+        claire = Usuario().apply{
+            nombre = "Claire"
+            apellido = "Redfield"
+            fechaNacimiento = LocalDate.of(1979, 6, 5)
+            saldo = 1000000.0
+            email = "claire@gmail.com"
+            contrasenia = "1234567890"
+        }
 
         compra1 = Compra().apply {
             ordenCompra = 1
@@ -78,11 +113,11 @@ class DifficultBootstrap : InitializingBean {
         dami.compras.add(compra3)
 
 
-        repoUsuarios.create(dami)
-        repoUsuarios.create(jill)
-        repoUsuarios.create(leon)
-        repoUsuarios.create(chris)
-        repoUsuarios.create(claire)
+        repoUsuarios.save(dami)
+        repoUsuarios.save(jill)
+        repoUsuarios.save(leon)
+        repoUsuarios.save(chris)
+        repoUsuarios.save(claire)
 
     }
 
@@ -128,7 +163,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
-            lotes = listOf(lotePisoNormal)
+            lotes = listOf(lotePisoNormal) as MutableList<Lote>
         }
 
         pisoAltoTransito = Piso().apply {
@@ -141,7 +176,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
-            lotes = listOf(lotePisoAltoTransito)
+            lotes = listOf(lotePisoAltoTransito) as MutableList<Lote>
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -153,7 +188,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
-            lotes = listOf(lotePinturaMenorRendimiento)
+            lotes = listOf(lotePinturaMenorRendimiento).toMutableList()
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -165,7 +200,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Negro"
             litros = 10
-            lotes = listOf(lotePinturaMayorRendimiento)
+            lotes = listOf(lotePinturaMayorRendimiento).toMutableList()
         }
 
         combo = Combo().apply {
@@ -175,14 +210,14 @@ class DifficultBootstrap : InitializingBean {
             paisOrigen = "Urawey"
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            lotes = listOf(loteCombo)
+            lotes = listOf(loteCombo) as MutableList<Lote>
         }
 
-        repoProductos.create(pisoNormal)
-        repoProductos.create(pisoAltoTransito)
-        repoProductos.create(pinturaMayorRendimiento)
-        repoProductos.create(pinturaMenorRendimiento)
-        repoProductos.create(combo)
+        repoProductos.save(pisoNormal)
+        repoProductos.save(pisoAltoTransito)
+        repoProductos.save(pinturaMayorRendimiento)
+        repoProductos.save(pinturaMenorRendimiento)
+        repoProductos.save(combo)
 
         //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }

@@ -1,9 +1,10 @@
 package difficult
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
 class BackendTp2022PhmGrupo2Application
 
 fun main(args: Array<String>) {

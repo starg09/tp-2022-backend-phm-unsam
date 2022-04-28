@@ -3,11 +3,26 @@ package difficult.domain
 import SaldoInsuficienteException
 import java.time.LocalDate
 import java.time.Period
+import javax.persistence.*
 
-class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var email: String, var contrasenia: String){
+@Entity
+class Usuario(){
+    @Column
+    lateinit var nombre: String
+    lateinit var apellido: String
+    lateinit var fechaNacimiento: LocalDate
+    var saldo: Double = 0.0
+    lateinit var email: String
+    lateinit var contrasenia: String
 
+    @Transient //TODO: borrar
     val carrito = Carrito()
+
+    @OneToMany
     val compras = mutableSetOf<Compra>()
+
+    @Id
+    @GeneratedValue
     var id = 0
 
     fun edad(): Int{

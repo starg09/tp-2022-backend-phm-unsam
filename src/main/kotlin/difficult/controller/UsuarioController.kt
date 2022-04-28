@@ -15,7 +15,7 @@ class UsuarioController {
 
 
     @GetMapping("/usuarios")
-    fun getUsuarios(): MutableSet<Usuario> {
+    fun getUsuarios(): MutableIterable<Usuario> {
         return usuarioService.getUsuarios()
     }
 

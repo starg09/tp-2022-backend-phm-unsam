@@ -9,6 +9,7 @@ import javax.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Productos")
 abstract class Producto {
     @Column
     var nombre: String = ""
@@ -22,7 +23,7 @@ abstract class Producto {
     var precioBase: Double = 0.0
 
     @OneToMany
-    var lotes = listOf<Lote>()
+    var lotes = mutableListOf<Lote>()
 
     @Id
     @GeneratedValue

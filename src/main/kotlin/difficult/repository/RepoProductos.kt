@@ -1,46 +1,10 @@
 package difficult.repository
 
-import LoginException
-import UsuarioNoEncontradoException
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
-import difficult.domain.Usuario
-import difficult.service.LoginDTO
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-
-@Repository
-class RepoUsuarios {
-    val elementos = mutableSetOf<Usuario>()
-    var idAsignar: Int = 1
-
-    fun create(elemento: Usuario){
-        //validar(elemento)
-        elementos.add(elemento)
-        elemento.id = idAsignar
-        idAsignar++
-    }
-
-    fun loguear(loginDTO: LoginDTO): Usuario {
-        try {
-            return elementos.first { it.email == loginDTO.email && it.contrasenia == loginDTO.password }
-        }
-        catch (e:Exception){
-            throw LoginException("Error al loguear")
-        }
-    }
-
-    fun getById(id:Int): Usuario {
-        try {
-            return elementos.first { it.id == id}
-        }
-        catch (e:Exception){
-            throw UsuarioNoEncontradoException("no se ha encontrado al usuario")
-        }
-    }
-
-}
 
 @Repository
 interface RepoProductos : CrudRepository<Producto, Int> {
@@ -51,7 +15,7 @@ interface RepoProductos : CrudRepository<Producto, Int> {
 
     //fun findByPaisOrNombre
 
-            //TODO: dinamic query repos
+            //TODO: derived query
 
 }
 

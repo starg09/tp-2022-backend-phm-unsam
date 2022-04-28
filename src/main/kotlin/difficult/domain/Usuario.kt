@@ -9,13 +9,17 @@ import javax.persistence.*
 class Usuario(){
     @Column
     lateinit var nombre: String
+    @Column
     lateinit var apellido: String
+    @Column
     lateinit var fechaNacimiento: LocalDate
+    @Column
     var saldo: Double = 0.0
+    @Column
     lateinit var email: String
+    @Column
     lateinit var contrasenia: String
 
-    @Transient //TODO: borrar
     val carrito = Carrito()
 
     @OneToMany

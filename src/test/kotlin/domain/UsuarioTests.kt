@@ -8,7 +8,14 @@ import java.time.LocalDate
 class UsuarioTests: DescribeSpec( {
 
     describe("un usuario") {
-        val unUsuario = Usuario("dami", "lescano", LocalDate.of(2000, 6, 5), 1000000.0, "a@c", "1234567890")
+        val unUsuario = Usuario().apply{
+            nombre = "dami"
+            apellido = "lescano"
+            fechaNacimiento = LocalDate.of(2000, 6, 5)
+            saldo = 1000000.0
+            email = "a@c"
+            contrasenia = "1234567890"
+        }
         val unLotePintura = Lote().apply {
             cantidadDisponible = 2
         }

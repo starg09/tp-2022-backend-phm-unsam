@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://localhost/difficult?createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:sqlserver://localhost;integratedSecurity=true
+    username: phm
+    password: 2022phm
     platform: mssql
 
   jpa:

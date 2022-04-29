@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
 import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Repository
 
-@Repository
 interface RepoProductos : CrudRepository<Producto, Int> {
 
-    fun filtrar(filtros : List<Filtro>): List<Producto> {
+    /*fun filtrar(filtros : List<Filtro>): List<Producto> {
         return this.findAll().filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
-    }
+    }*/
 
     //fun findByPaisOrNombre
 

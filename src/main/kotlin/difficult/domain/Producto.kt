@@ -201,10 +201,10 @@ class ComboDTO : ProductoDTO() {
 @Converter
 class TipoPisoConverter : AttributeConverter<TipoPiso, String>{
 
+    val ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
     private val mapper = ObjectMapper().apply {
         activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
     }
-    val ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
 
     override fun convertToDatabaseColumn(tipoPiso: TipoPiso): String {
         return tipoPiso.tipoNombre()

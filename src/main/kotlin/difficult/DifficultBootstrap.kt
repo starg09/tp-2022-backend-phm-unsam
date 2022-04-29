@@ -90,19 +90,16 @@ class DifficultBootstrap : InitializingBean {
         }
 
         compra1 = Compra().apply {
-            ordenCompra = 1
             fechaCompra = LocalDate.now()
             cantidad = 1
             importe = 2000.0
         }
         compra2 = Compra().apply {
-            ordenCompra = 2
             fechaCompra = LocalDate.now()
             cantidad = 2
             importe = 3600.0
         }
         compra3 = Compra().apply {
-            ordenCompra = 3
             fechaCompra = LocalDate.now()
             cantidad = 1
             importe = 2400.0

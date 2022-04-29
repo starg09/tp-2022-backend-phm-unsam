@@ -20,6 +20,7 @@ class Usuario(){
     @Column
     lateinit var contrasenia: String
 
+    @Transient
     val carrito = Carrito()
 
     @OneToMany

@@ -23,7 +23,8 @@ class ProductoService {
 
     fun filtrar(filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
         val filtros = toFiltros(filtrosDTO)
-        return toProductosDTO(repoProductos.filtrar(filtros))
+        //return toProductosDTO(repoProductos.filtrar(filtros))
+        return listOf()
     }
 
     fun toProductosDTO(productos: List<Producto>): List<ProductoDTO> {

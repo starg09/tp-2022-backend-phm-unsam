@@ -1,10 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://localhost;integratedSecurity=true
+    url: jdbc:sqlserver://
     username: phm
     password: 2022phm
-    platform: mssql
 
   jpa:
     open-in-view: false

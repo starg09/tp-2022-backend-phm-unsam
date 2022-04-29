@@ -1,5 +1,6 @@
 package difficult.service
 
+import LoginException
 import difficult.domain.Compra
 import difficult.domain.Lote
 import difficult.domain.Producto
@@ -31,7 +32,9 @@ class UsuarioService {
     }
 
     fun login(loginDTO: LoginDTO): Int {
-        val unUsuario: Usuario = repoUsuarios.loguear(loginDTO)
+        val unUsuario: Usuario = repoUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
+            LoginException("Error al loguear")
+        }
         return unUsuario.id
     }
 

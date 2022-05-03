@@ -9,7 +9,6 @@ import javax.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "Productos")
 abstract class Producto {
     @Column
     var nombre: String = ""
@@ -22,11 +21,11 @@ abstract class Producto {
     @Column
     var precioBase: Double = 0.0
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     var lotes = mutableListOf<Lote>()
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
 
     open fun precioTotal(): Double {
@@ -35,6 +34,10 @@ abstract class Producto {
 
     fun elegirUnLote(loteNumber: Int): Lote {
         return lotes.first { it.numeroLote == loteNumber }
+    }
+
+    fun agregarLote(lote: Lote){
+        lotes.add(lote)
     }
 
 
@@ -73,7 +76,7 @@ class Combo : Producto() {
 
 @Entity
 class Piso : Producto() {
-    @Column
+    @Column(name = "tipo")
     @Convert(converter = TipoPisoConverter::class)
     lateinit var tipo: TipoPiso
     @Column
@@ -146,7 +149,7 @@ class Pintura: Producto(){
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
-    property = "tipoPiso"
+    property = "tipo"
 )
 @JsonSubTypes(
     JsonSubTypes.Type(value = PisoAltoTransito::class, name = "Alto transito"),
@@ -211,7 +214,13 @@ class TipoPisoConverter : AttributeConverter<TipoPiso, String>{
     }
 
     override fun convertToEntityAttribute(tipoPisoString: String): TipoPiso {
-        return mapper.readValue(tipoPisoString, TipoPiso::class.java)
+        /*val json = mapper.writeValueAsString(tipoPisoString)
+        return mapper.readValue(json, TipoPiso::class.java)*/
+        return if (tipoPisoString == "Normal") {
+            PisoNormal()
+        } else{
+            PisoAltoTransito()
+        }
     }
 }
 

@@ -23,11 +23,11 @@ class Usuario(){
     @Transient
     val carrito = Carrito()
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     val compras = mutableSetOf<Compra>()
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id = 0
 
     fun edad(): Int{
@@ -55,10 +55,9 @@ class Usuario(){
         carrito.vaciar()
     }
 
-    fun realizarCompra(orden: Int){
+    fun realizarCompra(){
         saldoInsuficiente()
         val compra = Compra().apply {
-            ordenCompra = orden
             fechaCompra = LocalDate.now()
             cantidad = cantidadProductosCarrito()
             importe = importeTotalCarrito()

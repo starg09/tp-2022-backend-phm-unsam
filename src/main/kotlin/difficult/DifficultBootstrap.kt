@@ -23,9 +23,9 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var mapperObject: ObjectMapper
     private lateinit var ptv: PolymorphicTypeValidator
 
-    private lateinit var compra1: Compra
+    /*private lateinit var compra1: Compra
     private lateinit var compra2: Compra
-    private lateinit var compra3: Compra
+    private lateinit var compra3: Compra*/
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -89,7 +89,7 @@ class DifficultBootstrap : InitializingBean {
             contrasenia = "1234567890"
         }
 
-        compra1 = Compra().apply {
+        /*compra1 = Compra().apply {
             fechaCompra = LocalDate.now()
             cantidad = 1
             importe = 2000.0
@@ -107,7 +107,7 @@ class DifficultBootstrap : InitializingBean {
         
         dami.compras.add(compra1)
         dami.compras.add(compra2)
-        dami.compras.add(compra3)
+        dami.compras.add(compra3)*/
 
 
         repoUsuarios.save(dami)
@@ -119,7 +119,7 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initLotes(){
-        lotePisoAltoTransito = Lote().apply {
+        /*lotePisoAltoTransito = Lote().apply {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
             numeroLote = 2222
@@ -143,7 +143,7 @@ class DifficultBootstrap : InitializingBean {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
-        }
+        }*/
     }
 
     fun initProductos(){
@@ -160,7 +160,11 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
-            lotes = listOf(lotePisoNormal) as MutableList<Lote>
+            agregarLote(Lote().apply {
+                cantidadDisponible = 6
+                fechaIngreso = LocalDate.now()
+                numeroLote = 1111
+            })
         }
 
         pisoAltoTransito = Piso().apply {
@@ -173,7 +177,11 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
-            lotes = listOf(lotePisoAltoTransito) as MutableList<Lote>
+            agregarLote(Lote().apply {
+                cantidadDisponible = 2
+                fechaIngreso = LocalDate.now()
+                numeroLote = 2222
+            })
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -185,7 +193,11 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
-            lotes = listOf(lotePinturaMenorRendimiento).toMutableList()
+            agregarLote(Lote().apply {
+                cantidadDisponible = 3
+                fechaIngreso = LocalDate.now()
+                numeroLote = 4444
+            })
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -197,7 +209,11 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Negro"
             litros = 10
-            lotes = listOf(lotePinturaMayorRendimiento).toMutableList()
+            agregarLote(Lote().apply {
+                cantidadDisponible = 5
+                fechaIngreso = LocalDate.now()
+                numeroLote = 3333
+            })
         }
 
         combo = Combo().apply {
@@ -205,9 +221,14 @@ class DifficultBootstrap : InitializingBean {
             descripcion = "una descripcion"
             puntaje = 5
             paisOrigen = "Urawey"
+            precioBase = 0.0
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            lotes = listOf(loteCombo) as MutableList<Lote>
+            agregarLote(Lote().apply {
+                cantidadDisponible = 2
+                fechaIngreso = LocalDate.now()
+                numeroLote = 5555
+            })
         }
 
         repoProductos.save(pisoNormal)
@@ -222,6 +243,7 @@ class DifficultBootstrap : InitializingBean {
     fun initCarrito(){
         dami.agregarAlCarrito(pisoNormal, 1, 1111)
         dami.agregarAlCarrito(pinturaMenorRendimiento, 1, 4444)
+        dami.realizarCompra()
     }
 
     fun crearMapperObject(){

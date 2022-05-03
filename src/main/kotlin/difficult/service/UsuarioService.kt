@@ -8,6 +8,7 @@ import difficult.domain.Usuario
 import difficult.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
@@ -19,10 +20,12 @@ class UsuarioService {
     @Autowired
     private lateinit var repoProductos: RepoProductos
 
+    @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
         return repoUsuarios.findAll()
     }
 
+    @Transactional(readOnly = true)
     fun getUsuario(id: Int): UsuarioDTO {
         return usuarioToDto(getById(id))
     }
@@ -31,6 +34,7 @@ class UsuarioService {
         return UsuarioDTO(usuario.nombre, usuario.apellido, usuario.fechaNacimiento, usuario.saldo, usuario.id)
     }
 
+    @Transactional(readOnly = true)
     fun login(loginDTO: LoginDTO): Int {
         val unUsuario: Usuario = repoUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
             LoginException("Error al loguear")
@@ -38,10 +42,12 @@ class UsuarioService {
         return unUsuario.id
     }
 
+    @Transactional
     fun agregarSaldo(cantidad: Double, id: Int){
         getById(id).aumentarSaldo(cantidad)
     }
 
+    @Transactional(readOnly = true)
     fun carrito(id: Int): List<CarritoDTO> {
         val usuario =  getById(id)
         return usuario.carrito.productosEnCarrito.map { toCarritoDTO(it) }
@@ -59,28 +65,33 @@ class UsuarioService {
         }
     }
 
+    @Transactional
     fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, loteNumero)
     }
 
+    @Transactional
     fun eliminarCarrito(usuarioId: Int, productoId: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         usuario.eliminarDelCarrito(producto)
     }
 
+    @Transactional
     fun comprasUsuario(id: Int): MutableSet<Compra> {
         return getById(id).compras
     }
 
+    @Transactional
     fun vaciarCarrito(id: Int) {
         getById(id).vaciarCarrito()
     }
 
+    @Transactional
     fun comprar(id: Int) {
-        getById(id).realizarCompra(numeroDeOrden())
+        getById(id).realizarCompra()
     }
 
     fun numeroDeOrden(): Int {

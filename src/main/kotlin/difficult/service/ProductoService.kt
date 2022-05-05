@@ -26,7 +26,23 @@ class ProductoService {
     @Transactional(readOnly = true)
     fun filtrar(filtrosDTO: FiltroDTO): List<ProductoDTO> {
         val productosFiltrados = mutableSetOf<Producto>()
-        productosFiltrados.addAll(repoProductos.findAllByNombreContainsAndPaisOrigenAndPuntajeGreaterThanEqual(filtrosDTO.nombre, filtrosDTO.pais, filtrosDTO.puntaje))
+        val metodoFiltro = if (filtrosDTO.paises.isEmpty())
+            { repo: RepoProductos ->
+                repo.findAllByNombreContainsAndPuntajeGreaterThanEqual(
+                    filtrosDTO.nombre,
+                    filtrosDTO.puntaje
+                )
+            }
+        else
+            { repo: RepoProductos ->
+                repo.findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(
+                    filtrosDTO.nombre,
+                    filtrosDTO.paises,
+                    filtrosDTO.puntaje
+
+                )
+            }
+        productosFiltrados.addAll(metodoFiltro(repoProductos))
         /*productosFiltrados.addAll(repoProductos.findAllByNombreContains(filtrosDTO.nombre))
         productosFiltrados.addAll(repoProductos.findAllByPaisOrigen(filtrosDTO.pais))
         productosFiltrados.addAll(repoProductos.findAllByPuntajeGreaterThanEqual(filtrosDTO.puntaje))*/
@@ -75,6 +91,6 @@ class ProductoService {
 
 class FiltroDTO {
     var nombre: String = ""
-    var pais: String = ""
+    var paises: List<String> = listOf()
     var puntaje: Int = 5
 }

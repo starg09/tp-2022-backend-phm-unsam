@@ -12,7 +12,9 @@ interface RepoProductos : CrudRepository<Producto, Int> {
         return this.findAll().filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
     }*/
 
-    fun findAllByNombreContainsAndPaisOrigenAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: String, puntaje: Int): List<Producto>
+    fun findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: List<String>, puntaje: Int): List<Producto>
+
+    fun findAllByNombreContainsAndPuntajeGreaterThanEqual(nombre: String, puntaje: Int): List<Producto>
 
     fun findAllByNombreContains(nombre: String): List<Producto>
 

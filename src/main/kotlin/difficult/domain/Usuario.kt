@@ -61,6 +61,10 @@ class Usuario(){
         }
     }
 
+    fun tamanioCarrito() {
+        carrito.productosEnCarrito.size
+    }
+
     fun realizarCompra(){
         carritoVacio()
         saldoInsuficiente()

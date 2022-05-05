@@ -21,8 +21,8 @@ class Usuario(){
     @Column
     lateinit var contrasenia: String
 
-    @OneToOne(cascade = [CascadeType.ALL])
-    val carrito = Carrito()
+    @Transient
+    var carrito = Carrito()
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val compras = mutableSetOf<Compra>()

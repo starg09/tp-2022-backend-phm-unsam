@@ -3,14 +3,10 @@ package difficult.domain
 import YaEstaEnElCarritoException
 import javax.persistence.*
 
-@Entity
 class Carrito {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val carritoId: Long = 0
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    var carritoId: Int = 0
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
@@ -55,18 +51,11 @@ class Carrito {
 
 }
 
-@Entity
 class ProductoCarrito {
 
-    //FIXME: Que no use id autogenerado, que se relacione al carritoId
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val idProdCarrito: Long = 0
-
-    @ManyToOne
     lateinit var producto : Producto
-    @ManyToOne
+
     lateinit var lote : Lote
-    @Column
+
     var cantidad : Int = 1
 }

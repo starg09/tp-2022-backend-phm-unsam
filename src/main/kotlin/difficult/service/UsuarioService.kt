@@ -20,6 +20,9 @@ class UsuarioService {
     @Autowired
     private lateinit var repoLotes: RepoLotes
 
+    @Autowired
+    private lateinit var repoCarrito: RepoCarrito
+
     @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
         return repoUsuarios.findAll()
@@ -48,8 +51,9 @@ class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    fun carrito(id: Int): List<CarritoDTO> {
-        val usuario =  getById(id)
+    fun carrito(usuarioId: Int): List<CarritoDTO> {
+        val usuario =  getById(usuarioId)
+        usuario.carrito = getCarrito(usuarioId)
         return usuario.carrito.productosEnCarrito.map { toCarritoDTO(it) }
     }
 
@@ -70,7 +74,7 @@ class UsuarioService {
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         val lote = repoLotes.findByNumeroLote(loteNumero)
-
+        usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
         //repoUsuarios.save(usuario)
     }
@@ -79,6 +83,7 @@ class UsuarioService {
     fun eliminarCarrito(usuarioId: Int, productoId: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
+        usuario.carrito = getCarrito(usuarioId)
         usuario.eliminarDelCarrito(producto)
         repoUsuarios.save(usuario)
     }
@@ -89,15 +94,17 @@ class UsuarioService {
     }
 
     @Transactional
-    fun vaciarCarrito(id: Int) {
-        val usuario = getById(id)
+    fun vaciarCarrito(usuarioId: Int) {
+        val usuario = getById(usuarioId)
+        usuario.carrito = getCarrito(usuarioId)
         usuario.vaciarCarrito()
         repoUsuarios.save(usuario)
     }
 
     @Transactional
-    fun comprar(id: Int) {
-        val usuario = getById(id)
+    fun comprar(usuarioId: Int) {
+        val usuario = getById(usuarioId)
+        usuario.carrito = getCarrito(usuarioId)
         usuario.realizarCompra()
         repoUsuarios.save(usuario)
     }
@@ -112,6 +119,10 @@ class UsuarioService {
 
     fun getByProductoId(productoId: Int): Producto {
         return repoProductos.findById(productoId).get()
+    }
+
+    fun getCarrito(usuarioId: Int): Carrito {
+        return repoCarrito.getById(usuarioId)
     }
 
 }

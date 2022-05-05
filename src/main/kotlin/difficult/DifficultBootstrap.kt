@@ -19,6 +19,8 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoUsuarios: RepoUsuarios
     @Autowired
     private lateinit var repoLotes: RepoLotes
+    @Autowired
+    private lateinit var repoCarrito: RepoCarrito
 
 
 
@@ -58,6 +60,7 @@ class DifficultBootstrap : InitializingBean {
             saldo = 1000000.0
             email = "lescano5600@gmail.com"
             contrasenia = "1234567890"
+            carrito = Carrito().apply {  }
         }
         jill = Usuario().apply {
             nombre = "Jill"
@@ -244,6 +247,14 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initCarrito(){
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+
+        dami.carrito = repoCarrito.getById(dami.id)
+
         dami.agregarAlCarrito(pisoNormal, 1, lotePisoNormal)
         dami.agregarAlCarrito(pinturaMenorRendimiento, 1, lotePinturaMenorRendimiento)
         val productos = dami.carrito.getProductos()

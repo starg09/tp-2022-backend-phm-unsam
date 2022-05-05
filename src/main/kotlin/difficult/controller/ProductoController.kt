@@ -26,7 +26,7 @@ class ProductoController {
     }
 
     @GetMapping("/productos/filtrar")
-    fun filtrar(@RequestBody filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
+    fun filtrar(@RequestBody filtrosDTO: FiltroDTO): List<ProductoDTO> {
         return productoService.filtrar(filtrosDTO)
     }
 
@@ -36,8 +36,8 @@ class ProductoController {
     }
 
     @GetMapping("/productos/encontrarNombre")
-    fun encontrarNombre(@RequestBody nombres: String): Producto {
-        return productoService.encontrarNombre(nombres)
+    fun encontrarNombre(@RequestBody nombres: FiltroDTO): List<ProductoDTO> {
+        return productoService.encontrarNombre(nombres.nombre)
     }
 
 }

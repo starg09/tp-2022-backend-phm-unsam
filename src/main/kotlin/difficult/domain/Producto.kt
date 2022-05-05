@@ -48,7 +48,7 @@ abstract class Producto {
 @Entity
 class Combo : Producto() {
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     var productos = mutableSetOf<Producto>()
 
     fun agregarProducto(unProducto: Producto){

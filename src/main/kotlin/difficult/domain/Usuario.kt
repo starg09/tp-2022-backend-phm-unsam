@@ -1,5 +1,6 @@
 package difficult.domain
 
+import CarritoVacioException
 import SaldoInsuficienteException
 import java.time.LocalDate
 import java.time.Period
@@ -55,7 +56,14 @@ class Usuario(){
         carrito.vaciar()
     }
 
+    fun carritoVacio(){
+        if (carrito.catidadProductos() == 0) {
+            throw CarritoVacioException("El carrito esta vacio")
+        }
+    }
+
     fun realizarCompra(){
+        carritoVacio()
         saldoInsuficiente()
         val compra = Compra().apply {
             fechaCompra = LocalDate.now()

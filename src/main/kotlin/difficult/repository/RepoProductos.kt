@@ -12,11 +12,16 @@ interface RepoProductos : CrudRepository<Producto, Int> {
         return this.findAll().filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
     }*/
 
-    //fun findByPaisOrNombre
+    fun findAllByNombreContainsAndPaisOrigenAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: String, puntaje: Int): List<Producto>
 
-    @Query("SELECT * FROM producto WHERE nombre LIKE '%?1%'", nativeQuery = true)
-    fun findSegunNombre(nombre: String): Producto
-            //TODO: derived query
+    fun findAllByNombreContains(nombre: String): List<Producto>
+
+    /*fun findAllByPaisOrigen(pais: String): List<Producto>
+
+    fun findAllByPuntajeGreaterThanEqual(puntaje: Int): List<Producto>*/
+
+    /*@Query("SELECT * FROM producto WHERE nombre LIKE '%?1%'", nativeQuery = true)
+    fun findSegunNombre(nombre: String): Producto*/
 
 }
 

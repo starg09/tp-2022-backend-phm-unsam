@@ -24,27 +24,30 @@ class ProductoService {
     }
 
     @Transactional(readOnly = true)
-    fun filtrar(filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
-        val filtros = toFiltros(filtrosDTO)
-        //return toProductosDTO(repoProductos.filtrar(filtros))
-        return listOf()
+    fun filtrar(filtrosDTO: FiltroDTO): List<ProductoDTO> {
+        val productosFiltrados = mutableSetOf<Producto>()
+        productosFiltrados.addAll(repoProductos.findAllByNombreContainsAndPaisOrigenAndPuntajeGreaterThanEqual(filtrosDTO.nombre, filtrosDTO.pais, filtrosDTO.puntaje))
+        /*productosFiltrados.addAll(repoProductos.findAllByNombreContains(filtrosDTO.nombre))
+        productosFiltrados.addAll(repoProductos.findAllByPaisOrigen(filtrosDTO.pais))
+        productosFiltrados.addAll(repoProductos.findAllByPuntajeGreaterThanEqual(filtrosDTO.puntaje))*/
+        return toProductosDTO(productosFiltrados.toList())
     }
 
     fun toProductosDTO(productos: List<Producto>): List<ProductoDTO> {
         return productos.map { it.toProductoDTO() }
     }
 
-    fun toFiltros(filtrosDTO: List<FiltroDTO>): List<Filtro> {
+    /*fun toFiltros(filtrosDTO: List<FiltroDTO>): List<Filtro> {
 
         return filtrosDTO.map { toFiltro(it) }
-    }
+    }*/
 
-    fun toFiltro(filtroDTO: FiltroDTO): Filtro {
+    /*fun toFiltro(filtroDTO: FiltroDTO): Filtro {
         val json = mapperObject.writeValueAsString(filtroDTO)
         val filtro = mapperObject.readValue(json, Filtro::class.java)
         filtro.valor = filtroDTO.valor
         return  filtro
-    }
+    }*/
 
     @Transactional(readOnly = true)
     fun getLotes(): List<Lote>{
@@ -60,8 +63,8 @@ class ProductoService {
         return repoProductos.findById(productoId).get()
     }
 
-    fun encontrarNombre(nombres: String): Producto {
-        return repoProductos.findSegunNombre(nombres)
+    fun encontrarNombre(nombres: String): List<ProductoDTO> {
+        return toProductosDTO(repoProductos.findAllByNombreContains(nombres))
     }
 
 }
@@ -71,6 +74,7 @@ class ProductoService {
 
 
 class FiltroDTO {
-    var type: String = ""
-    var valor: String = ""
+    var nombre: String = ""
+    var pais: String = ""
+    var puntaje: Int = 5
 }

@@ -105,7 +105,9 @@ class UsuarioService {
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
+        val lotes = usuario.carrito.productosEnCarrito.map { it.lote }
         usuario.realizarCompra()
+        repoLotes.saveAll(lotes)
         repoUsuarios.save(usuario)
     }
 

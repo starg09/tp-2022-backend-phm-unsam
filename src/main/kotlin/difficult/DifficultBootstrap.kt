@@ -163,6 +163,11 @@ class DifficultBootstrap : InitializingBean {
             agregarLote(Lote().apply {
                 cantidadDisponible = 6
                 fechaIngreso = LocalDate.now()
+                numeroLote = 7777
+            })
+            agregarLote(Lote().apply {
+                cantidadDisponible = 6
+                fechaIngreso = LocalDate.now()
                 numeroLote = 1111
             })
         }

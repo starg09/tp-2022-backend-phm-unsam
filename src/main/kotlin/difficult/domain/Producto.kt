@@ -21,14 +21,14 @@ abstract class Producto {
     @Column
     var precioBase: Double = 0.0
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var lotes = mutableListOf<Lote>()
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
 
-    open fun precioTotal(): Double {
+    fun precioTotal(): Double {
         return precioBase
     }
 

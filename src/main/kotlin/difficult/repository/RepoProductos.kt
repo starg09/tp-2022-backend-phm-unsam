@@ -3,6 +3,7 @@ package difficult.repository
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface RepoProductos : CrudRepository<Producto, Int> {
@@ -13,6 +14,8 @@ interface RepoProductos : CrudRepository<Producto, Int> {
 
     //fun findByPaisOrNombre
 
+    @Query("SELECT * FROM producto WHERE nombre LIKE '%?1%'", nativeQuery = true)
+    fun findSegunNombre(nombre: String): Producto
             //TODO: derived query
 
 }

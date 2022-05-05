@@ -1,6 +1,7 @@
 package difficult.controller
 
 import difficult.domain.Lote
+import difficult.domain.Producto
 import difficult.domain.ProductoDTO
 import difficult.service.FiltroDTO
 import difficult.service.ProductoService
@@ -32,6 +33,11 @@ class ProductoController {
     @GetMapping("/productos/{id}/detalles")
     fun productoDetalles(@PathVariable id: Int): ProductoDTO {
         return productoService.productoDetalles(id)
+    }
+
+    @GetMapping("/productos/encontrarNombre")
+    fun encontrarNombre(@RequestBody nombres: String): Producto {
+        return productoService.encontrarNombre(nombres)
     }
 
 }

@@ -60,6 +60,10 @@ class ProductoService {
         return repoProductos.findById(productoId).get()
     }
 
+    fun encontrarNombre(nombres: String): Producto {
+        return repoProductos.findSegunNombre(nombres)
+    }
+
 }
 
 

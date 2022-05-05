@@ -47,7 +47,7 @@ class UsuarioService {
         getById(id).aumentarSaldo(cantidad)
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     fun carrito(id: Int): List<CarritoDTO> {
         val usuario =  getById(id)
         return usuario.carrito.productosEnCarrito.map { toCarritoDTO(it) }
@@ -65,14 +65,14 @@ class UsuarioService {
         }
     }
 
-    @Transactional
+    //@Transactional
     fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, loteNumero)
     }
 
-    @Transactional
+    //@Transactional
     fun eliminarCarrito(usuarioId: Int, productoId: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
@@ -84,7 +84,7 @@ class UsuarioService {
         return getById(id).compras
     }
 
-    @Transactional
+    //@Transactional
     fun vaciarCarrito(id: Int) {
         getById(id).vaciarCarrito()
     }

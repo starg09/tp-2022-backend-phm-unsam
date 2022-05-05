@@ -23,7 +23,7 @@ class Usuario(){
     @Transient
     val carrito = Carrito()
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val compras = mutableSetOf<Compra>()
 
     @Id

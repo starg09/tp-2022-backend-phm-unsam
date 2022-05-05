@@ -21,7 +21,7 @@ class Usuario(){
     @Column
     lateinit var contrasenia: String
 
-    @Transient
+    @OneToOne(cascade = [CascadeType.ALL])
     val carrito = Carrito()
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
@@ -43,8 +43,7 @@ class Usuario(){
         saldo -= monto
     }
 
-    fun agregarAlCarrito(producto: Producto, cantidad: Int, numeroLote: Int){
-        val lote = producto.elegirUnLote(numeroLote)
+    fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Lote){
         carrito.agregarProducto(producto, cantidad, lote)
     }
 

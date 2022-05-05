@@ -17,6 +17,8 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoProductos: RepoProductos
     @Autowired
     private lateinit var repoUsuarios: RepoUsuarios
+    @Autowired
+    private lateinit var repoLotes: RepoLotes
 
 
 
@@ -41,6 +43,7 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var combo: Combo
 
     private lateinit var lotePisoNormal: Lote
+    private lateinit var lotePisoNormal2: Lote
     private lateinit var lotePisoAltoTransito: Lote
     private lateinit var lotePinturaMayorRendimiento: Lote
     private lateinit var lotePinturaMenorRendimiento: Lote
@@ -119,7 +122,7 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initLotes(){
-        /*lotePisoAltoTransito = Lote().apply {
+        lotePisoAltoTransito = Lote().apply {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
             numeroLote = 2222
@@ -128,6 +131,11 @@ class DifficultBootstrap : InitializingBean {
             cantidadDisponible = 6
             fechaIngreso = LocalDate.now()
             numeroLote = 1111
+        }
+        lotePisoNormal2 = Lote().apply {
+            cantidadDisponible = 6
+            fechaIngreso = LocalDate.now()
+            numeroLote = 7777
         }
         lotePinturaMayorRendimiento = Lote().apply {
             cantidadDisponible = 5
@@ -143,7 +151,17 @@ class DifficultBootstrap : InitializingBean {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
-        }*/
+        }
+
+
+//        repoLotes.saveAll(listOf(
+//            lotePisoNormal,
+//            lotePisoNormal2,
+//            lotePisoAltoTransito,
+//            lotePinturaMayorRendimiento,
+//            lotePinturaMenorRendimiento,
+//            loteCombo
+//        ))
     }
 
     fun initProductos(){
@@ -160,16 +178,8 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
-            agregarLote(Lote().apply {
-                cantidadDisponible = 6
-                fechaIngreso = LocalDate.now()
-                numeroLote = 7777
-            })
-            agregarLote(Lote().apply {
-                cantidadDisponible = 6
-                fechaIngreso = LocalDate.now()
-                numeroLote = 1111
-            })
+            agregarLote(lotePisoNormal)
+            agregarLote(lotePisoNormal2)
         }
 
         pisoAltoTransito = Piso().apply {
@@ -182,11 +192,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
-            agregarLote(Lote().apply {
-                cantidadDisponible = 2
-                fechaIngreso = LocalDate.now()
-                numeroLote = 2222
-            })
+            agregarLote(lotePisoAltoTransito)
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -198,11 +204,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
-            agregarLote(Lote().apply {
-                cantidadDisponible = 3
-                fechaIngreso = LocalDate.now()
-                numeroLote = 4444
-            })
+            agregarLote(lotePinturaMenorRendimiento)
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -214,11 +216,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Negro"
             litros = 10
-            agregarLote(Lote().apply {
-                cantidadDisponible = 5
-                fechaIngreso = LocalDate.now()
-                numeroLote = 3333
-            })
+            agregarLote(lotePinturaMayorRendimiento)
         }
 
         combo = Combo().apply {
@@ -229,11 +227,7 @@ class DifficultBootstrap : InitializingBean {
             precioBase = 0.0
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            agregarLote(Lote().apply {
-                cantidadDisponible = 2
-                fechaIngreso = LocalDate.now()
-                numeroLote = 5555
-            })
+            agregarLote(loteCombo)
         }
 
         repoProductos.save(pisoNormal)
@@ -246,9 +240,12 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initCarrito(){
-        dami.agregarAlCarrito(pisoNormal, 1, 1111)
-        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, 4444)
+        dami.agregarAlCarrito(pisoNormal, 1, lotePisoNormal)
+        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, lotePinturaMenorRendimiento)
+        val productos = dami.carrito.getProductos()
         dami.realizarCompra()
+        repoUsuarios.save(dami)
+        productos.forEach { repoProductos.save(it) }
     }
 
     fun crearMapperObject(){

@@ -20,6 +20,8 @@ abstract class Producto {
     var paisOrigen: String = ""
     @Column
     var precioBase: Double = 0.0
+    @Column
+    var urlImagen: String = ""
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var lotes = mutableListOf<Lote>()
@@ -63,6 +65,7 @@ class Combo : Producto() {
         return ComboDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -98,6 +101,7 @@ class Piso : Producto() {
         return PisoDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -134,6 +138,7 @@ class Pintura: Producto(){
         return PinturaDTO().apply {
             nombreDto = nombre
             descripcionDto = descripcion
+            urlImagenDto = urlImagen
             puntajeDto = puntaje
             paisOrigenDto = paisOrigen
             precioDto = precioTotal()
@@ -177,7 +182,8 @@ class PisoNormal : TipoPiso() {
 
 abstract class ProductoDTO {
     var nombreDto: String = ""
-    var descripcionDto: String= ""
+    var descripcionDto: String = ""
+    var urlImagenDto: String = ""
     var puntajeDto: Int = 0
     var paisOrigenDto: String = ""
     var precioDto: Double = 0.0

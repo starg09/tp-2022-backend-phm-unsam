@@ -15,9 +15,6 @@ class ProductoService {
     @Autowired
     private lateinit var repoProductos: RepoProductos
 
-    @Autowired
-    private lateinit var mapperObject: ObjectMapper
-
     @Transactional(readOnly = true)
     fun getProductos(): List<ProductoDTO> {
         return toProductosDTO(repoProductos.findAll().toList())
@@ -79,6 +76,7 @@ class ProductoService {
         return repoProductos.findById(productoId).get()
     }
 
+    @Deprecated("Esto vuela")
     fun encontrarNombre(nombres: String): List<ProductoDTO> {
         return toProductosDTO(repoProductos.findAllByNombreContains(nombres))
     }

@@ -24,7 +24,7 @@ class Usuario(){
     @Transient
     var carrito = Carrito()
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val compras = mutableSetOf<Compra>()
 
     @Id
@@ -61,9 +61,7 @@ class Usuario(){
         }
     }
 
-    fun tamanioCarrito() {
-        carrito.productosEnCarrito.size
-    }
+    fun tamanioCarrito() = carrito.productosEnCarrito.size
 
     fun realizarCompra(){
         carritoVacio()

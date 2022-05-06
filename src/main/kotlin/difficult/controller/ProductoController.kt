@@ -45,6 +45,7 @@ class ProductoController {
         return productoService.productoDetalles(id)
     }
 
+    @Deprecated("esto tambien vuela")
     @GetMapping("/productos/encontrarNombre")
     fun encontrarNombre(@RequestBody nombres: FiltroDTO): List<ProductoDTO> {
         return productoService.encontrarNombre(nombres.nombre)

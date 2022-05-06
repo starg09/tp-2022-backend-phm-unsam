@@ -31,7 +31,7 @@ abstract class Producto {
     var id: Int = 0
 
     fun precioTotal(): Double {
-        return precioBase
+        return precioBase //TODO: Agregar soporte de descuento, si algun lote tiene mas de 4 meses (entrega 0)
     }
 
     fun elegirUnLote(loteNumber: Int): Lote {

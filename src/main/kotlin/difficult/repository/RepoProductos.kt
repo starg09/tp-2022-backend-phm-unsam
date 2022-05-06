@@ -28,6 +28,7 @@ interface RepoProductos : CrudRepository<Producto, Int> {
 }
 
 
+@Deprecated("Mas cosas que vuelan")
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,

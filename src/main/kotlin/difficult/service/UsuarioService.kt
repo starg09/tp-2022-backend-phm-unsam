@@ -115,7 +115,7 @@ class UsuarioService {
         return repoUsuarios.findAll().map{ it.compras.size}.fold(0) { acum, it -> acum + it } + 1
     }
 
-    fun tamanioCarrito(): Int {
+    fun tamanioCarrito(id: Int): Int {
         return getById(id).tamanioCarrito()
     }
 

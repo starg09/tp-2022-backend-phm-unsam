@@ -30,7 +30,7 @@ class Carrito {
     }
 
     fun eliminarProducto(productoABorrar: Producto){
-        productosEnCarrito.removeIf { productoABorrar == it.producto }
+        productosEnCarrito.removeIf { productoABorrar.id == it.producto.id }
     }
 
     fun vaciar(){

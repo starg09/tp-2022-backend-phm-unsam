@@ -45,18 +45,6 @@ class ProductoService {
         return productos.map { it.toProductoDTO() }
     }
 
-    /*fun toFiltros(filtrosDTO: List<FiltroDTO>): List<Filtro> {
-
-        return filtrosDTO.map { toFiltro(it) }
-    }*/
-
-    /*fun toFiltro(filtroDTO: FiltroDTO): Filtro {
-        val json = mapperObject.writeValueAsString(filtroDTO)
-        val filtro = mapperObject.readValue(json, Filtro::class.java)
-        filtro.valor = filtroDTO.valor
-        return  filtro
-    }*/
-
     @Transactional(readOnly = true)
     fun getLotes(): List<Lote>{
         return repoProductos.findAll().map { it.lotes }.flatten()

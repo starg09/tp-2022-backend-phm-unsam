@@ -49,14 +49,14 @@ class UsuarioController {
         return usuarioService.carrito(id)
     }
 
-    @GetMapping("/usuarios/tamanioCarrito/{id}")
+    @GetMapping("/usuarios/{id}/tamanioCarrito")
     fun tamanioCarrito(@PathVariable id: Int): Int {
         return usuarioService.tamanioCarrito(id)
     }
 
-    @PutMapping("/usuarios/carrito/agregar")
-    fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
-        usuarioService.agregarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
+    @PutMapping("/usuarios/{id}/carrito/agregar")
+    fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO, @PathVariable id: Int){
+        usuarioService.agregarCarrito(id, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/carrito/eliminar")

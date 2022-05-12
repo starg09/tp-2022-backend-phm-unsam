@@ -2,6 +2,8 @@ package difficult.domain
 
 import CantidadInsuficienteLoteException
 import java.time.LocalDate
+import java.time.Period
+import java.util.Date
 import javax.persistence.*
 
 @Entity
@@ -26,6 +28,10 @@ class Lote {
 
     fun disminuirCantidadDisponible(cantidad: Int){
         cantidadDisponible -= cantidad
+    }
+
+    fun loteDeMasDeCuatroMeses(): Boolean {
+        return Period.between(fechaIngreso, LocalDate.now()).months > 4
     }
 }
 

@@ -18,18 +18,12 @@ class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var repoUsuarios: RepoUsuarios
     @Autowired
-    private lateinit var repoLotes: RepoLotes
-    @Autowired
     private lateinit var repoCarrito: RepoCarrito
 
 
 
     private lateinit var mapperObject: ObjectMapper
     private lateinit var ptv: PolymorphicTypeValidator
-
-    /*private lateinit var compra1: Compra
-    private lateinit var compra2: Compra
-    private lateinit var compra3: Compra*/
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -95,27 +89,6 @@ class DifficultBootstrap : InitializingBean {
             contrasenia = "1234567890"
         }
 
-        /*compra1 = Compra().apply {
-            fechaCompra = LocalDate.now()
-            cantidad = 1
-            importe = 2000.0
-        }
-        compra2 = Compra().apply {
-            fechaCompra = LocalDate.now()
-            cantidad = 2
-            importe = 3600.0
-        }
-        compra3 = Compra().apply {
-            fechaCompra = LocalDate.now()
-            cantidad = 1
-            importe = 2400.0
-        }
-        
-        dami.compras.add(compra1)
-        dami.compras.add(compra2)
-        dami.compras.add(compra3)*/
-
-
         repoUsuarios.save(dami)
         repoUsuarios.save(jill)
         repoUsuarios.save(leon)
@@ -155,16 +128,6 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
         }
-
-
-//        repoLotes.saveAll(listOf(
-//            lotePisoNormal,
-//            lotePisoNormal2,
-//            lotePisoAltoTransito,
-//            lotePinturaMayorRendimiento,
-//            lotePinturaMenorRendimiento,
-//            loteCombo
-//        ))
     }
 
     fun initProductos(){
@@ -242,16 +205,14 @@ class DifficultBootstrap : InitializingBean {
         repoProductos.save(pinturaMayorRendimiento)
         repoProductos.save(pinturaMenorRendimiento)
         repoProductos.save(combo)
-
-        //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }
 
     fun initCarrito(){
-        repoCarrito.create(Carrito())
-        repoCarrito.create(Carrito())
-        repoCarrito.create(Carrito())
-        repoCarrito.create(Carrito())
-        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito(), dami.id)
+        repoCarrito.create(Carrito(), leon.id)
+        repoCarrito.create(Carrito(), jill.id)
+        repoCarrito.create(Carrito(), claire.id)
+        repoCarrito.create(Carrito(), chris.id)
 
         dami.carrito = repoCarrito.getById(dami.id)
 

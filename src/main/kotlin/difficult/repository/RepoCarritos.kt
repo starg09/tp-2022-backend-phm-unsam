@@ -6,16 +6,10 @@ import org.springframework.stereotype.Repository
 @Repository
 class RepoCarrito {
     val elementos = mutableSetOf<Carrito>()
-    var idAsignar: Int = 1
 
-    fun getCantidadElementos() { elementos.size }
-
-    fun create(elemento: Carrito){
-        //validar(elemento)
-        elemento.carritoId = idAsignar
+    fun create(elemento: Carrito, idUsuario: Int){
+        elemento.carritoId = idUsuario
         elementos.add(elemento)
-        //elemento.setId(idAsignar)
-        idAsignar++
     }
 
     fun getById(usuarioId: Int): Carrito {

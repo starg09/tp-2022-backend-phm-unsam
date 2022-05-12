@@ -7,7 +7,7 @@ import java.time.Period
 import javax.persistence.*
 
 @Entity
-class Usuario(){
+class Usuario {
     @Column
     lateinit var nombre: String
     @Column
@@ -56,7 +56,7 @@ class Usuario(){
     }
 
     fun carritoVacio(){
-        if (carrito.catidadProductos() == 0) {
+        if (carrito.cantidadProductos() == 0) {
             throw CarritoVacioException("El carrito esta vacio")
         }
     }
@@ -66,6 +66,7 @@ class Usuario(){
     fun realizarCompra(){
         carritoVacio()
         saldoInsuficiente()
+        carrito.productosDisponibles()
         val compra = Compra().apply {
             fechaCompra = LocalDate.now()
             cantidad = cantidadProductosCarrito()
@@ -84,7 +85,7 @@ class Usuario(){
     }
 
     fun cantidadProductosCarrito(): Int {
-        return carrito.catidadProductos()
+        return carrito.cantidadProductos()
     }
 
     fun importeTotalCarrito(): Double{

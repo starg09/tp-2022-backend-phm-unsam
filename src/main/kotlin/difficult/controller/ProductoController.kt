@@ -1,9 +1,7 @@
 package difficult.controller
 
 import difficult.domain.Lote
-import difficult.domain.Producto
 import difficult.domain.ProductoDTO
-import difficult.repository.Filtro
 import difficult.service.FiltroDTO
 import difficult.service.ProductoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,12 +41,6 @@ class ProductoController {
     @GetMapping("/productos/{id}/detalles")
     fun productoDetalles(@PathVariable id: Int): ProductoDTO {
         return productoService.productoDetalles(id)
-    }
-
-    @Deprecated("esto tambien vuela")
-    @GetMapping("/productos/encontrarNombre")
-    fun encontrarNombre(@RequestBody nombres: FiltroDTO): List<ProductoDTO> {
-        return productoService.encontrarNombre(nombres.nombre)
     }
 
 }

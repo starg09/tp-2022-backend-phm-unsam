@@ -1,8 +1,6 @@
 package difficult.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import difficult.domain.*
-import difficult.repository.Filtro
 import difficult.repository.RepoProductos
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -40,9 +38,6 @@ class ProductoService {
                 )
             }
         productosFiltrados.addAll(metodoFiltro(repoProductos))
-        /*productosFiltrados.addAll(repoProductos.findAllByNombreContains(filtrosDTO.nombre))
-        productosFiltrados.addAll(repoProductos.findAllByPaisOrigen(filtrosDTO.pais))
-        productosFiltrados.addAll(repoProductos.findAllByPuntajeGreaterThanEqual(filtrosDTO.puntaje))*/
         return toProductosDTO(productosFiltrados.toList())
     }
 
@@ -74,11 +69,6 @@ class ProductoService {
 
     fun getById(productoId: Int): Producto {
         return repoProductos.findById(productoId).get()
-    }
-
-    @Deprecated("Esto vuela")
-    fun encontrarNombre(nombres: String): List<ProductoDTO> {
-        return toProductosDTO(repoProductos.findAllByNombreContains(nombres))
     }
 
 }

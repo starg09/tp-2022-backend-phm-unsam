@@ -1,6 +1,7 @@
 package difficult.service
 
 import LoginException
+import UsuarioNoEncontradoException
 import difficult.domain.*
 import difficult.repository.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,7 +48,7 @@ class UsuarioService {
 
     @Transactional
     fun agregarSaldo(cantidad: Double, id: Int){
-        getById(id).aumentarSaldo(cantidad) //TODO: Consultar por que no hace falta repo save aca?
+        getById(id).aumentarSaldo(cantidad)
     }
 
     @Transactional(readOnly = true)
@@ -76,7 +77,6 @@ class UsuarioService {
         val lote = repoLotes.findByNumeroLote(loteNumero)
         usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
-        //repoUsuarios.save(usuario)
     }
 
     @Transactional
@@ -85,12 +85,13 @@ class UsuarioService {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
         usuario.eliminarDelCarrito(producto)
-        repoUsuarios.save(usuario)
     }
 
     @Transactional
     fun comprasUsuario(id: Int): MutableSet<Compra> {
-        return getById(id).compras
+        return repoUsuarios.findConComprasById(id).orElseThrow {
+            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
+        }.compras
     }
 
     @Transactional
@@ -98,7 +99,6 @@ class UsuarioService {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
         usuario.vaciarCarrito()
-        repoUsuarios.save(usuario)
     }
 
     @Transactional
@@ -111,16 +111,14 @@ class UsuarioService {
         repoUsuarios.save(usuario)
     }
 
-    fun numeroDeOrden(): Int {
-        return repoUsuarios.findAll().map{ it.compras.size}.fold(0) { acum, it -> acum + it } + 1
-    }
-
     fun tamanioCarrito(id: Int): Int {
         return getById(id).tamanioCarrito()
     }
 
     fun getById(id: Int): Usuario {
-        return repoUsuarios.findById(id).get()
+        return repoUsuarios.findById(id).orElseThrow {
+            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
+        }
     }
 
     fun getByProductoId(productoId: Int): Producto {

@@ -1,9 +1,5 @@
 package difficult.domain
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import javax.persistence.*
 
 
@@ -31,18 +27,20 @@ abstract class Producto {
     var id: Int = 0
 
     fun precioTotal(): Double {
-        return precioBase //TODO: Agregar soporte de descuento, si algun lote tiene mas de 4 meses (entrega 0)
-    }
-
-    fun elegirUnLote(loteNumber: Int): Lote {
-        return lotes.first { it.numeroLote == loteNumber }
+        return precioBase * descuentoPorLote()
     }
 
     fun agregarLote(lote: Lote){
         lotes.add(lote)
     }
 
-
+    fun descuentoPorLote(): Double {
+        return if (lotes.any { it.loteDeMasDeCuatroMeses() }){
+            0.9
+        } else {
+            1.0
+        }
+    }
 
     abstract fun toProductoDTO() : ProductoDTO
 }
@@ -58,7 +56,7 @@ class Combo : Producto() {
     }
 
     override fun precioTotal(): Double {
-        return ((productos.fold(0.0) { acum, producto -> acum + producto.precioTotal() + 20.0 })  * 0.85)
+        return (productos.sumOf { it.precioTotal() + 20.0 })  * 0.85
     }
 
     override fun toProductoDTO(): ComboDTO {
@@ -79,14 +77,13 @@ class Combo : Producto() {
 
 @Entity
 class Piso : Producto() {
-    @Column(name = "tipo")
+    @Column
     @Convert(converter = TipoPisoConverter::class)
     lateinit var tipo: TipoPiso
     @Column
     lateinit var terminacion : String
     var medidaX: Int = 0
     var medidaZ: Int = 0
-    // TODO: var pair: Pair<Int, Int> = 0 to 0
 
     override fun precioTotal(): Double {
         return super.precioTotal() * tipo.porcentajeIncremento
@@ -151,15 +148,6 @@ class Pintura: Producto(){
     }
 }
 
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "tipo"
-)
-@JsonSubTypes(
-    JsonSubTypes.Type(value = PisoAltoTransito::class, name = "Alto transito"),
-    JsonSubTypes.Type(value = PisoNormal::class, name = "Normal")
-)
 abstract class TipoPiso {
     open val porcentajeIncremento: Double = 1.0
 
@@ -210,18 +198,11 @@ class ComboDTO : ProductoDTO() {
 @Converter
 class TipoPisoConverter : AttributeConverter<TipoPiso, String>{
 
-    val ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
-    private val mapper = ObjectMapper().apply {
-        activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
-    }
-
     override fun convertToDatabaseColumn(tipoPiso: TipoPiso): String {
         return tipoPiso.tipoNombre()
     }
 
     override fun convertToEntityAttribute(tipoPisoString: String): TipoPiso {
-        /*val json = mapper.writeValueAsString(tipoPisoString)
-        return mapper.readValue(json, TipoPiso::class.java)*/
         return if (tipoPisoString == "Normal") {
             PisoNormal()
         } else{

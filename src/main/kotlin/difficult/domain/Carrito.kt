@@ -1,7 +1,6 @@
 package difficult.domain
 
 import YaEstaEnElCarritoException
-import javax.persistence.*
 
 class Carrito {
 
@@ -10,14 +9,15 @@ class Carrito {
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
-        val productoPorAgregar = ProductoCarrito().apply{
-            this.producto = producto
-            this.cantidad = cantidad
-            this.lote = lote}
-        if (this.getNumerosLote().contains(productoPorAgregar.lote.numeroLote)){
+        if (this.getNumerosLote().contains(lote.numeroLote)){
             throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
         lote.chequearCantidadDisponible(cantidad)
+        val productoPorAgregar = ProductoCarrito().apply{
+            this.producto = producto
+            this.cantidad = cantidad
+            this.lote = lote
+        }
         productosEnCarrito.add(productoPorAgregar)
     }
 
@@ -38,15 +38,19 @@ class Carrito {
     }
 
     fun disminurLotes(){
-        productosEnCarrito.forEach { it.lote.disminuirCantidadDisponible(it.cantidad) }
+        productosEnCarrito.forEach { it.disminuirCantidadDisponible() }
     }
 
-    fun catidadProductos(): Int {
-        return productosEnCarrito.fold(0){ acum, it -> acum + it.cantidad }
+    fun cantidadProductos(): Int {
+        return productosEnCarrito.sumOf { it.cantidad }
     }
 
     fun precioTotal(): Double {
-        return productosEnCarrito.fold(0.0) { acum, it -> acum + it.producto.precioTotal() * it.cantidad }
+        return productosEnCarrito.sumOf { it.producto.precioTotal() * it.cantidad }
+    }
+
+    fun productosDisponibles() {
+        productosEnCarrito.forEach { it.loteDisponible() }
     }
 
 }
@@ -58,4 +62,12 @@ class ProductoCarrito {
     lateinit var lote : Lote
 
     var cantidad : Int = 1
+
+    fun disminuirCantidadDisponible(){
+        lote.disminuirCantidadDisponible(cantidad)
+    }
+
+    fun loteDisponible(){
+        lote.chequearCantidadDisponible(cantidad)
+    }
 }

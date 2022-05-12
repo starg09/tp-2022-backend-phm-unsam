@@ -3,9 +3,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
         plugins {
             id("org.springframework.boot") version "2.6.4"
             id("io.spring.dependency-management") version "1.0.11.RELEASE"
+            id("org.jetbrains.kotlin.plugin.allopen") version "1.6.21"
             kotlin("jvm") version "1.6.10"
             kotlin("plugin.spring") version "1.6.10"
             jacoco
+        }
+
+        allOpen {
+            annotation("javax.persistence.Entity")
         }
 
 group = "ar.edu.unsam.phm"
@@ -17,6 +22,7 @@ repositories {
 }
 
 val kotestVersion = "5.0.0"
+val springVersion = "2.6.4"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -29,6 +35,22 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springVersion")
+    implementation("org.springframework.boot:spring-boot-starter-data-rest:$springVersion")
+    implementation("org.springframework.boot:spring-boot-starter-hateoas:$springVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web-services:$springVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
+    implementation("org.springframework.boot:spring-boot-devtools:$springVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1")
+    testImplementation("com.h2database:h2:2.1.210")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springVersion")
+    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
+
 }
 
 tasks.withType<KotlinCompile> {

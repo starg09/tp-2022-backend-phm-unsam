@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin(origins = ["*"], methods = [RequestMethod.PUT, RequestMethod.GET, RequestMethod.POST])
+@CrossOrigin(origins = ["*"])
 class UsuarioController {
 
     @Autowired
@@ -15,7 +15,7 @@ class UsuarioController {
 
 
     @GetMapping("/usuarios")
-    fun getUsuarios(): MutableSet<Usuario> {
+    fun getUsuarios(): MutableIterable<Usuario> {
         return usuarioService.getUsuarios()
     }
 
@@ -47,6 +47,11 @@ class UsuarioController {
     @GetMapping("/usuarios/carrito/{id}")
     fun carrito(@PathVariable id: Int): List<CarritoDTO> {
         return usuarioService.carrito(id)
+    }
+
+    @GetMapping("/usuarios/tamanioCarrito/{id}")
+    fun tamanioCarrito(@PathVariable id: Int): Int {
+        return usuarioService.tamanioCarrito(id)
     }
 
     @PutMapping("/usuarios/carrito/agregar")

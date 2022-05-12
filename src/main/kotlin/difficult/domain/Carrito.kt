@@ -1,22 +1,36 @@
 package difficult.domain
 
 import YaEstaEnElCarritoException
+import javax.persistence.*
 
 class Carrito {
-    var productosEnCarrito = mutableListOf<Triple<Producto, Int, Lote>>()
 
+
+    var carritoId: Int = 0
+    var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
-        if (productosEnCarrito.contains(Triple(producto, cantidad, lote))){
+        val productoPorAgregar = ProductoCarrito().apply{
+            this.producto = producto
+            this.cantidad = cantidad
+            this.lote = lote}
+        if (this.getNumerosLote().contains(productoPorAgregar.lote.numeroLote)){
             throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
         lote.chequearCantidadDisponible(cantidad)
-        productosEnCarrito.add(Triple(producto, cantidad, lote))
+        productosEnCarrito.add(productoPorAgregar)
     }
 
-    fun eliminarProducto(producto: Producto){
-        val productos = productosEnCarrito.map { it.first }
-        productosEnCarrito.removeIf { productos.contains(producto) }
+    fun getProductos(): List<Producto>{
+        return productosEnCarrito.map{it.producto}
+    }
+
+    fun getNumerosLote(): List<Int>{
+        return productosEnCarrito.map{it.lote.numeroLote}
+    }
+
+    fun eliminarProducto(productoABorrar: Producto){
+        productosEnCarrito.removeIf { productoABorrar.id == it.producto.id }
     }
 
     fun vaciar(){
@@ -24,15 +38,24 @@ class Carrito {
     }
 
     fun disminurLotes(){
-        productosEnCarrito.forEach { it.third.disminuirCantidadDisponible(it.second) }
+        productosEnCarrito.forEach { it.lote.disminuirCantidadDisponible(it.cantidad) }
     }
 
     fun catidadProductos(): Int {
-        return productosEnCarrito.fold(0){ acum, it -> acum + it.second }
+        return productosEnCarrito.fold(0){ acum, it -> acum + it.cantidad }
     }
 
     fun precioTotal(): Double {
-        return productosEnCarrito.fold(0.0) { acum, it -> acum + it.first.precioTotal() * it.second }
+        return productosEnCarrito.fold(0.0) { acum, it -> acum + it.producto.precioTotal() * it.cantidad }
     }
 
+}
+
+class ProductoCarrito {
+
+    lateinit var producto : Producto
+
+    lateinit var lote : Lote
+
+    var cantidad : Int = 1
 }

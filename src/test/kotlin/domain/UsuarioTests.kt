@@ -8,7 +8,14 @@ import java.time.LocalDate
 class UsuarioTests: DescribeSpec( {
 
     describe("un usuario") {
-        val unUsuario = Usuario("dami", "lescano", LocalDate.of(2000, 6, 5), 1000000.0, "1234567890")
+        val unUsuario = Usuario().apply{
+            nombre = "dami"
+            apellido = "lescano"
+            fechaNacimiento = LocalDate.of(2000, 6, 5)
+            saldo = 1000000.0
+            email = "a@c"
+            contrasenia = "1234567890"
+        }
         val unLotePintura = Lote().apply {
             cantidadDisponible = 2
         }
@@ -18,18 +25,18 @@ class UsuarioTests: DescribeSpec( {
         val producto1 = Pintura().apply{
             precioBase = 5000.0
             rendimiento = 3
-            lote = unLotePintura
+            lotes.add(unLotePintura)
         }
 
         val producto2 = Piso().apply{
             precioBase = 8000.0
             tipo = PisoNormal()
-            lote = unLotePiso
+            lotes.add(unLotePiso)
         }
 
-        unUsuario.agregarAlCarrito(producto1, 2)
+        unUsuario.agregarAlCarrito(producto1, 2, 5)
 
-        unUsuario.agregarAlCarrito(producto2, 4)
+        unUsuario.agregarAlCarrito(producto2, 4, 5)
 
 
         it("un test") {
@@ -47,7 +54,7 @@ class UsuarioTests: DescribeSpec( {
         }
 
         it("al agregar productos al carrito, estan en el carrito"){
-            unUsuario.carrito.size shouldBe 2
+            unUsuario.carrito.productosEnCarrito.size shouldBe 2
         }
 
         it("la cantidad de productos del carrito"){

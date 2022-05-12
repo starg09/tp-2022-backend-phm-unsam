@@ -1,23 +1,45 @@
 package difficult.domain
 
-import CantidadInsuficienteLoteException
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import javax.persistence.*
 
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract class Producto {
+    @Column
     var nombre: String = ""
-    var descripcion: String = ""
+    @Column
+    var descripcion: String= ""
+    @Column
     var puntaje: Int = 0
+    @Column
     var paisOrigen: String = ""
+    @Column
     var precioBase: Double = 0.0
+    @Column
     var urlImagen: String = ""
-    var lotes = listOf<Lote>()
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    var lotes = mutableListOf<Lote>()
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
 
-    open fun precioTotal(): Double {
-        return precioBase
+    fun precioTotal(): Double {
+        return precioBase //TODO: Agregar soporte de descuento, si algun lote tiene mas de 4 meses (entrega 0)
     }
 
     fun elegirUnLote(loteNumber: Int): Lote {
         return lotes.first { it.numeroLote == loteNumber }
+    }
+
+    fun agregarLote(lote: Lote){
+        lotes.add(lote)
     }
 
 
@@ -25,7 +47,10 @@ abstract class Producto {
     abstract fun toProductoDTO() : ProductoDTO
 }
 
+@Entity
 class Combo : Producto() {
+
+    @ManyToMany(fetch = FetchType.EAGER)
     var productos = mutableSetOf<Producto>()
 
     fun agregarProducto(unProducto: Producto){
@@ -52,8 +77,12 @@ class Combo : Producto() {
 
 }
 
+@Entity
 class Piso : Producto() {
+    @Column(name = "tipo")
+    @Convert(converter = TipoPisoConverter::class)
     lateinit var tipo: TipoPiso
+    @Column
     lateinit var terminacion : String
     var medidaX: Int = 0
     var medidaZ: Int = 0
@@ -63,6 +92,7 @@ class Piso : Producto() {
         return super.precioTotal() * tipo.porcentajeIncremento
     }
 
+    @Column
     fun medidas(): String {
         return "$medidaX X $medidaZ"
     }
@@ -85,9 +115,13 @@ class Piso : Producto() {
 
 }
 
+@Entity
 class Pintura: Producto(){
+    @Column
     var litros = 0
+    @Column
     var rendimiento = 0
+    @Column
     lateinit var color: String
 
     override fun precioTotal(): Double {
@@ -117,6 +151,15 @@ class Pintura: Producto(){
     }
 }
 
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "tipo"
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = PisoAltoTransito::class, name = "Alto transito"),
+    JsonSubTypes.Type(value = PisoNormal::class, name = "Normal")
+)
 abstract class TipoPiso {
     open val porcentajeIncremento: Double = 1.0
 
@@ -162,5 +205,28 @@ class PisoDTO : ProductoDTO() {
 
 class ComboDTO : ProductoDTO() {
     var productosDto = listOf<ProductoDTO>()
+}
+
+@Converter
+class TipoPisoConverter : AttributeConverter<TipoPiso, String>{
+
+    val ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
+    private val mapper = ObjectMapper().apply {
+        activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
+    }
+
+    override fun convertToDatabaseColumn(tipoPiso: TipoPiso): String {
+        return tipoPiso.tipoNombre()
+    }
+
+    override fun convertToEntityAttribute(tipoPisoString: String): TipoPiso {
+        /*val json = mapper.writeValueAsString(tipoPisoString)
+        return mapper.readValue(json, TipoPiso::class.java)*/
+        return if (tipoPisoString == "Normal") {
+            PisoNormal()
+        } else{
+            PisoAltoTransito()
+        }
+    }
 }
 

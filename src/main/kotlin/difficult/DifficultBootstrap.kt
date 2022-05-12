@@ -13,19 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired
 
 @Service
 class DifficultBootstrap : InitializingBean {
-
-    @Autowired
-    private lateinit var repoUsuarios: RepoUsuarios
-
     @Autowired
     private lateinit var repoProductos: RepoProductos
+    @Autowired
+    private lateinit var repoUsuarios: RepoUsuarios
+    @Autowired
+    private lateinit var repoLotes: RepoLotes
+    @Autowired
+    private lateinit var repoCarrito: RepoCarrito
+
+
 
     private lateinit var mapperObject: ObjectMapper
     private lateinit var ptv: PolymorphicTypeValidator
 
-    private lateinit var compra1: Compra
+    /*private lateinit var compra1: Compra
     private lateinit var compra2: Compra
-    private lateinit var compra3: Compra
+    private lateinit var compra3: Compra*/
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -41,6 +45,7 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var combo: Combo
 
     private lateinit var lotePisoNormal: Lote
+    private lateinit var lotePisoNormal2: Lote
     private lateinit var lotePisoAltoTransito: Lote
     private lateinit var lotePinturaMayorRendimiento: Lote
     private lateinit var lotePinturaMenorRendimiento: Lote
@@ -48,26 +53,59 @@ class DifficultBootstrap : InitializingBean {
 
     fun initUsuarios(){
 
-        dami = Usuario("Dami", "Lescano", LocalDate.of(2000, 6, 5), 1000000.0, "lescano5600@gmail.com","1234567890")
-        jill = Usuario("Jill", "Valentine", LocalDate.of(1974, 6, 5), 1000000.0, "jill@gmail.com","1234567890")
-        chris = Usuario("Chris", "Redfield", LocalDate.of(1973, 6, 5), 1000000.0, "chris@gmail.com","1234567890")
-        leon = Usuario("Leon Scott", "Kennedy", LocalDate.of(1977, 6, 5), 1000000.0, "leon@gmail.com","1234567890")
-        claire = Usuario("Claire", "Redfield", LocalDate.of(1979, 6, 5), 1000000.0, "claire@gmail.com","1234567890")
+        dami = Usuario().apply {
+            nombre = "Dami"
+            apellido = "Lescano"
+            fechaNacimiento = LocalDate.of(2000, 6, 5)
+            saldo = 1000000.0
+            email = "lescano5600@gmail.com"
+            contrasenia = "1234567890"
+            carrito = Carrito().apply {  }
+        }
+        jill = Usuario().apply {
+            nombre = "Jill"
+            apellido = "Valentine"
+            fechaNacimiento = LocalDate.of(1974, 6, 5)
+            saldo = 1000000.0
+            email = "jill@gmail.com"
+            contrasenia = "1234567890"
+        }
+        chris = Usuario().apply {
+            nombre = "Chris"
+            apellido = "Redfield"
+            fechaNacimiento = LocalDate.of(1973, 6, 5)
+            saldo = 1000000.0
+            email = "chris@gmail.com"
+            contrasenia = "1234567890"
+        }
+        leon = Usuario().apply {
+            nombre = "Leon Scott"
+            apellido = "Kennedy"
+            fechaNacimiento = LocalDate.of(1977, 6, 5)
+            saldo = 1000000.0
+            email = "leon@gmail.com"
+            contrasenia = "1234567890"
+        }
+        claire = Usuario().apply{
+            nombre = "Claire"
+            apellido = "Redfield"
+            fechaNacimiento = LocalDate.of(1979, 6, 5)
+            saldo = 1000000.0
+            email = "claire@gmail.com"
+            contrasenia = "1234567890"
+        }
 
-        compra1 = Compra().apply {
-            ordenCompra = 1
+        /*compra1 = Compra().apply {
             fechaCompra = LocalDate.now()
             cantidad = 1
             importe = 2000.0
         }
         compra2 = Compra().apply {
-            ordenCompra = 2
             fechaCompra = LocalDate.now()
             cantidad = 2
             importe = 3600.0
         }
         compra3 = Compra().apply {
-            ordenCompra = 3
             fechaCompra = LocalDate.now()
             cantidad = 1
             importe = 2400.0
@@ -75,14 +113,14 @@ class DifficultBootstrap : InitializingBean {
         
         dami.compras.add(compra1)
         dami.compras.add(compra2)
-        dami.compras.add(compra3)
+        dami.compras.add(compra3)*/
 
 
-        repoUsuarios.create(dami)
-        repoUsuarios.create(jill)
-        repoUsuarios.create(leon)
-        repoUsuarios.create(chris)
-        repoUsuarios.create(claire)
+        repoUsuarios.save(dami)
+        repoUsuarios.save(jill)
+        repoUsuarios.save(leon)
+        repoUsuarios.save(chris)
+        repoUsuarios.save(claire)
 
     }
 
@@ -96,6 +134,11 @@ class DifficultBootstrap : InitializingBean {
             cantidadDisponible = 6
             fechaIngreso = LocalDate.now()
             numeroLote = 1111
+        }
+        lotePisoNormal2 = Lote().apply {
+            cantidadDisponible = 6
+            fechaIngreso = LocalDate.now()
+            numeroLote = 7777
         }
         lotePinturaMayorRendimiento = Lote().apply {
             cantidadDisponible = 5
@@ -112,6 +155,16 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
         }
+
+
+//        repoLotes.saveAll(listOf(
+//            lotePisoNormal,
+//            lotePisoNormal2,
+//            lotePisoAltoTransito,
+//            lotePinturaMayorRendimiento,
+//            lotePinturaMenorRendimiento,
+//            loteCombo
+//        ))
     }
 
     fun initProductos(){
@@ -129,7 +182,8 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
-            lotes = listOf(lotePisoNormal)
+            agregarLote(lotePisoNormal)
+            agregarLote(lotePisoNormal2)
         }
 
         pisoAltoTransito = Piso().apply {
@@ -143,7 +197,7 @@ class DifficultBootstrap : InitializingBean {
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
-            lotes = listOf(lotePisoAltoTransito)
+            agregarLote(lotePisoAltoTransito)
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -156,7 +210,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 4
             color = "Blanco"
             litros = 10
-            lotes = listOf(lotePinturaMenorRendimiento)
+            agregarLote(lotePinturaMenorRendimiento)
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -169,7 +223,7 @@ class DifficultBootstrap : InitializingBean {
             rendimiento = 9
             color = "Negro"
             litros = 10
-            lotes = listOf(lotePinturaMayorRendimiento)
+            agregarLote(lotePinturaMayorRendimiento)
         }
 
         combo = Combo().apply {
@@ -177,23 +231,36 @@ class DifficultBootstrap : InitializingBean {
             descripcion = "una descripcion"
             puntaje = 5
             paisOrigen = "Urawey"
+            precioBase = 0.0
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            lotes = listOf(loteCombo)
+            agregarLote(loteCombo)
         }
 
-        repoProductos.create(pisoNormal)
-        repoProductos.create(pisoAltoTransito)
-        repoProductos.create(pinturaMayorRendimiento)
-        repoProductos.create(pinturaMenorRendimiento)
-        repoProductos.create(combo)
+        repoProductos.save(pisoNormal)
+        repoProductos.save(pisoAltoTransito)
+        repoProductos.save(pinturaMayorRendimiento)
+        repoProductos.save(pinturaMenorRendimiento)
+        repoProductos.save(combo)
 
         //repoProductos.establecerFiltros(listOf(FiltroPuntuacion(5)))
     }
 
     fun initCarrito(){
-        dami.agregarAlCarrito(pisoNormal, 1, 1111)
-        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, 4444)
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+        repoCarrito.create(Carrito())
+
+        dami.carrito = repoCarrito.getById(dami.id)
+
+        dami.agregarAlCarrito(pisoNormal, 1, lotePisoNormal)
+        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, lotePinturaMenorRendimiento)
+        val productos = dami.carrito.getProductos()
+        dami.realizarCompra()
+        repoUsuarios.save(dami)
+        productos.forEach { repoProductos.save(it) }
     }
 
     fun crearMapperObject(){

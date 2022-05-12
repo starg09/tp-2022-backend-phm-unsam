@@ -1,69 +1,34 @@
 package difficult.repository
 
-import LoginException
-import UsuarioNoEncontradoException
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import difficult.domain.Producto
-import difficult.domain.Usuario
-import difficult.service.LoginDTO
-import org.springframework.stereotype.Repository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 
-@Repository
-class RepoUsuarios {
-    val elementos = mutableSetOf<Usuario>()
-    var idAsignar: Int = 1
+interface RepoProductos : CrudRepository<Producto, Int> {
 
-    fun create(elemento: Usuario){
-        //validar(elemento)
-        elementos.add(elemento)
-        elemento.id = idAsignar
-        idAsignar++
-    }
+    /*fun filtrar(filtros : List<Filtro>): List<Producto> {
+        return this.findAll().filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
+    }*/
 
-    fun loguear(loginDTO: LoginDTO): Usuario {
-        try {
-            return elementos.first { it.email == loginDTO.email && it.contrasenia == loginDTO.password }
-        }
-        catch (e:Exception){
-            throw LoginException("Error al loguear")
-        }
-    }
+    fun findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: List<String>, puntaje: Int): List<Producto>
 
-    fun getById(id:Int): Usuario {
-        try {
-            return elementos.first { it.id == id}
-        }
-        catch (e:Exception){
-            throw UsuarioNoEncontradoException("no se ha encontrado al usuario")
-        }
-    }
+    fun findAllByNombreContainsAndPuntajeGreaterThanEqual(nombre: String, puntaje: Int): List<Producto>
 
-}
+    fun findAllByNombreContains(nombre: String): List<Producto>
 
-@Repository
-class RepoProductos {
-    val elementos = mutableSetOf<Producto>()
-    var idAsignar: Int = 1
+    /*fun findAllByPaisOrigen(pais: String): List<Producto>
 
-    fun create(elemento: Producto){
-        //validar(elemento)
-        elementos.add(elemento)
-        elemento.id = idAsignar
-        idAsignar++
-    }
+    fun findAllByPuntajeGreaterThanEqual(puntaje: Int): List<Producto>*/
 
-    fun getById(id:Int): Producto {
-        return elementos.first { it.id == id}
-    }
-
-    fun filtrar(filtros : List<Filtro>): List<Producto> {
-        return elementos.filter { producto ->  filtros.all { filtro -> filtro.cumpleCondicion(producto) } || filtros.isEmpty()}
-    }
+    /*@Query("SELECT * FROM producto WHERE nombre LIKE '%?1%'", nativeQuery = true)
+    fun findSegunNombre(nombre: String): Producto*/
 
 }
 
 
+@Deprecated("Mas cosas que vuelan")
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,

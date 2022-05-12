@@ -1,13 +1,34 @@
 package difficult.domain
 
+import CarritoVacioException
 import SaldoInsuficienteException
 import java.time.LocalDate
 import java.time.Period
+import javax.persistence.*
 
-class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var email: String, var contrasenia: String){
+@Entity
+class Usuario(){
+    @Column
+    lateinit var nombre: String
+    @Column
+    lateinit var apellido: String
+    @Column
+    lateinit var fechaNacimiento: LocalDate
+    @Column
+    var saldo: Double = 0.0
+    @Column
+    lateinit var email: String
+    @Column
+    lateinit var contrasenia: String
 
-    val carrito = Carrito()
+    @Transient
+    var carrito = Carrito()
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val compras = mutableSetOf<Compra>()
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id = 0
 
     fun edad(): Int{
@@ -22,8 +43,7 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         saldo -= monto
     }
 
-    fun agregarAlCarrito(producto: Producto, cantidad: Int, numeroLote: Int){
-        val lote = producto.elegirUnLote(numeroLote)
+    fun agregarAlCarrito(producto: Producto, cantidad: Int, lote: Lote){
         carrito.agregarProducto(producto, cantidad, lote)
     }
 
@@ -35,10 +55,18 @@ class Usuario(var nombre: String, var apellido: String, val fechaNacimiento: Loc
         carrito.vaciar()
     }
 
-    fun realizarCompra(orden: Int){
+    fun carritoVacio(){
+        if (carrito.catidadProductos() == 0) {
+            throw CarritoVacioException("El carrito esta vacio")
+        }
+    }
+
+    fun tamanioCarrito() = carrito.productosEnCarrito.size
+
+    fun realizarCompra(){
+        carritoVacio()
         saldoInsuficiente()
         val compra = Compra().apply {
-            ordenCompra = orden
             fechaCompra = LocalDate.now()
             cantidad = cantidadProductosCarrito()
             importe = importeTotalCarrito()

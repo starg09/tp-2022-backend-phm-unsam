@@ -1,7 +1,9 @@
 package difficult.controller
 
 import difficult.domain.Lote
+import difficult.domain.Producto
 import difficult.domain.ProductoDTO
+import difficult.repository.Filtro
 import difficult.service.FiltroDTO
 import difficult.service.ProductoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,13 +27,28 @@ class ProductoController {
     }
 
     @GetMapping("/productos/filtrar")
-    fun filtrar(@RequestBody filtrosDTO: List<FiltroDTO>): List<ProductoDTO> {
+    fun filtrar(
+        @RequestParam(value="nombre", required = false, defaultValue = "") nombre: String,
+        @RequestParam(value="paises", required = false, defaultValue = "") paises: List<String>,
+        @RequestParam(value="puntajeMinimo", required = false, defaultValue = "0") puntajeMinimo: Int
+    ): List<ProductoDTO> {
+        val filtrosDTO = FiltroDTO().apply {
+            this.nombre = nombre
+            this.paises = paises
+            this.puntaje = puntajeMinimo
+        }
         return productoService.filtrar(filtrosDTO)
     }
 
     @GetMapping("/productos/{id}/detalles")
     fun productoDetalles(@PathVariable id: Int): ProductoDTO {
         return productoService.productoDetalles(id)
+    }
+
+    @Deprecated("esto tambien vuela")
+    @GetMapping("/productos/encontrarNombre")
+    fun encontrarNombre(@RequestBody nombres: FiltroDTO): List<ProductoDTO> {
+        return productoService.encontrarNombre(nombres.nombre)
     }
 
 }

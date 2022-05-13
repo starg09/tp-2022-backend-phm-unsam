@@ -25,6 +25,7 @@ class Usuario {
     var carrito = Carrito()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "id_usuario")
     val compras = mutableSetOf<Compra>()
 
     @Id

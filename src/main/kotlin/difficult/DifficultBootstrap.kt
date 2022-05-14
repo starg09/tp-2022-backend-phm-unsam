@@ -151,7 +151,7 @@ class DifficultBootstrap : InitializingBean {
 
         pisoAltoTransito = Piso().apply {
             nombre = "Acme arena"
-            descripcion = "una descripcion"
+            descripcion = "Una variable mas oscura, arenosa, de nuestro tipo principal de baldosa. Traídas exclusivamente desde Brasilia, en vuelo charter privado incluido en el precio."
             urlImagen = "productos/acme_arena.webp"
             puntaje = 4
             paisOrigen = "Brasil"

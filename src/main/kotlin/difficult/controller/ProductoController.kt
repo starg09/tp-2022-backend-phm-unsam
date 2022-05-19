@@ -39,7 +39,7 @@ class ProductoController {
     }
 
     @GetMapping("/productos/{id}/detalles")
-    fun productoDetalles(@PathVariable id: Int): ProductoDTO {
+    fun productoDetalles(@PathVariable id: String): ProductoDTO {
         return productoService.productoDetalles(id)
     }
 

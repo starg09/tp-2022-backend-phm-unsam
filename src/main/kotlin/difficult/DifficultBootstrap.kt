@@ -149,7 +149,7 @@ class DifficultBootstrap : InitializingBean {
             terminacion = "satinado"
             agregarLote(lotePisoNormal)
             agregarLote(lotePisoNormal2)
-            id = 1
+//            id = 1
         }
 
         pisoAltoTransito = Piso().apply {
@@ -164,7 +164,7 @@ class DifficultBootstrap : InitializingBean {
             medidaZ = 60
             terminacion = "no satinado"
             agregarLote(lotePisoAltoTransito)
-            id = 2
+//            id = 2
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -178,7 +178,7 @@ class DifficultBootstrap : InitializingBean {
             color = "Blanco"
             litros = 10
             agregarLote(lotePinturaMenorRendimiento)
-            id = 3
+//            id = 3
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -192,7 +192,7 @@ class DifficultBootstrap : InitializingBean {
             color = "Negro"
             litros = 10
             agregarLote(lotePinturaMayorRendimiento)
-            id = 4
+//            id = 4
         }
 
         combo = Combo().apply {
@@ -204,7 +204,7 @@ class DifficultBootstrap : InitializingBean {
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
             agregarLote(loteCombo)
-            id = 5
+//            id = 5
         }
 
         repoProductos.save(pisoNormal)

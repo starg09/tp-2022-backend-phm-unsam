@@ -1,12 +1,13 @@
 package difficult.domain
 
+import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
 import javax.persistence.*
 
 @Document(collection = "productos")
 abstract class Producto {
     @Id
-    var id: Int = 0
+    lateinit var id: String
     var nombre: String = ""
     var descripcion: String= ""
     var puntaje: Int = 0
@@ -156,7 +157,7 @@ abstract class ProductoDTO {
     var paisOrigenDto: String = ""
     var precioDto: Double = 0.0
     var lotesDto = listOf<LoteDTO>()
-    var idDto: Int = 0
+    var idDto: String = ""
 }
 
 class PinturaDTO : ProductoDTO() {

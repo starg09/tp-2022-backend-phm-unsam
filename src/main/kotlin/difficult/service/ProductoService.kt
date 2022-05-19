@@ -54,11 +54,11 @@ class ProductoService {
     }
 
     @Transactional(readOnly = true)
-    fun productoDetalles(id: Int): ProductoDTO {
+    fun productoDetalles(id: String): ProductoDTO {
         return getById(id).toProductoDTO()
     }
 
-    fun getById(productoId: Int): Producto {
+    fun getById(productoId: String): Producto {
         return repoProductos.findById(productoId).get()
     }
 

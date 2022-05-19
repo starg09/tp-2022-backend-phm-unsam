@@ -71,7 +71,7 @@ class UsuarioService {
     }
 
     @Transactional
-    fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
+    fun agregarCarrito(usuarioId: Int, productoId: String, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         val lote = repoLotes.findByNumeroLote(loteNumero)
@@ -80,7 +80,7 @@ class UsuarioService {
     }
 
     @Transactional
-    fun eliminarCarrito(usuarioId: Int, productoId: Int){
+    fun eliminarCarrito(usuarioId: Int, productoId: String){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
@@ -105,9 +105,11 @@ class UsuarioService {
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
+        val productos = usuario.carrito.productosEnCarrito.map { it.producto }
         val lotes = usuario.carrito.productosEnCarrito.map { it.lote }
         usuario.realizarCompra()
         repoLotes.saveAll(lotes)
+        repoProductos.saveAll(productos)
         repoUsuarios.save(usuario)
     }
 
@@ -121,7 +123,7 @@ class UsuarioService {
         }
     }
 
-    fun getByProductoId(productoId: Int): Producto {
+    fun getByProductoId(productoId: String): Producto {
         return repoProductos.findById(productoId).get()
     }
 
@@ -136,7 +138,7 @@ class LoginDTO {
     lateinit var password: String
 }
 
-class AgregarCarritoDTO(var idProducto: Int, var idUsuario: Int, var cantidad: Int, var loteNumero: Int)
+class AgregarCarritoDTO(var idProducto: String, var idUsuario: Int, var cantidad: Int, var loteNumero: Int)
 
 class CarritoDTO {
     lateinit var nombre: String
@@ -144,7 +146,7 @@ class CarritoDTO {
     var lote: Int = 0
     var cantidad: Int = 0
     var precio: Double = 0.0
-    var id: Int = 0
+    var id: String = ""
 }
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)

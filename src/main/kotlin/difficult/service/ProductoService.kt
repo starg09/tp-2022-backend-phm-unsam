@@ -1,6 +1,7 @@
 package difficult.service
 
 import difficult.domain.*
+import difficult.repository.RepoLotes
 import difficult.repository.RepoProductos
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,6 +13,8 @@ class ProductoService {
 
     @Autowired
     private lateinit var repoProductos: RepoProductos
+    @Autowired
+    private lateinit var repoLotes: RepoLotes
 
     @Transactional(readOnly = true)
     fun getProductos(): List<ProductoDTO> {
@@ -47,7 +50,7 @@ class ProductoService {
 
     @Transactional(readOnly = true)
     fun getLotes(): List<Lote>{
-        return repoProductos.findAll().map { it.lotes }.flatten()
+        return repoLotes.findAll().toList()
     }
 
     @Transactional(readOnly = true)

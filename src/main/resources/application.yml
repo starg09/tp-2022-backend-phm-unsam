@@ -13,3 +13,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  data:
+    mongodb:
+      database: prueba
+      host: localhost
+      port: 27017
+
+  mongodb:
+    embedded:
+      version: 6.0
+
+logging:
+  level:
+    org.springframework.data: DEBUG
+    org.mongodb.driver.protocol.command: DEBUG

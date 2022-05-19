@@ -1,8 +1,5 @@
 package difficult
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator
 import difficult.domain.*
 import difficult.repository.*
 import java.time.LocalDate
@@ -19,11 +16,8 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoUsuarios: RepoUsuarios
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
-
-
-
-    private lateinit var mapperObject: ObjectMapper
-    private lateinit var ptv: PolymorphicTypeValidator
+    @Autowired
+    private lateinit var repoLotes: RepoLotes
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -128,6 +122,14 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             numeroLote = 5555
         }
+
+        repoLotes.save(lotePisoNormal)
+        repoLotes.save(lotePisoNormal2)
+        repoLotes.save(lotePisoAltoTransito)
+        repoLotes.save(lotePinturaMayorRendimiento)
+        repoLotes.save(lotePinturaMenorRendimiento)
+        repoLotes.save(loteCombo)
+
     }
 
     fun initProductos(){
@@ -141,12 +143,13 @@ class DifficultBootstrap : InitializingBean {
             puntaje = 3
             paisOrigen = "Argentina"
             precioBase = 2500.0
-            tipo = PisoNormal()
+            esAltoTransito = false
             medidaX = 50
             medidaZ = 30
             terminacion = "satinado"
             agregarLote(lotePisoNormal)
             agregarLote(lotePisoNormal2)
+            id = 1
         }
 
         pisoAltoTransito = Piso().apply {
@@ -156,11 +159,12 @@ class DifficultBootstrap : InitializingBean {
             puntaje = 4
             paisOrigen = "Brasil"
             precioBase = 1000.0
-            tipo = PisoAltoTransito()
+            esAltoTransito = true
             medidaX = 60
             medidaZ = 60
             terminacion = "no satinado"
             agregarLote(lotePisoAltoTransito)
+            id = 2
         }
 
         pinturaMenorRendimiento = Pintura().apply {
@@ -174,6 +178,7 @@ class DifficultBootstrap : InitializingBean {
             color = "Blanco"
             litros = 10
             agregarLote(lotePinturaMenorRendimiento)
+            id = 3
         }
 
         pinturaMayorRendimiento = Pintura().apply {
@@ -187,6 +192,7 @@ class DifficultBootstrap : InitializingBean {
             color = "Negro"
             litros = 10
             agregarLote(lotePinturaMayorRendimiento)
+            id = 4
         }
 
         combo = Combo().apply {
@@ -198,6 +204,7 @@ class DifficultBootstrap : InitializingBean {
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
             agregarLote(loteCombo)
+            id = 5
         }
 
         repoProductos.save(pisoNormal)
@@ -224,19 +231,10 @@ class DifficultBootstrap : InitializingBean {
         productos.forEach { repoProductos.save(it) }
     }
 
-    fun crearMapperObject(){
-        ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.baeldung.jackson.inheritance").allowIfSubType("java.util.ArrayList").build()
-        mapperObject = ObjectMapper()
-                mapperObject.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
-    }
-
-
-
     override fun afterPropertiesSet() {
         this.initUsuarios()
         this.initLotes()
         this.initProductos()
-        this.crearMapperObject()
         this.initCarrito()
     }
 

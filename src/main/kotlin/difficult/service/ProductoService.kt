@@ -4,6 +4,7 @@ import difficult.domain.*
 import difficult.repository.RepoLotes
 import difficult.repository.RepoProductos
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,6 +16,9 @@ class ProductoService {
     private lateinit var repoProductos: RepoProductos
     @Autowired
     private lateinit var repoLotes: RepoLotes
+
+    @Autowired
+    private lateinit var mongoTemplate: MongoTemplate
 
     @Transactional(readOnly = true)
     fun getProductos(): List<ProductoDTO> {
@@ -61,6 +65,11 @@ class ProductoService {
     fun getById(productoId: Int): Producto {
         return repoProductos.findById(productoId).get()
     }
+
+    fun obtenerPaisesOrigen(): List<String> {
+        return repoProductos.findDistinctPaisOrigens()
+    }
+
 
 }
 

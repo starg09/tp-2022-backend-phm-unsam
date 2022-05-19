@@ -67,7 +67,7 @@ class ProductoService {
     }
 
     fun obtenerPaisesOrigen(): List<String> {
-        return repoProductos.findDistinctPaisOrigens()
+        return repoProductos.findDistinctPaisOrigen()
     }
 
 

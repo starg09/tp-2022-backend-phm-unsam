@@ -12,5 +12,5 @@ interface RepoProductos : MongoRepository<Producto, Int> {
     fun findAllByNombreContainsAndPuntajeGreaterThanEqual(nombre: String, puntaje: Int): List<Producto>
 
     @Aggregation(pipeline = ["{ '\$group': { '_id' : '\$paisOrigen' } }"])
-    fun findDistinctPaisOrigens(): List<String>
+    fun findDistinctPaisOrigen(): List<String>
 }

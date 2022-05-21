@@ -30,14 +30,14 @@ class ProductoService {
         val productosFiltrados = mutableSetOf<Producto>()
         val metodoFiltro = if (filtrosDTO.paises.isEmpty())
             { repo: RepoProductos ->
-                repo.findAllByNombreContainsAndPuntajeGreaterThanEqual(
+                repo.findAllByNombreIgnoreCaseContainsAndPuntajeGreaterThanEqual(
                     filtrosDTO.nombre,
                     filtrosDTO.puntaje
                 )
             }
         else
             { repo: RepoProductos ->
-                repo.findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(
+                repo.findAllByNombreIgnoreCaseContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(
                     filtrosDTO.nombre,
                     filtrosDTO.paises,
                     filtrosDTO.puntaje

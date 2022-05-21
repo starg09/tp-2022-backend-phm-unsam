@@ -6,10 +6,9 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface RepoProductos : MongoRepository<Producto, Int> {
 
+    fun findAllByNombreIgnoreCaseContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: List<String>, puntaje: Int): List<Producto>
 
-    fun findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(nombre: String, paisOrigen: List<String>, puntaje: Int): List<Producto>
-
-    fun findAllByNombreContainsAndPuntajeGreaterThanEqual(nombre: String, puntaje: Int): List<Producto>
+    fun findAllByNombreIgnoreCaseContainsAndPuntajeGreaterThanEqual(nombre: String, puntaje: Int): List<Producto>
 
     @Aggregation(pipeline = ["{ '\$group': { '_id' : '\$paisOrigen' } }"])
     fun findDistinctPaisOrigen(): List<String>

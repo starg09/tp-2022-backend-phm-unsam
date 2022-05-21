@@ -1,6 +1,9 @@
 package difficult.domain
 
+import org.springframework.data.annotation.Reference
+import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.web.bind.annotation.Mapping
 import javax.persistence.*
 
 @Document(collection = "productos")
@@ -13,6 +16,8 @@ abstract class Producto {
     var paisOrigen: String = ""
     var precioBase: Double = 0.0
     var urlImagen: String = ""
+    //@Reference
+    //@DBRef
     var lotes = mutableListOf<Lote>()
 
     open fun precioTotal(): Double {
@@ -174,83 +179,3 @@ class PisoDTO : ProductoDTO() {
 class ComboDTO : ProductoDTO() {
     var productosDto = listOf<ProductoDTO>()
 }
-
-/*@Document(collection = "productos")
-abstract class Producto {
-    // propiedades
-    // productos
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int = 0
-    var nombre: String = ""
-    var descripcion: String= ""
-    var puntaje: Int = 0
-    var paisOrigen: String = ""
-    var precioBase: Double = 0.0
-    var urlImagen: String = ""
-    var lotes = mutableListOf<Lote>()
-
-    // pisos
-    var esAltoTransito: Boolean = false
-    lateinit var terminacion : String
-    var medidaX: Int = 0
-    var medidaZ: Int = 0
-
-    // pinturas
-    var litros = 0
-    var rendimiento = 0
-    lateinit var color: String
-
-    // combos
-    var productos = mutableSetOf<Producto>()
-
-    // metodos
-    // productos
-    fun precioTotal(): Double {
-        return precioBase * descuentoPorLote()
-    }
-
-    fun agregarLote(lote: Lote){
-        lotes.add(lote)
-    }
-
-    fun descuentoPorLote(): Double {
-        return if (lotes.any { it.loteDeMasDeCuatroMeses() }){
-            0.9
-        } else {
-            1.0
-        }
-    }
-
-    //abstract fun toProductoDTO() : ProductoDTO
-
-    // pisos
-    /*override fun precioTotal(): Double {
-        return super.precioTotal() * tipo.porcentajeIncremento
-    }*/
-
-    fun medidas(): String {
-        return "$medidaX X $medidaZ"
-    }
-
-    // pinturas
-    /*override fun precioTotal(): Double {
-        return super.precioTotal() * this.rendimientoMayor()
-    }*/
-
-    fun rendimientoMayor(): Double {
-        return if (rendimiento > 8) {
-            1.25
-        } else 1.0
-    }
-
-    // combos
-    fun agregarProducto(unProducto: Producto){
-        productos.add(unProducto)
-    }
-
-    /*override fun precioTotal(): Double {
-        return (productos.sumOf { it.precioTotal() + 20.0 })  * 0.85
-    }*/
-
-}*/

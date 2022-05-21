@@ -2,6 +2,8 @@ package difficult
 
 import difficult.domain.*
 import difficult.repository.*
+import difficult.service.ProductoService
+import difficult.service.UsuarioService
 import java.time.LocalDate
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
@@ -18,6 +20,8 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoCarrito: RepoCarrito
     @Autowired
     private lateinit var repoLotes: RepoLotes
+    @Autowired
+    private lateinit var usuarioService: UsuarioService
 
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
@@ -48,7 +52,6 @@ class DifficultBootstrap : InitializingBean {
             saldo = 1000000.0
             email = "lescano5600@gmail.com"
             contrasenia = "1234567890"
-            carrito = Carrito().apply {  }
         }
         jill = Usuario().apply {
             nombre = "Jill"
@@ -221,14 +224,10 @@ class DifficultBootstrap : InitializingBean {
         repoCarrito.create(Carrito(), claire.id)
         repoCarrito.create(Carrito(), chris.id)
 
-        dami.carrito = repoCarrito.getById(dami.id)
+        usuarioService.agregarCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.numeroLote)
+        usuarioService.agregarCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.numeroLote)
 
-        dami.agregarAlCarrito(pisoNormal, 1, lotePisoNormal)
-        dami.agregarAlCarrito(pinturaMenorRendimiento, 1, lotePinturaMenorRendimiento)
-        val productos = dami.carrito.getProductos()
-        dami.realizarCompra()
-        repoUsuarios.save(dami)
-        productos.forEach { repoProductos.save(it) }
+        usuarioService.comprar(dami.id)
     }
 
     override fun afterPropertiesSet() {

@@ -2,7 +2,6 @@ package difficult
 
 import difficult.domain.*
 import difficult.repository.*
-import difficult.service.ProductoService
 import difficult.service.UsuarioService
 import java.time.LocalDate
 import org.springframework.beans.factory.InitializingBean
@@ -41,7 +40,10 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var lotePisoAltoTransito: Lote
     private lateinit var lotePinturaMayorRendimiento: Lote
     private lateinit var lotePinturaMenorRendimiento: Lote
-    private lateinit var loteCombo: Lote
+    private lateinit var loteCombo1: Lote
+    private lateinit var loteCombo2: Lote
+    private lateinit var loteCombo3: Lote
+    private lateinit var loteCombo4: Lote
 
     fun initUsuarios(){
 
@@ -98,32 +100,47 @@ class DifficultBootstrap : InitializingBean {
         lotePisoAltoTransito = Lote().apply {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
-            numeroLote = 2222
+            id = 2222
         }
         lotePisoNormal = Lote().apply {
             cantidadDisponible = 6
             fechaIngreso = LocalDate.now()
-            numeroLote = 1111
+            id = 1111
         }
         lotePisoNormal2 = Lote().apply {
             cantidadDisponible = 6
             fechaIngreso = LocalDate.now()
-            numeroLote = 7777
+            id = 7777
         }
         lotePinturaMayorRendimiento = Lote().apply {
             cantidadDisponible = 5
             fechaIngreso = LocalDate.now()
-            numeroLote = 3333
+            id = 3333
         }
         lotePinturaMenorRendimiento = Lote().apply {
             cantidadDisponible = 3
             fechaIngreso = LocalDate.now()
-            numeroLote = 4444
+            id = 4444
         }
-        loteCombo = Lote().apply {
-            cantidadDisponible = 2
+        loteCombo1 = Lote().apply {
+            cantidadDisponible = 7
             fechaIngreso = LocalDate.now()
-            numeroLote = 5555
+            id = 5551
+        }
+        loteCombo2 = Lote().apply {
+            cantidadDisponible = 4
+            fechaIngreso = LocalDate.now()
+            id = 5552
+        }
+        loteCombo3 = Lote().apply {
+            cantidadDisponible = 11
+            fechaIngreso = LocalDate.now()
+            id = 5553
+        }
+        loteCombo4 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 5554
         }
 
         repoLotes.save(lotePisoNormal)
@@ -131,7 +148,7 @@ class DifficultBootstrap : InitializingBean {
         repoLotes.save(lotePisoAltoTransito)
         repoLotes.save(lotePinturaMayorRendimiento)
         repoLotes.save(lotePinturaMenorRendimiento)
-        repoLotes.save(loteCombo)
+        listOf(loteCombo1, loteCombo2, loteCombo3, loteCombo4).forEach { repoLotes.save(it) }
 
     }
 
@@ -206,7 +223,10 @@ class DifficultBootstrap : InitializingBean {
             precioBase = 0.0
             agregarProducto(pisoNormal)
             agregarProducto(pinturaMenorRendimiento)
-            agregarLote(loteCombo)
+            agregarLote(loteCombo1)
+            agregarLote(loteCombo2)
+            agregarLote(loteCombo3)
+            agregarLote(loteCombo4)
             id = 5
         }
 
@@ -224,8 +244,8 @@ class DifficultBootstrap : InitializingBean {
         repoCarrito.create(Carrito(), claire.id)
         repoCarrito.create(Carrito(), chris.id)
 
-        usuarioService.agregarCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.numeroLote)
-        usuarioService.agregarCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.numeroLote)
+        usuarioService.agregarCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
+        usuarioService.agregarCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
 
         usuarioService.comprar(dami.id)
     }

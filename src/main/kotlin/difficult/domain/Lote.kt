@@ -1,22 +1,23 @@
 package difficult.domain
 
 import CantidadInsuficienteLoteException
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
 import java.time.Period
-import java.util.Date
 import javax.persistence.*
 
-@Entity
+@Document(collection = "lotes")
 class Lote {
     @Id
-    var numeroLote: Int = 0
+    var id: Int = 0
+
     lateinit var fechaIngreso: LocalDate
     var cantidadDisponible: Int = 0
 
     fun toLoteDTO(): LoteDTO {
         return LoteDTO().apply {
             cantidadDisponibleDto = cantidadDisponible
-            numeroLoteDto = numeroLote
+            numeroLoteDto = id
         }
     }
 

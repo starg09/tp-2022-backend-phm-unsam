@@ -3,6 +3,7 @@ package difficult.domain
 import org.springframework.data.annotation.Reference
 import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.DocumentReference
 import org.springframework.web.bind.annotation.Mapping
 import javax.persistence.*
 
@@ -18,6 +19,7 @@ abstract class Producto {
     var urlImagen: String = ""
     //@Reference
     //@DBRef
+    @DocumentReference
     var lotes = mutableListOf<Lote>()
 
     open fun precioTotal(): Double {

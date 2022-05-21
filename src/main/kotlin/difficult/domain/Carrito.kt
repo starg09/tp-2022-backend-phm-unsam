@@ -9,7 +9,7 @@ class Carrito {
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
-        if (this.getNumerosLote().contains(lote.numeroLote)){
+        if (this.getNumerosLote().contains(lote.id)){
             throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
         lote.chequearCantidadDisponible(cantidad)
@@ -26,7 +26,7 @@ class Carrito {
     }
 
     fun getNumerosLote(): List<Int>{
-        return productosEnCarrito.map{it.lote.numeroLote}
+        return productosEnCarrito.map{it.lote.id}
     }
 
     fun eliminarProducto(productoABorrar: Producto){

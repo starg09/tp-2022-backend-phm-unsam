@@ -1,10 +1,9 @@
 package difficult.repository
 
 import difficult.domain.Lote
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.mongodb.repository.MongoRepository
 
-interface RepoLotes : CrudRepository<Lote, Int> {
+interface RepoLotes : MongoRepository<Lote, Int> {
 
-    fun findByNumeroLote(id: Int) : Lote
 
 }

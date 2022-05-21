@@ -63,7 +63,7 @@ class UsuarioService {
         return CarritoDTO().apply {
             nombre = producto.nombre
             descripcion = producto.descripcion
-            lote = entry.lote.numeroLote
+            lote = entry.lote.id
             cantidad = entry.cantidad
             precio = producto.precioTotal()
             id = producto.id
@@ -74,7 +74,7 @@ class UsuarioService {
     fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
-        val lote = repoLotes.findByNumeroLote(loteNumero)
+        val lote = repoLotes.findById(loteNumero).get()
         usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
     }

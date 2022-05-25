@@ -18,8 +18,8 @@ spring:
     mongodb:
       database: prueba
       host: localhost
-  #      port: 28001 # Puerto servidor con sharding
-        port: 27017
+#       port: 28001 # Puerto servidor con sharding
+      port: 27017
 
   mongodb:
     embedded:

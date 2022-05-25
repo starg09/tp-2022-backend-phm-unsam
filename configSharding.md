@@ -35,7 +35,7 @@ mongod --shardsvr --replSet shard2 --dbpath ./mongoShards/repl2 --logpath ./mong
 ## Levantar Servicio de routeo
 
 ```bash
-mongo --port 26050
+mongosh --port 26050
 ```
 
 ```
@@ -49,7 +49,7 @@ exit
 ### Shard 1
 
 ```bash
-mongo --port 27000
+mongosh --port 27000
 ```
 
 ```
@@ -62,7 +62,7 @@ exit
 ### Shard 2
 
 ```bash
-mongo --port 27100
+mongosh --port 27100
 ```
 
 ```
@@ -81,7 +81,7 @@ mongos --configdb rsConf/127.0.0.1:26050,127.0.0.1:26051 --logappend --logpath .
 ## Conexión al Router
 
 ```bash
-mongo --port 28001
+mongosh --port 28001
 ```
 
 ```
@@ -92,8 +92,8 @@ sh.addShard("shard2/127.0.0.1:27100")
 db.adminCommand( { listShards: 1 } )
 
 use prueba
-db.productos.ensureIndex({"_id": "hashed"})
-db.lotes.ensureIndex({"_id": "hashed"})
+db.productos.createIndex({"_id": "hashed"})
+db.lotes.createIndex({"_id": "hashed"})
 
 sh.enableSharding("prueba")
 
@@ -101,5 +101,5 @@ sh.shardCollection("prueba.productos", {"_id": "hashed"}, false)
 sh.shardCollection("prueba.lotes", {"_id": "hashed"}, false)
 
 db.productos.getShardDistribution()
-db.lotes.getShardDistribucion()
+db.lotes.getShardDistribution()
 ```

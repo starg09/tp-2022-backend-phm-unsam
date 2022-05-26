@@ -26,6 +26,7 @@ class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var usuarioService: UsuarioService
 
+
     private lateinit var dami: Usuario
     private lateinit var jill: Usuario
     private lateinit var chris: Usuario

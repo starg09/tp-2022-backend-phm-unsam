@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.util.Date
 
 @Service
 class UsuarioService {
@@ -23,6 +24,9 @@ class UsuarioService {
 
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
+
+    @Autowired
+    private lateinit var repoClicks: RepoClicks
 
     @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
@@ -45,6 +49,16 @@ class UsuarioService {
         }
         return unUsuario.id
     }
+
+    //CLICKS------------------------------------------------------------------------------------
+    @Transactional(readOnly = true)
+    fun agregarClick(click: Click) {
+        repoClicks.save(click)
+    }
+    @Transactional(readOnly = true)
+    fun getClicksUsuario(id: Int): List<Clicks> {
+        return repoClicks.findAllById(id)
+    //END CLICKS--------------------------------------------------------------------------------
 
     @Transactional
     fun agregarSaldo(cantidad: Double, id: Int){
@@ -154,3 +168,5 @@ class CarritoDTO {
 }
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)
+
+class ClickDTO(var momento: Date, var nombreProducto: String, var usuario: Int )

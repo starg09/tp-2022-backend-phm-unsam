@@ -29,6 +29,16 @@ class UsuarioController {
         return usuarioService.login(loginDTO)
     }
 
+    @PostMapping("/usuarios/agregarClick")
+    fun agregarClick(@RequestBody click: Click) {
+        usuarioService.agregarClick(click)
+    }
+    @GetMapping("/usuarios/{id}/getClicksUsuario")
+    fun getClicksUsuario(@PathVariable id: Int): List<Click> {
+        return usuarioService.getClicksUsuario(id)
+    }
+
+
     @PutMapping("/usuarios/{id}/agregarSaldo")
     fun agregarSaldo(@RequestBody cantidad: Double, @PathVariable id: Int){
         usuarioService.agregarSaldo(cantidad, id)

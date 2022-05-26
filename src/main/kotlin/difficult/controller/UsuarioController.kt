@@ -2,6 +2,7 @@ package difficult.controller
 
 import difficult.domain.Compra
 import difficult.domain.Usuario
+import difficult.domain.Click
 import difficult.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

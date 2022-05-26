@@ -50,16 +50,14 @@ class UsuarioService {
         return unUsuario.id
     }
 
-    //CLICKS------------------------------------------------------------------------------------
     @Transactional(readOnly = true)
     fun agregarClick(click: Click) {
         repoClicks.save(click)
     }
     @Transactional(readOnly = true)
-    fun getClicksUsuario(id: Int): List<Clicks> {
-        return repoClicks.findAllById(id)
-    //END CLICKS--------------------------------------------------------------------------------
-
+    fun getClicksUsuario(id: Int): List<Click> {
+        return repoClicks.findAllByUsuario(id)
+    }
     @Transactional
     fun agregarSaldo(cantidad: Double, id: Int){
         getById(id).aumentarSaldo(cantidad)

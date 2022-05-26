@@ -5,15 +5,15 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.DocumentReference
 import org.springframework.web.bind.annotation.Mapping
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Document(collection = "clicks")
 class Click {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    var id: Long
-    var momento: Date = LocalDateTime.now()
-    var nombreProducto: String= ""
+    lateinit var id: String
+    var momento: LocalDateTime = LocalDateTime.now()
+    var nombreProducto: String = ""
     var usuario: Int = 0
-    }
 }
+

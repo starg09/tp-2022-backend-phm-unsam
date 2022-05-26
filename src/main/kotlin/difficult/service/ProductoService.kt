@@ -47,7 +47,7 @@ class ProductoService {
 
     @Transactional(readOnly = true)
     fun getLotes(): List<Lote>{
-        return listOf() //FIXME: TODO: Implementar
+        return repoProductos.getLotes();
     }
 
     @Transactional(readOnly = true)

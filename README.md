@@ -38,44 +38,44 @@ db.getCollection("productos").aggregate(
 ```
 [{
  $lookup: {
-  from: 'lotes',
-  localField: 'lotes',
-  foreignField: '_id',
-  as: 'lotes_lookup'
+	from: 'lotes',
+	localField: 'lotes',
+	foreignField: '_id',
+	as: 'lotes_lookup'
  }
 }, {
- $addFields: {
-  lotes_lookup: {
-   $filter: {
-    input: '$lotes_lookup',
-    as: 'item',
-    cond: {
-     $gt: [
-      '$$item.cantidadDisponible',
-      0
-     ]
+    $addFields: {
+	lotes_lookup: {
+    $filter: {
+		input: '$lotes_lookup',
+        as: 'item',
+        cond: {
+            $gt: [
+                '$$item.cantidadDisponible',
+                0
+            ]
+        }
+        }
+	    }
     }
-   }
-  }
- }
 }, {
- $addFields: {
-  cantidadLotesConStock: {
-   $size: '$lotes_lookup'
-  }
- }
+    $addFields: {
+        cantidadLotesConStock: {
+            $size: '$lotes_lookup'
+        }
+    }
 }, {
- $addFields: {
-  masDeCuatroLotesConStock: {
-   $gte: [
-    '$cantidadLotesConStock',
-    4
-   ]
-  }
- }
+    $addFields: {
+        masDeCuatroLotesConStock: {
+         $gte: [
+            '$cantidadLotesConStock',
+            4
+         ]
+        }
+    }
 }, {
- $match: {
-  masDeCuatroLotesConStock: true
- }
+    $match: {
+	    masDeCuatroLotesConStock: true
+    }
 }]
 ```

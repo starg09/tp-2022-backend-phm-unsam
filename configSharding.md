@@ -1,4 +1,3 @@
-> **_Nota:_** Ejecutar todo desde la raiz del proyecto
 
 ## Crear carpetas
 
@@ -10,11 +9,15 @@ sudo chmod 775 shard* cfg*
 sudo chown -R `id -un` shard* cfg*
 ```
 
+---
+> _**Nota:** Empezando aquí ejecutar cada paso desde la raiz del proyecto._
+
 ## Config Servers
 
 ```bash
 mongod --replSet rsConf --configsvr --port 26050 --logpath ./mongoShards/log.cfg1 --logappend --dbpath ./mongoShards/cfg1
-
+```
+```bash
 mongod --replSet rsConf --configsvr --port 26051 --logpath ./mongoShards/log.cfg2 --logappend --dbpath ./mongoShards/cfg2
 ```
 
@@ -22,15 +25,22 @@ mongod --replSet rsConf --configsvr --port 26051 --logpath ./mongoShards/log.cfg
 
 ```bash
 mongod --shardsvr --replSet shard1 --dbpath ./mongoShards/shard1 --logpath ./mongoShards/log.shard1 --port 27000 --logappend --oplogSize 50
-
+```
+```bash
 mongod --shardsvr --replSet shard1 --dbpath ./mongoShards/repl1 --logpath ./mongoShards/log.repl1 --port 27001 --logappend --oplogSize 50
-
+```
+```bash
 mongod --shardsvr --replSet shard2 --dbpath ./mongoShards/shard2 --logpath ./mongoShards/log.shard2 --port 27100 --logappend --oplogSize 50
-
+```
+```bash
 mongod --shardsvr --replSet shard2 --dbpath ./mongoShards/repl2 --logpath ./mongoShards/log.repl2 --port 27101 --logappend --oplogSize 50
 ```
 
-> Verificacion de procesos corriendo: `ps -fe | grep mongo`
+> Verificacion de procesos corriendo:
+>  
+> ```bash
+> ps -fe | grep mongo
+> ```
 
 ## Levantar Servicio de routeo
 

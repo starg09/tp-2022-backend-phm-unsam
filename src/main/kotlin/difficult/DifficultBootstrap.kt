@@ -7,6 +7,7 @@ import java.time.LocalDate
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.concurrent.ThreadLocalRandom
 
 const val RECREAR_LOTES_EN_MONGO = false
 @Service
@@ -306,6 +307,46 @@ class DifficultBootstrap : InitializingBean {
                 agregarLote(tempLote3)
             }
         )
+
+        IntRange(0, 69).forEach{ n ->
+
+            var idBaseLote = 90000 + (n * 100)
+            val idBaseProducto = 100 + n
+
+            tempLote1 = Lote().apply {
+                cantidadDisponible = ThreadLocalRandom.current().nextInt(0, 8);
+                fechaIngreso = LocalDate.now()
+                id = idBaseLote++
+            }
+            tempLote2 = Lote().apply {
+                cantidadDisponible = ThreadLocalRandom.current().nextInt(0, 8);
+                fechaIngreso = LocalDate.now()
+                id = idBaseLote++
+            }
+            tempLote3 = Lote().apply {
+                cantidadDisponible = ThreadLocalRandom.current().nextInt(0, 8);
+                fechaIngreso = LocalDate.now()
+                id = idBaseLote++
+            }
+            listOf(tempLote1, tempLote2, tempLote3).forEach { lote -> guardarLoteSiNoExiste(lote) }
+            guardarSiNoExiste(
+                Pintura().apply {
+                    id = idBaseProducto
+                    nombre = "Pintura random #$n"
+                    descripcion = "Numero Falopa de Test numero $n de 69"
+                    urlImagen = "productos/pintura_random_${n}.jpg"
+                    puntaje = ThreadLocalRandom.current().nextInt(1, 6);
+                    paisOrigen = "No Determinado"
+                    precioBase = 800.0 + ThreadLocalRandom.current().nextInt(1, 400);
+                    rendimiento = ThreadLocalRandom.current().nextInt(3, 11);
+                    color = "Gris"
+                    litros = ThreadLocalRandom.current().nextInt(10, 30);
+                    agregarLote(tempLote1)
+                    agregarLote(tempLote2)
+                    agregarLote(tempLote3)
+                }
+            )
+        }
 
 
 

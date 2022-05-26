@@ -5,14 +5,24 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class RepoCarrito {
-    val elementos = mutableSetOf<Carrito>()
+    val elementos = hashMapOf<Int, Carrito>()
 
-    fun create(elemento: Carrito, idUsuario: Int){
-        elemento.carritoId = idUsuario
-        elementos.add(elemento)
+    fun create(idUsuario: Int): Carrito {
+        val nuevoCarrito = Carrito()
+        elementos.set(idUsuario, nuevoCarrito)
+        return nuevoCarrito
     }
 
     fun getById(usuarioId: Int): Carrito {
-        return elementos.first{it.carritoId == usuarioId}
+        return elementos.getOrDefault(usuarioId, Carrito())
+    }
+
+    fun tamanioCarrito(usuarioId: Int): Int {
+        return getById(usuarioId).productosEnCarrito.size
+    }
+
+    fun guardar(usuarioId: Int, carrito: Carrito): Carrito {
+        elementos.set(usuarioId, carrito)
+        return carrito
     }
 }

@@ -56,7 +56,7 @@ class UsuarioController {
 
     @PutMapping("/usuarios/{id}/carrito/agregar")
     fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO, @PathVariable id: Int){
-        usuarioService.agregarCarrito(id, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
+        usuarioService.agregarProductoCarrito(id, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/carrito/eliminar")

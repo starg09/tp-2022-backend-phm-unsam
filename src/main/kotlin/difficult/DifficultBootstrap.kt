@@ -55,6 +55,25 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var tempPiso: Piso
     private lateinit var tempPintura: Pintura
 
+
+    fun guardarSiNoExiste(producto: Producto) {
+        repoProductos.findById(producto.id)
+            .orElseGet { repoProductos.save(producto) };
+    }
+
+
+    fun guardarSiNoExiste(lote: Lote) {
+        repoLotes.findById(lote.id)
+            .orElseGet { repoLotes.save(lote) };
+    }
+
+
+    //TODO: ¿Hace falta? ¿Es costoso? (consultas cada vez que se arranca spring)
+    fun guardarSiNoExiste(usuario: Usuario): Usuario {
+        return repoUsuarios.findByEmail(usuario.email)
+            .orElseGet{ repoUsuarios.save(usuario); }
+    }
+
     fun initUsuarios() {
 
         dami = Usuario().apply {
@@ -98,11 +117,12 @@ class DifficultBootstrap : InitializingBean {
             contrasenia = "1234567890"
         }
 
-        repoUsuarios.save(dami)
-        repoUsuarios.save(jill)
-        repoUsuarios.save(leon)
-        repoUsuarios.save(chris)
-        repoUsuarios.save(claire)
+
+        dami = guardarSiNoExiste(dami)
+        jill = guardarSiNoExiste(jill)
+        leon = guardarSiNoExiste(leon)
+        chris = guardarSiNoExiste(chris)
+        claire = guardarSiNoExiste(claire)
 
     }
 
@@ -153,12 +173,12 @@ class DifficultBootstrap : InitializingBean {
             id = 5554
         }
 
-        repoLotes.save(lotePisoNormal)
-        repoLotes.save(lotePisoNormal2)
-        repoLotes.save(lotePisoAltoTransito)
-        repoLotes.save(lotePinturaMayorRendimiento)
-        repoLotes.save(lotePinturaMenorRendimiento)
-        listOf(loteCombo1, loteCombo2, loteCombo3, loteCombo4).forEach { repoLotes.save(it) }
+        guardarSiNoExiste(lotePisoNormal)
+        guardarSiNoExiste(lotePisoNormal2)
+        guardarSiNoExiste(lotePisoAltoTransito)
+        guardarSiNoExiste(lotePinturaMayorRendimiento)
+        guardarSiNoExiste(lotePinturaMenorRendimiento)
+        listOf(loteCombo1, loteCombo2, loteCombo3, loteCombo4).forEach { guardarSiNoExiste(it) }
 
     }
 
@@ -240,16 +260,14 @@ class DifficultBootstrap : InitializingBean {
             id = 5
         }
 
-        repoProductos.save(pisoNormal)
-        repoProductos.save(pisoAltoTransito)
-        repoProductos.save(pinturaMayorRendimiento)
-        repoProductos.save(pinturaMenorRendimiento)
-        repoProductos.save(combo)
+        guardarSiNoExiste(pisoNormal)
+        guardarSiNoExiste(pisoAltoTransito)
+        guardarSiNoExiste(pinturaMayorRendimiento)
+        guardarSiNoExiste(pinturaMenorRendimiento)
+        guardarSiNoExiste(combo)
 
 
 //        -------------------------------------------------
-
-
 
 
         tempLote1 = Lote().apply {
@@ -267,8 +285,8 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 10301
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
-        repoProductos.save(
+        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarSiNoExiste(it) }
+        guardarSiNoExiste(
             Pintura().apply {
                 id = 6
                 nombre = "Tersuave Roja"
@@ -305,8 +323,8 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 10302
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
-        repoProductos.save(
+        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarSiNoExiste(it) }
+        guardarSiNoExiste(
             Pintura().apply {
                 id = 7
                 nombre = "Tersuave Blanca"
@@ -344,8 +362,8 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 20301
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
-        repoProductos.save(
+        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarSiNoExiste(it) }
+        guardarSiNoExiste(
             Piso().apply {
                 id = 8
                 nombre = "Rizzo Ladrillo Hueco 27 Centavos"
@@ -384,8 +402,8 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 20302
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
-        repoProductos.save(
+        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarSiNoExiste(it) }
+        guardarSiNoExiste(
             Piso().apply {
                 id = 9
                 nombre = "Piso de Aluminio"
@@ -405,21 +423,14 @@ class DifficultBootstrap : InitializingBean {
         )
 
 
-
-
     }
 
     fun initCarrito() {
-        repoCarrito.create(Carrito(), dami.id)
-        repoCarrito.create(Carrito(), leon.id)
-        repoCarrito.create(Carrito(), jill.id)
-        repoCarrito.create(Carrito(), claire.id)
-        repoCarrito.create(Carrito(), chris.id)
-
-        usuarioService.agregarCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
-        usuarioService.agregarCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
-
-        usuarioService.comprar(dami.id)
+        if (usuarioService.comprasUsuario(dami.id).isEmpty()) {
+            usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
+            usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
+            usuarioService.comprar(dami.id)
+        }
     }
 
     override fun afterPropertiesSet() {

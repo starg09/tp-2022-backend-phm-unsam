@@ -5,5 +5,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface RepoLotes : MongoRepository<Lote, Int> {
 
-
 }

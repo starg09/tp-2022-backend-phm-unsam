@@ -4,8 +4,6 @@ import YaEstaEnElCarritoException
 
 class Carrito {
 
-
-    var carritoId: Int = 0
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){

@@ -71,12 +71,13 @@ class UsuarioService {
     }
 
     @Transactional
-    fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
+    fun agregarProductoCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         val lote = repoLotes.findById(loteNumero).get()
         usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
@@ -85,6 +86,7 @@ class UsuarioService {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
         usuario.eliminarDelCarrito(producto)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
@@ -99,6 +101,7 @@ class UsuarioService {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
         usuario.vaciarCarrito()
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
@@ -109,10 +112,11 @@ class UsuarioService {
         usuario.realizarCompra()
         repoLotes.saveAll(lotes)
         repoUsuarios.save(usuario)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
-    fun tamanioCarrito(id: Int): Int {
-        return getById(id).tamanioCarrito()
+    fun tamanioCarrito(usuarioId: Int): Int {
+        return repoCarrito.tamanioCarrito(usuarioId)
     }
 
     fun getById(id: Int): Usuario {
@@ -127,6 +131,9 @@ class UsuarioService {
 
     fun getCarrito(usuarioId: Int): Carrito {
         return repoCarrito.getById(usuarioId)
+    }
+    fun saveCarrito(usuarioId: Int, carrito: Carrito): Carrito {
+        return repoCarrito.guardar(usuarioId, carrito)
     }
 
 }

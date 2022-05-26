@@ -8,8 +8,27 @@ Ver [configSharding.md](configSharding.md)
 
 ### 1)  Saber qué producto es el más clickeado.
 
-> _Coming Soon™_
-
+```
+[{
+ $group: {
+  _id: {
+   nombreProducto: '$nombreProducto'
+  },
+  count: {
+   $sum: 1
+  },
+  nombreProducto: {
+   $first: '$nombreProducto'
+  }
+ }
+}, {
+ $sort: {
+  count: -1
+ }
+}, {
+ $limit: 1
+}]
+```
 ### 2)  Saber cuántos artículos son pisos de alto tránsito.
 
 ``` 

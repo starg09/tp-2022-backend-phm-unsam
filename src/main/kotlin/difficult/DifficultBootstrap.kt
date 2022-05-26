@@ -13,12 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired
 class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var repoProductos: RepoProductos
+
     @Autowired
     private lateinit var repoUsuarios: RepoUsuarios
+
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
+
     @Autowired
     private lateinit var repoLotes: RepoLotes
+
     @Autowired
     private lateinit var usuarioService: UsuarioService
 
@@ -45,7 +49,13 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var loteCombo3: Lote
     private lateinit var loteCombo4: Lote
 
-    fun initUsuarios(){
+    private lateinit var tempLote1: Lote
+    private lateinit var tempLote2: Lote
+    private lateinit var tempLote3: Lote
+    private lateinit var tempPiso: Piso
+    private lateinit var tempPintura: Pintura
+
+    fun initUsuarios() {
 
         dami = Usuario().apply {
             nombre = "Dami"
@@ -79,7 +89,7 @@ class DifficultBootstrap : InitializingBean {
             email = "leon@gmail.com"
             contrasenia = "1234567890"
         }
-        claire = Usuario().apply{
+        claire = Usuario().apply {
             nombre = "Claire"
             apellido = "Redfield"
             fechaNacimiento = LocalDate.of(1979, 6, 5)
@@ -96,7 +106,7 @@ class DifficultBootstrap : InitializingBean {
 
     }
 
-    fun initLotes(){
+    fun initLotes() {
         lotePisoAltoTransito = Lote().apply {
             cantidadDisponible = 2
             fechaIngreso = LocalDate.now()
@@ -152,8 +162,7 @@ class DifficultBootstrap : InitializingBean {
 
     }
 
-    fun initProductos(){
-
+    fun initProductos() {
 
 
         pisoNormal = Piso().apply {
@@ -174,7 +183,8 @@ class DifficultBootstrap : InitializingBean {
 
         pisoAltoTransito = Piso().apply {
             nombre = "Acme arena"
-            descripcion = "Una variable mas oscura, arenosa, de nuestro tipo principal de baldosa. Traídas exclusivamente desde Brasilia, en vuelo charter privado incluido en el precio."
+            descripcion =
+                "Una variable mas oscura, arenosa, de nuestro tipo principal de baldosa. Traídas exclusivamente desde Brasilia, en vuelo charter privado incluido en el precio."
             urlImagen = "productos/acme_arena.webp"
             puntaje = 4
             paisOrigen = "Brasil"
@@ -235,9 +245,171 @@ class DifficultBootstrap : InitializingBean {
         repoProductos.save(pinturaMayorRendimiento)
         repoProductos.save(pinturaMenorRendimiento)
         repoProductos.save(combo)
+
+
+//        -------------------------------------------------
+
+
+
+
+        tempLote1 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10101
+        }
+        tempLote2 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10201
+        }
+        tempLote3 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10301
+        }
+        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
+        repoProductos.save(
+            Pintura().apply {
+                id = 6
+                nombre = "Tersuave Roja"
+                descripcion = "Pintura marca Tersuave de color rojo"
+                urlImagen = "productos/tersuave_roja.jpg"
+                puntaje = 2
+                paisOrigen = "Argentina"
+                precioBase = 800.0
+                rendimiento = 7
+                color = "Rojo"
+                litros = 12
+                agregarLote(tempLote1)
+                agregarLote(tempLote2)
+                agregarLote(tempLote3)
+            }
+        )
+
+
+
+
+
+        tempLote1 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10102
+        }
+        tempLote2 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10202
+        }
+        tempLote3 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 10302
+        }
+        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
+        repoProductos.save(
+            Pintura().apply {
+                id = 7
+                nombre = "Tersuave Blanca"
+                descripcion = "Pintura marca Tersuave de color blanco"
+                urlImagen = "productos/tersuave_blanca.jpg"
+                puntaje = 3
+                paisOrigen = "Argentina"
+                precioBase = 750.0
+                rendimiento = 8
+                color = "Blanco"
+                litros = 12
+                agregarLote(tempLote1)
+                agregarLote(tempLote2)
+                agregarLote(tempLote3)
+            }
+        )
+
+
+
+
+
+
+        tempLote1 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20101
+        }
+        tempLote2 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20201
+        }
+        tempLote3 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20301
+        }
+        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
+        repoProductos.save(
+            Piso().apply {
+                id = 8
+                nombre = "Rizzo Ladrillo Hueco 27 Centavos"
+                descripcion = "Buen revestimiento, excelente piso!"
+                urlImagen = "productos/degoas.png"
+                puntaje = 5
+                paisOrigen = "Argentina"
+                precioBase = 0.27
+                esAltoTransito = false
+                medidaX = 20
+                medidaZ = 10
+                terminacion = "no satinado"
+                agregarLote(tempLote1)
+                agregarLote(tempLote2)
+                agregarLote(tempLote3)
+            }
+        )
+
+
+
+
+
+
+        tempLote1 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20102
+        }
+        tempLote2 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20202
+        }
+        tempLote3 = Lote().apply {
+            cantidadDisponible = 3
+            fechaIngreso = LocalDate.now()
+            id = 20302
+        }
+        listOf(tempLote1, tempLote2, tempLote3).forEach { repoLotes.save(it) }
+        repoProductos.save(
+            Piso().apply {
+                id = 9
+                nombre = "Piso de Aluminio"
+                descripcion = "Ultima tecnologia! Consultar promociones durante septiembre"
+                urlImagen = "productos/aluminio.png"
+                puntaje = 4
+                paisOrigen = "China"
+                precioBase = 1240.0
+                esAltoTransito = true
+                medidaX = 40
+                medidaZ = 40
+                terminacion = "satinado"
+                agregarLote(tempLote1)
+                agregarLote(tempLote2)
+                agregarLote(tempLote3)
+            }
+        )
+
+
+
+
     }
 
-    fun initCarrito(){
+    fun initCarrito() {
         repoCarrito.create(Carrito(), dami.id)
         repoCarrito.create(Carrito(), leon.id)
         repoCarrito.create(Carrito(), jill.id)

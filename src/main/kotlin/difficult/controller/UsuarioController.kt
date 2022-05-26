@@ -61,7 +61,7 @@ class UsuarioController {
 
     @DeleteMapping("/usuarios/carrito/eliminar")
     fun eliminarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
-        usuarioService.eliminarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto)
+        usuarioService.eliminarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/{id}/carrito/vaciar")

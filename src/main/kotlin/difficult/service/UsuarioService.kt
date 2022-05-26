@@ -81,11 +81,10 @@ class UsuarioService {
     }
 
     @Transactional
-    fun eliminarCarrito(usuarioId: Int, productoId: Int){
-        val producto = getByProductoId(productoId)
+    fun eliminarCarrito(usuarioId: Int, productoId: Int, loteNumero: Int){
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
-        usuario.eliminarDelCarrito(producto)
+        usuario.eliminarDelCarrito(productoId, loteNumero)
         saveCarrito(usuarioId, usuario.carrito)
     }
 

@@ -1,34 +1,37 @@
 package difficult.domain
 
-import YaEstaEnElCarritoException
-
 class Carrito {
 
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
-        if (this.getNumerosLote().contains(lote.id)){
-            throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
+        var cantidadFinal = cantidad
+        if (this.getNumerosLote().contains(lote.id) && getProductos().contains(producto.id) && lote.cantidadDisponible >= cantidad){
+            cantidadFinal += (productosEnCarrito.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidad ?: 0)
+            lote.chequearCantidadDisponible(cantidadFinal)
+            eliminarProducto(producto.id, lote.id)
+
+            //throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
-        lote.chequearCantidadDisponible(cantidad)
+        lote.chequearCantidadDisponible(cantidadFinal)
         val productoPorAgregar = ProductoCarrito().apply{
             this.producto = producto
-            this.cantidad = cantidad
+            this.cantidad = cantidadFinal
             this.lote = lote
         }
         productosEnCarrito.add(productoPorAgregar)
     }
 
-    fun getProductos(): List<Producto>{
-        return productosEnCarrito.map{it.producto}
+    fun getProductos(): List<Int> {
+        return productosEnCarrito.map{it.producto.id}
     }
 
     fun getNumerosLote(): List<Int>{
         return productosEnCarrito.map{it.lote.id}
     }
 
-    fun eliminarProducto(productoABorrar: Producto){
-        productosEnCarrito.removeIf { productoABorrar.id == it.producto.id }
+    fun eliminarProducto(productoABorrarId: Int, loteABorrarId: Int){
+        productosEnCarrito.removeIf { productoABorrarId == it.producto.id && it.lote.id == loteABorrarId}
     }
 
     fun vaciar(){

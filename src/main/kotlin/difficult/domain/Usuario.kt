@@ -48,8 +48,8 @@ class Usuario {
         carrito.agregarProducto(producto, cantidad, lote)
     }
 
-    fun eliminarDelCarrito(producto: Producto){
-        carrito.eliminarProducto(producto)
+    fun eliminarDelCarrito(productoId: Int, loteId: Int){
+        carrito.eliminarProducto(productoId, loteId)
     }
 
     fun vaciarCarrito(){

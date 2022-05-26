@@ -40,7 +40,7 @@ class UsuarioController {
     }
 
     @GetMapping("/usuarios/{id}/compras")
-    fun comprasUsuario(@PathVariable id: Int): MutableSet<Compra> {
+    fun comprasUsuario(@PathVariable id: Int): List<Compra> {
         return usuarioService.comprasUsuario(id)
     }
 

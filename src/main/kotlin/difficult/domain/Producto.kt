@@ -19,7 +19,8 @@ abstract class Producto {
     var urlImagen: String = ""
     //@Reference
     //@DBRef
-    @DocumentReference
+//    @DocumentReference
+    @Embedded
     var lotes = mutableListOf<Lote>()
 
     open fun precioTotal(): Double {

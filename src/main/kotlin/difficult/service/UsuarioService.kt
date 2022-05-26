@@ -20,9 +20,6 @@ class UsuarioService {
     private lateinit var repoProductos: RepoProductos
 
     @Autowired
-    private lateinit var repoLotes: RepoLotes
-
-    @Autowired
     private lateinit var repoCarrito: RepoCarrito
 
     @Autowired
@@ -87,7 +84,7 @@ class UsuarioService {
     fun agregarProductoCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
-        val lote = repoLotes.findById(loteNumero).get()
+        val lote = producto.lotes.first{ it.id == loteNumero }
         usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
         saveCarrito(usuarioId, usuario.carrito)
@@ -120,9 +117,9 @@ class UsuarioService {
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
-        val lotes = usuario.carrito.productosEnCarrito.map { it.lote }
+        val productos = usuario.carrito.productosEnCarrito.map{it.producto}
         usuario.realizarCompra()
-        repoLotes.saveAll(lotes)
+        repoProductos.saveAll(productos)
         repoUsuarios.save(usuario)
         saveCarrito(usuarioId, usuario.carrito)
     }

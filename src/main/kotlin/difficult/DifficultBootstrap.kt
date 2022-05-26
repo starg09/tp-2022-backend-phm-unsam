@@ -19,12 +19,6 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoUsuarios: RepoUsuarios
 
     @Autowired
-    private lateinit var repoCarrito: RepoCarrito
-
-    @Autowired
-    private lateinit var repoLotes: RepoLotes
-
-    @Autowired
     private lateinit var usuarioService: UsuarioService
 
 
@@ -61,14 +55,6 @@ class DifficultBootstrap : InitializingBean {
     fun guardarSiNoExiste(producto: Producto) {
         repoProductos.findById(producto.id)
             .orElseGet { repoProductos.save(producto) };
-    }
-
-
-    fun guardarLoteSiNoExiste(lote: Lote) {
-        repoLotes.findById(lote.id).ifPresentOrElse(
-            { if (RECREAR_LOTES_EN_MONGO) repoLotes.save(lote) },
-            { repoLotes.save(lote) }
-        )
     }
 
 
@@ -177,13 +163,6 @@ class DifficultBootstrap : InitializingBean {
             id = 5554
         }
 
-        guardarLoteSiNoExiste(lotePisoNormal)
-        guardarLoteSiNoExiste(lotePisoNormal2)
-        guardarLoteSiNoExiste(lotePisoAltoTransito)
-        guardarLoteSiNoExiste(lotePinturaMayorRendimiento)
-        guardarLoteSiNoExiste(lotePinturaMenorRendimiento)
-        listOf(loteCombo1, loteCombo2, loteCombo3, loteCombo4).forEach { guardarLoteSiNoExiste(it) }
-
     }
 
     fun initProductos() {
@@ -289,7 +268,6 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 10301
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarLoteSiNoExiste(it) }
         guardarSiNoExiste(
             Pintura().apply {
                 id = 6
@@ -328,7 +306,6 @@ class DifficultBootstrap : InitializingBean {
                 fechaIngreso = LocalDate.now()
                 id = idBaseLote++
             }
-            listOf(tempLote1, tempLote2, tempLote3).forEach { lote -> guardarLoteSiNoExiste(lote) }
             guardarSiNoExiste(
                 Pintura().apply {
                     id = idBaseProducto
@@ -367,7 +344,6 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 10302
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarLoteSiNoExiste(it) }
         guardarSiNoExiste(
             Pintura().apply {
                 id = 7
@@ -406,7 +382,6 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 20301
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarLoteSiNoExiste(it) }
         guardarSiNoExiste(
             Piso().apply {
                 id = 8
@@ -446,7 +421,6 @@ class DifficultBootstrap : InitializingBean {
             fechaIngreso = LocalDate.now()
             id = 20302
         }
-        listOf(tempLote1, tempLote2, tempLote3).forEach { guardarLoteSiNoExiste(it) }
         guardarSiNoExiste(
             Piso().apply {
                 id = 9

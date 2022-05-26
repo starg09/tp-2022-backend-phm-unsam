@@ -6,9 +6,7 @@ import java.time.LocalDate
 import java.time.Period
 import javax.persistence.*
 
-@Document(collection = "lotes")
 class Lote {
-    @Id
     var id: Int = 0
 
     lateinit var fechaIngreso: LocalDate

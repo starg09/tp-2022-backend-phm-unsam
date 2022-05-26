@@ -65,7 +65,7 @@ class UsuarioService {
             descripcion = producto.descripcion
             lote = entry.lote.id
             cantidad = entry.cantidad
-            precio = producto.precioTotal()
+            precio = producto.precioTotal() * cantidad
             id = producto.id
         }
     }

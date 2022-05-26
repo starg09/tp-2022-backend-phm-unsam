@@ -52,7 +52,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun agregarClick(click: Click) {
-        click.id = (repoClicks.findAll().size + 1).toString()
+        //click.id = (repoClicks.findAll().size + 1).toString()
         repoClicks.save(click)
     }
     @Transactional(readOnly = true)

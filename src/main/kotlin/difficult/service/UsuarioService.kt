@@ -89,10 +89,10 @@ class UsuarioService {
     }
 
     @Transactional
-    fun comprasUsuario(id: Int): MutableSet<Compra> {
+    fun comprasUsuario(id: Int): List<Compra> {
         return repoUsuarios.findConComprasById(id).orElseThrow {
             UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
-        }.compras
+        }.compras.sortedBy { it.ordenCompra }.take(5)
     }
 
     @Transactional

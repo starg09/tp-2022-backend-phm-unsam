@@ -104,12 +104,15 @@ db.adminCommand( { listShards: 1 } )
 use prueba
 db.productos.createIndex({"_id": "hashed"})
 db.lotes.createIndex({"_id": "hashed"})
+db.clicks.createIndex({"_id": "hashed"})
 
 sh.enableSharding("prueba")
 
 sh.shardCollection("prueba.productos", {"_id": "hashed"}, false)
 sh.shardCollection("prueba.lotes", {"_id": "hashed"}, false)
+sh.shardCollection("prueba.clicks", {"_id": "hashed"}, false)
 
 db.productos.getShardDistribution()
 db.lotes.getShardDistribution()
+db.clicks.getShardDistribution()
 ```

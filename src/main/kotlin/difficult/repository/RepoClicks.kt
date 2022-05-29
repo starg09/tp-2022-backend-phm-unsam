@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.Aggregation
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface RepoClicks : MongoRepository<Click, Int> {
-    fun findAllByUsuario(Usuario: Int): List<Click>
+    fun findAllByUsuario(usuario: Int): List<Click>
 }
 

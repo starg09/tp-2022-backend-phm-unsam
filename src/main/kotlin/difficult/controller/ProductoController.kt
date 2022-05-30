@@ -43,4 +43,9 @@ class ProductoController {
         return productoService.productoDetalles(id)
     }
 
+    @GetMapping("/productos/paisesOrigen")
+    fun obtenerPaisesOrigen(): List<String> {
+        return productoService.obtenerPaisesOrigen()
+    }
+
 }

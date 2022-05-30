@@ -1,32 +1,29 @@
 package difficult.domain
 
+import org.springframework.data.annotation.Reference
+import org.springframework.data.mongodb.core.mapping.DBRef
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.DocumentReference
+import org.springframework.web.bind.annotation.Mapping
 import javax.persistence.*
 
-
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Document(collection = "productos")
 abstract class Producto {
-    @Column
+    @Id
+    var id: Int = 0
     var nombre: String = ""
-    @Column
     var descripcion: String= ""
-    @Column
     var puntaje: Int = 0
-    @Column
     var paisOrigen: String = ""
-    @Column
     var precioBase: Double = 0.0
-    @Column
     var urlImagen: String = ""
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    //@Reference
+    //@DBRef
+//    @DocumentReference
+    @Embedded
     var lotes = mutableListOf<Lote>()
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int = 0
-
-    fun precioTotal(): Double {
+    open fun precioTotal(): Double {
         return precioBase * descuentoPorLote()
     }
 
@@ -45,53 +42,37 @@ abstract class Producto {
     abstract fun toProductoDTO() : ProductoDTO
 }
 
-@Entity
-class Combo : Producto() {
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    var productos = mutableSetOf<Producto>()
-
-    fun agregarProducto(unProducto: Producto){
-        productos.add(unProducto)
-    }
-
-    override fun precioTotal(): Double {
-        return (productos.sumOf { it.precioTotal() + 20.0 })  * 0.85
-    }
-
-    override fun toProductoDTO(): ComboDTO {
-        return ComboDTO().apply {
-            nombreDto = nombre
-            descripcionDto = descripcion
-            urlImagenDto = urlImagen
-            puntajeDto = puntaje
-            paisOrigenDto = paisOrigen
-            precioDto = precioTotal()
-            lotesDto = lotes.map { it.toLoteDTO() }
-            idDto = id
-            productosDto = productos.map { it.toProductoDTO() }
-        }
-    }
-
-}
-
-@Entity
+@Document(collection = "productos")
 class Piso : Producto() {
-    @Column
-    @Convert(converter = TipoPisoConverter::class)
-    lateinit var tipo: TipoPiso
-    @Column
+    var esAltoTransito: Boolean = false
     lateinit var terminacion : String
     var medidaX: Int = 0
     var medidaZ: Int = 0
 
     override fun precioTotal(): Double {
-        return super.precioTotal() * tipo.porcentajeIncremento
+        return super.precioTotal() * porcentajeIncremento()
     }
 
-    @Column
     fun medidas(): String {
         return "$medidaX X $medidaZ"
+    }
+
+    fun porcentajeIncremento(): Double {
+        return if (esAltoTransito){
+            1.20
+        }
+        else {
+            1.0
+        }
+    }
+
+    fun tipoPiso(): String {
+        return if (esAltoTransito){
+            "Alto transito"
+        }
+        else {
+            "Normal"
+        }
     }
 
     override fun toProductoDTO(): PisoDTO {
@@ -106,19 +87,16 @@ class Piso : Producto() {
             idDto = id
             terminacionDto = terminacion
             medidasDto = medidas()
-            tipoDto = tipo.tipoNombre()
+            tipoDto = tipoPiso()
         }
     }
 
 }
 
-@Entity
+@Document(collection = "productos")
 class Pintura: Producto(){
-    @Column
     var litros = 0
-    @Column
     var rendimiento = 0
-    @Column
     lateinit var color: String
 
     override fun precioTotal(): Double {
@@ -148,24 +126,34 @@ class Pintura: Producto(){
     }
 }
 
-abstract class TipoPiso {
-    open val porcentajeIncremento: Double = 1.0
+@Document(collection = "productos")
+class Combo : Producto() {
 
-    abstract fun tipoNombre(): String
-}
+    @Embedded
+    var productos = mutableSetOf<Producto>()
 
-class PisoAltoTransito : TipoPiso() {
-    override val porcentajeIncremento = 1.20
-
-    override fun tipoNombre(): String {
-        return "Alto Transito"
+    fun agregarProducto(unProducto: Producto){
+        productos.add(unProducto)
     }
-}
 
-class PisoNormal : TipoPiso() {
-    override fun tipoNombre(): String {
-        return "Normal"
+    override fun precioTotal(): Double {
+        return (productos.sumOf { it.precioTotal() + 20.0 })  * 0.85
     }
+
+    override fun toProductoDTO(): ComboDTO {
+        return ComboDTO().apply {
+            nombreDto = nombre
+            descripcionDto = descripcion
+            urlImagenDto = urlImagen
+            puntajeDto = puntaje
+            paisOrigenDto = paisOrigen
+            precioDto = precioTotal()
+            lotesDto = lotes.map { it.toLoteDTO() }
+            idDto = id
+            productosDto = productos.map { it.toProductoDTO() }
+        }
+    }
+
 }
 
 abstract class ProductoDTO {
@@ -194,20 +182,3 @@ class PisoDTO : ProductoDTO() {
 class ComboDTO : ProductoDTO() {
     var productosDto = listOf<ProductoDTO>()
 }
-
-@Converter
-class TipoPisoConverter : AttributeConverter<TipoPiso, String>{
-
-    override fun convertToDatabaseColumn(tipoPiso: TipoPiso): String {
-        return tipoPiso.tipoNombre()
-    }
-
-    override fun convertToEntityAttribute(tipoPisoString: String): TipoPiso {
-        return if (tipoPisoString == "Normal") {
-            PisoNormal()
-        } else{
-            PisoAltoTransito()
-        }
-    }
-}
-

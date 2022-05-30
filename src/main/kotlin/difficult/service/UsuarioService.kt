@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.util.Date
 
 @Service
 class UsuarioService {
@@ -19,10 +20,10 @@ class UsuarioService {
     private lateinit var repoProductos: RepoProductos
 
     @Autowired
-    private lateinit var repoLotes: RepoLotes
+    private lateinit var repoCarrito: RepoCarrito
 
     @Autowired
-    private lateinit var repoCarrito: RepoCarrito
+    private lateinit var repoClicks: RepoClicks
 
     @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
@@ -46,6 +47,15 @@ class UsuarioService {
         return unUsuario.id
     }
 
+    @Transactional(readOnly = true)
+    fun agregarClick(click: Click) {
+        //click.id = (repoClicks.findAll().size + 1).toString()
+        repoClicks.save(click)
+    }
+    @Transactional(readOnly = true)
+    fun getClicksUsuario(id: Int): List<Click> {
+        return repoClicks.findAllByUsuario(id)
+    }
     @Transactional
     fun agregarSaldo(cantidad: Double, id: Int){
         getById(id).aumentarSaldo(cantidad)
@@ -63,35 +73,36 @@ class UsuarioService {
         return CarritoDTO().apply {
             nombre = producto.nombre
             descripcion = producto.descripcion
-            lote = entry.lote.numeroLote
+            lote = entry.lote.id
             cantidad = entry.cantidad
-            precio = producto.precioTotal()
+            precio = producto.precioTotal() * cantidad
             id = producto.id
         }
     }
 
     @Transactional
-    fun agregarCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
+    fun agregarProductoCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
-        val lote = repoLotes.findByNumeroLote(loteNumero)
+        val lote = producto.lotes.first{ it.id == loteNumero }
         usuario.carrito = getCarrito(usuarioId)
         usuario.agregarAlCarrito(producto, cantidad, lote)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
-    fun eliminarCarrito(usuarioId: Int, productoId: Int){
-        val producto = getByProductoId(productoId)
+    fun eliminarCarrito(usuarioId: Int, productoId: Int, loteNumero: Int){
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
-        usuario.eliminarDelCarrito(producto)
+        usuario.eliminarDelCarrito(productoId, loteNumero)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
-    fun comprasUsuario(id: Int): MutableSet<Compra> {
+    fun comprasUsuario(id: Int): List<Compra> {
         return repoUsuarios.findConComprasById(id).orElseThrow {
             UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
-        }.compras
+        }.compras.sortedBy { it.ordenCompra }.take(5)
     }
 
     @Transactional
@@ -99,20 +110,22 @@ class UsuarioService {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
         usuario.vaciarCarrito()
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
     @Transactional
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
-        val lotes = usuario.carrito.productosEnCarrito.map { it.lote }
+        val productos = usuario.carrito.productosEnCarrito.map{it.producto}
         usuario.realizarCompra()
-        repoLotes.saveAll(lotes)
+        repoProductos.saveAll(productos)
         repoUsuarios.save(usuario)
+        saveCarrito(usuarioId, usuario.carrito)
     }
 
-    fun tamanioCarrito(id: Int): Int {
-        return getById(id).tamanioCarrito()
+    fun tamanioCarrito(usuarioId: Int): Int {
+        return repoCarrito.tamanioCarrito(usuarioId)
     }
 
     fun getById(id: Int): Usuario {
@@ -127,6 +140,9 @@ class UsuarioService {
 
     fun getCarrito(usuarioId: Int): Carrito {
         return repoCarrito.getById(usuarioId)
+    }
+    fun saveCarrito(usuarioId: Int, carrito: Carrito): Carrito {
+        return repoCarrito.guardar(usuarioId, carrito)
     }
 
 }
@@ -148,3 +164,5 @@ class CarritoDTO {
 }
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)
+
+class ClickDTO(var momento: Date, var nombreProducto: String, var usuario: Int )

@@ -9,6 +9,8 @@ interface RepoUsuarios : CrudRepository<Usuario, Int> {
 
     fun findByContraseniaAndEmail(password: String, email: String): Optional<Usuario>
 
+    fun findByEmail(email: String): Optional<Usuario>
+
     override fun findById(id: Int): Optional<Usuario>
 
     @EntityGraph(attributePaths = ["compras"])

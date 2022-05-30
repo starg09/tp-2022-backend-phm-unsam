@@ -23,14 +23,14 @@ class ProductoService {
         val productosFiltrados = mutableSetOf<Producto>()
         val metodoFiltro = if (filtrosDTO.paises.isEmpty())
             { repo: RepoProductos ->
-                repo.findAllByNombreContainsAndPuntajeGreaterThanEqual(
+                repo.findAllByNombreIgnoreCaseContainsAndPuntajeGreaterThanEqual(
                     filtrosDTO.nombre,
                     filtrosDTO.puntaje
                 )
             }
         else
             { repo: RepoProductos ->
-                repo.findAllByNombreContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(
+                repo.findAllByNombreIgnoreCaseContainsAndPaisOrigenInAndPuntajeGreaterThanEqual(
                     filtrosDTO.nombre,
                     filtrosDTO.paises,
                     filtrosDTO.puntaje
@@ -47,7 +47,7 @@ class ProductoService {
 
     @Transactional(readOnly = true)
     fun getLotes(): List<Lote>{
-        return repoProductos.findAll().map { it.lotes }.flatten()
+        return repoProductos.getLotes();
     }
 
     @Transactional(readOnly = true)
@@ -58,6 +58,11 @@ class ProductoService {
     fun getById(productoId: Int): Producto {
         return repoProductos.findById(productoId).get()
     }
+
+    fun obtenerPaisesOrigen(): List<String> {
+        return repoProductos.findDistinctPaisOrigen()
+    }
+
 
 }
 

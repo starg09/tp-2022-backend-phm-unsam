@@ -2,6 +2,7 @@ package difficult.controller
 
 import difficult.domain.Compra
 import difficult.domain.Usuario
+import difficult.domain.Click
 import difficult.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -29,6 +30,16 @@ class UsuarioController {
         return usuarioService.login(loginDTO)
     }
 
+    @PostMapping("/usuarios/agregarClick")
+    fun agregarClick(@RequestBody click: Click) {
+        usuarioService.agregarClick(click)
+    }
+    @GetMapping("/usuarios/{id}/getClicksUsuario")
+    fun getClicksUsuario(@PathVariable id: Int): List<Click> {
+        return usuarioService.getClicksUsuario(id)
+    }
+
+
     @PutMapping("/usuarios/{id}/agregarSaldo")
     fun agregarSaldo(@RequestBody cantidad: Double, @PathVariable id: Int){
         usuarioService.agregarSaldo(cantidad, id)
@@ -40,7 +51,7 @@ class UsuarioController {
     }
 
     @GetMapping("/usuarios/{id}/compras")
-    fun comprasUsuario(@PathVariable id: Int): MutableSet<Compra> {
+    fun comprasUsuario(@PathVariable id: Int): List<Compra> {
         return usuarioService.comprasUsuario(id)
     }
 
@@ -56,12 +67,12 @@ class UsuarioController {
 
     @PutMapping("/usuarios/{id}/carrito/agregar")
     fun agregarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO, @PathVariable id: Int){
-        usuarioService.agregarCarrito(id, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
+        usuarioService.agregarProductoCarrito(id, agregarCarritoDTO.idProducto, agregarCarritoDTO.cantidad, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/carrito/eliminar")
     fun eliminarCarrito(@RequestBody agregarCarritoDTO: AgregarCarritoDTO){
-        usuarioService.eliminarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto)
+        usuarioService.eliminarCarrito(agregarCarritoDTO.idUsuario, agregarCarritoDTO.idProducto, agregarCarritoDTO.loteNumero)
     }
 
     @DeleteMapping("/usuarios/{id}/carrito/vaciar")

@@ -1,10 +1,20 @@
 package difficult.domain
+import AgregarCeroUnidadesCarritoException
+import org.springframework.data.redis.core.RedisHash
+import org.springframework.data.annotation.Id
 
+@RedisHash
 class Carrito {
+
+    @Id
+    var id = 0
 
     var productosEnCarrito = mutableListOf<ProductoCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
+        if (cantidad == 0) {
+            throw AgregarCeroUnidadesCarritoException("¿Para que queres agregar 0 unidades al carrito?")
+        }
         var cantidadFinal = cantidad
         if (this.getNumerosLote().contains(lote.id) && getProductos().contains(producto.id) && lote.cantidadDisponible >= cantidad){
             cantidadFinal += (productosEnCarrito.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidad ?: 0)
@@ -39,7 +49,7 @@ class Carrito {
     }
 
     fun disminurLotes(){
-        productosEnCarrito.forEach { it.disminuirCantidadDisponible() }
+        productosEnCarrito.forEach { it.disminuirCantidadDisponible() } // TODO: preguntar sobre llamar al service desde aca
     }
 
     fun cantidadProductos(): Int {
@@ -54,6 +64,10 @@ class Carrito {
         productosEnCarrito.forEach { it.loteDisponible() }
     }
 
+    fun tamanioCarrito(): Int {
+        return productosEnCarrito.size
+    }
+
 }
 
 class ProductoCarrito {
@@ -65,7 +79,7 @@ class ProductoCarrito {
     var cantidad : Int = 1
 
     fun disminuirCantidadDisponible(){
-        lote.disminuirCantidadDisponible(cantidad)
+        producto.lotes.first{loteP -> loteP.id == lote.id}.disminuirCantidadDisponible(cantidad)
     }
 
     fun loteDisponible(){

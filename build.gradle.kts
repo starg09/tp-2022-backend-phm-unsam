@@ -51,6 +51,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springVersion")
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:$springVersion")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:$springVersion")
 
 }
 

@@ -117,15 +117,14 @@ class UsuarioService {
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
         usuario.carrito = getCarrito(usuarioId)
-        val productos = usuario.carrito.productosEnCarrito.map{it.producto}
-        usuario.realizarCompra()
+        val productos = usuario.realizarCompra()
         repoProductos.saveAll(productos)
         repoUsuarios.save(usuario)
         saveCarrito(usuarioId, usuario.carrito)
     }
 
     fun tamanioCarrito(usuarioId: Int): Int {
-        return repoCarrito.tamanioCarrito(usuarioId)
+        return repoCarrito.findById(usuarioId).get().tamanioCarrito()
     }
 
     fun getById(id: Int): Usuario {
@@ -139,10 +138,10 @@ class UsuarioService {
     }
 
     fun getCarrito(usuarioId: Int): Carrito {
-        return repoCarrito.getById(usuarioId)
+        return repoCarrito.findById(usuarioId).get()
     }
     fun saveCarrito(usuarioId: Int, carrito: Carrito): Carrito {
-        return repoCarrito.guardar(usuarioId, carrito)
+        return repoCarrito.save(carrito)
     }
 
 }
@@ -164,5 +163,3 @@ class CarritoDTO {
 }
 
 class UsuarioDTO(var nombre: String, var apellido: String, val fechaNacimiento: LocalDate, var saldo: Double, var id:Int)
-
-class ClickDTO(var momento: Date, var nombreProducto: String, var usuario: Int )

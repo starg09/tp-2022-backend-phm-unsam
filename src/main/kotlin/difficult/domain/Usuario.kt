@@ -63,7 +63,7 @@ class Usuario {
     }
 
 
-    fun realizarCompra(){
+    fun realizarCompra(): List<Producto>{
         carritoVacio()
         saldoInsuficiente()
         carrito.productosDisponibles()
@@ -75,7 +75,9 @@ class Usuario {
         compras.add(compra)
         disminuirSaldo(importeTotalCarrito())
         carrito.disminurLotes()
+        val productosActualizados = carrito.productosEnCarrito.map { it.producto }
         vaciarCarrito()
+        return  productosActualizados
     }
 
     fun saldoInsuficiente(){

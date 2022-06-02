@@ -19,6 +19,9 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoUsuarios: RepoUsuarios
 
     @Autowired
+    private lateinit var repoCarrito: RepoCarrito
+
+    @Autowired
     private lateinit var usuarioService: UsuarioService
 
 
@@ -444,6 +447,14 @@ class DifficultBootstrap : InitializingBean {
     }
 
     fun initCarrito() {
+
+        repoCarrito.save(Carrito().apply { id = dami.id })
+        repoCarrito.save(Carrito().apply { id = chris.id })
+        repoCarrito.save(Carrito().apply { id = jill.id })
+        repoCarrito.save(Carrito().apply { id = leon.id })
+        repoCarrito.save(Carrito().apply { id = claire.id })
+
+
         if (usuarioService.comprasUsuario(dami.id).isEmpty()) {
             usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
             usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)

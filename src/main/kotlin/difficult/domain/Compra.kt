@@ -11,7 +11,8 @@ class Compra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var ordenCompra: Int = 0
     lateinit var fechaCompra: LocalDate
-    var productos : MutableList<ProductoCompra> = emptyList()
+//    var productos : MutableList<ProductoCompra> = emptyList()
+    var cantidad : Int = 0
     var importe : Double = 0.0
 }
 

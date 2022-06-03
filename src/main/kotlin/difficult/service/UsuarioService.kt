@@ -13,8 +13,9 @@ import java.util.Date
 @Service
 class UsuarioService {
 
-//    @Autowired
-//    private lateinit var repoUsuarios: RepoUsuarios
+    @Autowired
+    private lateinit var repoUsuarios: RepoUsuarios
+
     @Autowired
     private lateinit var repoNeo4jUsuarios: RepoNeo4jUsuarios
 
@@ -43,7 +44,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun login(loginDTO: LoginDTO): Int {
-        val unUsuario: Usuario = repoNeo4jUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
+        val unUsuario: Usuario = repoUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
             LoginException("Error al loguear")
         }
         return unUsuario.id
@@ -123,7 +124,7 @@ class UsuarioService {
         val productos = usuario.realizarCompra()
         repoProductos.saveAll(productos)
         repoNeo4jUsuarios.save(usuario)
-//        repoUsuarios.save(usuario)
+        repoUsuarios.save(usuario)
         saveCarrito(usuarioId, usuario.carrito)
     }
 

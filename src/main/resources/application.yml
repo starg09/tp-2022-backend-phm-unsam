@@ -9,7 +9,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -20,14 +20,17 @@ spring:
       host: localhost
 #       port: 28001 # Puerto servidor con sharding
       port: 27017
-    neo4j:
-      uri: bolt://localhost:7687
-      username: neo4j
-      password: phm2022
 
   mongodb:
     embedded:
       version: 6.0
+  main:
+    allow-bean-definition-overriding: true
+  neo4j:
+    authentication:
+      username: neo4j
+      password: phm2022
+    uri: bolt://localhost:7687
 
 logging:
   level:

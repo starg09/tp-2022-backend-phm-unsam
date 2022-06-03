@@ -15,8 +15,11 @@ class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var repoProductos: RepoProductos
 
+//    @Autowired
+//    private lateinit var repoUsuarios: RepoUsuarios
+
     @Autowired
-    private lateinit var repoUsuarios: RepoUsuarios
+    private lateinit var repoNeo4jUsuarios: RepoNeo4jUsuarios
 
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
@@ -63,8 +66,10 @@ class DifficultBootstrap : InitializingBean {
 
     //TODO: ¿Hace falta? ¿Es costoso? (consultas cada vez que se arranca spring)
     fun guardarSiNoExiste(usuario: Usuario): Usuario {
-        return repoUsuarios.findByEmail(usuario.email)
-            .orElseGet{ repoUsuarios.save(usuario); }
+//        return repoUsuarios.findByEmail(usuario.email)
+//            .orElseGet{ repoNeo4jUsuarios.save(usuario); repoUsuarios.save(usuario); }
+        return repoNeo4jUsuarios.findByEmail(usuario.email)
+            .orElseGet{ repoNeo4jUsuarios.save(usuario); }
     }
 
     fun initUsuarios() {

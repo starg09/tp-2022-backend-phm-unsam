@@ -13,8 +13,10 @@ import java.util.Date
 @Service
 class UsuarioService {
 
+//    @Autowired
+//    private lateinit var repoUsuarios: RepoUsuarios
     @Autowired
-    private lateinit var repoUsuarios: RepoUsuarios
+    private lateinit var repoNeo4jUsuarios: RepoNeo4jUsuarios
 
     @Autowired
     private lateinit var repoProductos: RepoProductos
@@ -27,7 +29,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
-        return repoUsuarios.findAll()
+        return repoNeo4jUsuarios.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -41,7 +43,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun login(loginDTO: LoginDTO): Int {
-        val unUsuario: Usuario = repoUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
+        val unUsuario: Usuario = repoNeo4jUsuarios.findByContraseniaAndEmail(loginDTO.password, loginDTO.email).orElseThrow{
             LoginException("Error al loguear")
         }
         return unUsuario.id
@@ -100,9 +102,10 @@ class UsuarioService {
 
     @Transactional
     fun comprasUsuario(id: Int): List<Compra> {
-        return repoUsuarios.findConComprasById(id).orElseThrow {
-            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
-        }.compras.sortedBy { it.ordenCompra }.take(5)
+//        return repoNeo4jUsuarios.findConComprasById(id).orElseThrow {
+//            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
+//        }.compras.sortedBy { it.ordenCompra }.take(5)
+        return emptyList()
     }
 
     @Transactional
@@ -119,7 +122,8 @@ class UsuarioService {
         usuario.carrito = getCarrito(usuarioId)
         val productos = usuario.realizarCompra()
         repoProductos.saveAll(productos)
-        repoUsuarios.save(usuario)
+        repoNeo4jUsuarios.save(usuario)
+//        repoUsuarios.save(usuario)
         saveCarrito(usuarioId, usuario.carrito)
     }
 
@@ -128,7 +132,7 @@ class UsuarioService {
     }
 
     fun getById(id: Int): Usuario {
-        return repoUsuarios.findById(id).orElseThrow {
+        return repoNeo4jUsuarios.findById(id).orElseThrow {
             UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
         }
     }

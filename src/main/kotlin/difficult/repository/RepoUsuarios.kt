@@ -2,10 +2,11 @@ package difficult.repository
 
 import difficult.domain.Usuario
 import org.springframework.data.jpa.repository.EntityGraph
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
-interface RepoUsuarios : CrudRepository<Usuario, Int> {
+interface RepoUsuarios : JpaRepository<Usuario, Int> {
 
     fun findByContraseniaAndEmail(password: String, email: String): Optional<Usuario>
 

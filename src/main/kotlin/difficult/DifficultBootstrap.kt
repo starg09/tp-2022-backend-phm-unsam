@@ -67,7 +67,10 @@ class DifficultBootstrap : InitializingBean {
     //TODO: ¿Hace falta? ¿Es costoso? (consultas cada vez que se arranca spring)
     fun guardarSiNoExiste(usuario: Usuario): Usuario {
         return repoUsuarios.findByEmail(usuario.email)
-            .orElseGet{ repoNeo4jUsuarios.save(usuario); repoUsuarios.save(usuario); }
+            .orElseGet{
+                repoUsuarios.saveAndFlush(usuario);
+                repoNeo4jUsuarios.save(usuario);
+            }
     }
 
     fun initUsuarios() {
@@ -459,6 +462,7 @@ class DifficultBootstrap : InitializingBean {
 
 
         if (usuarioService.comprasUsuario(dami.id).isEmpty()) {
+            usuarioService.vaciarCarrito(dami.id)
             usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
             usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
             usuarioService.comprar(dami.id)

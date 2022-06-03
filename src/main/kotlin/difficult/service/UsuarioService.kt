@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
-import java.util.Date
 
 @Service
 class UsuarioService {
@@ -34,6 +33,7 @@ class UsuarioService {
     }
 
     @Transactional(readOnly = true)
+    //FIXME: Convertir a usuarioToDTO(usuarioId: Int)
     fun getUsuario(id: Int): UsuarioDTO {
         return usuarioToDto(getById(id))
     }
@@ -66,9 +66,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun carrito(usuarioId: Int): List<CarritoDTO> {
-        val usuario =  getById(usuarioId)
-        usuario.carrito = getCarrito(usuarioId)
-        return usuario.carrito.productosEnCarrito.map { toCarritoDTO(it) }
+        return getCarrito(usuarioId).productosEnCarrito.map { toCarritoDTO(it) }
     }
 
     fun toCarritoDTO(entry: ProductoCarrito): CarritoDTO {
@@ -88,50 +86,69 @@ class UsuarioService {
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         val lote = producto.lotes.first{ it.id == loteNumero }
-        usuario.carrito = getCarrito(usuarioId)
-        usuario.agregarAlCarrito(producto, cantidad, lote)
-        saveCarrito(usuarioId, usuario.carrito)
+        val carrito = getCarrito(usuarioId)
+        carrito.agregarProducto(producto, cantidad, lote)
+        saveCarrito(carrito)
     }
 
     @Transactional
     fun eliminarCarrito(usuarioId: Int, productoId: Int, loteNumero: Int){
-        val usuario = getById(usuarioId)
-        usuario.carrito = getCarrito(usuarioId)
-        usuario.eliminarDelCarrito(productoId, loteNumero)
-        saveCarrito(usuarioId, usuario.carrito)
+        val carrito = getCarrito(usuarioId)
+        carrito.eliminarProducto(productoId, loteNumero)
+        saveCarrito(carrito)
     }
 
     @Transactional
     fun comprasUsuario(id: Int): List<Compra> {
-//        return repoNeo4jUsuarios.findConComprasById(id).orElseThrow {
-//            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
-//        }.compras.sortedBy { it.ordenCompra }.take(5)
-        return emptyList()
+        return repoUsuarios.findConComprasById(id).orElseThrow {
+            UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
+        }.compras.sortedBy { it.ordenCompra }.take(5)
     }
 
     @Transactional
     fun vaciarCarrito(usuarioId: Int) {
-        val usuario = getById(usuarioId)
-        usuario.carrito = getCarrito(usuarioId)
-        usuario.vaciarCarrito()
-        saveCarrito(usuarioId, usuario.carrito)
+        val carrito = getCarrito(usuarioId)
+        carrito.vaciar()
+        saveCarrito(carrito)
     }
 
     @Transactional
     fun comprar(usuarioId: Int) {
         val usuario = getById(usuarioId)
-        usuario.carrito = getCarrito(usuarioId)
-        val productos = usuario.realizarCompra()
-        repoProductos.saveAll(productos)
+        val carrito = getCarrito(usuarioId)
+
+        carrito.validarCarritoNoEstaVacio()
+        carrito.validarAlcanzaSaldo(usuario.saldo)
+        carrito.validarProductosDisponibles()
+
+        val compra = Compra().apply {
+            fechaCompra = LocalDate.now()
+            productos.addAll(carrito.productosEnCarrito.map { productoCarrito ->
+                ProductoCompra().apply{
+                    nombreProducto = productoCarrito.producto.nombre
+                    idProducto = productoCarrito.producto.id
+                    numeroLote = productoCarrito.lote.id
+                    precioUnitario = productoCarrito.producto.precioTotal()
+                    cantidad = productoCarrito.cantidad
+                }
+            })
+        }
+        usuario.compras.add(compra)
+        usuario.disminuirSaldo(compra.getImporteTotal())
+        carrito.disminurLotes()
+        val productosActualizados = carrito.productosEnCarrito.map { it.producto }
+        carrito.vaciar()
+        repoProductos.saveAll(productosActualizados)
         repoNeo4jUsuarios.save(usuario)
         repoUsuarios.save(usuario)
-        saveCarrito(usuarioId, usuario.carrito)
+        saveCarrito(carrito)
     }
 
     fun tamanioCarrito(usuarioId: Int): Int {
         return repoCarrito.findById(usuarioId).get().tamanioCarrito()
     }
 
+    // FIXME: Convertir a getUsuario(idUsuario: Int)
     fun getById(id: Int): Usuario {
         return repoNeo4jUsuarios.findById(id).orElseThrow {
             UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
@@ -145,7 +162,7 @@ class UsuarioService {
     fun getCarrito(usuarioId: Int): Carrito {
         return repoCarrito.findById(usuarioId).get()
     }
-    fun saveCarrito(usuarioId: Int, carrito: Carrito): Carrito {
+    fun saveCarrito(carrito: Carrito): Carrito {
         return repoCarrito.save(carrito)
     }
 

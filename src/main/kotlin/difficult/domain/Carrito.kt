@@ -1,5 +1,7 @@
 package difficult.domain
 import AgregarCeroUnidadesCarritoException
+import CarritoVacioException
+import SaldoInsuficienteException
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.annotation.Id
 
@@ -60,12 +62,24 @@ class Carrito {
         return productosEnCarrito.sumOf { it.producto.precioTotal() * it.cantidad }
     }
 
-    fun productosDisponibles() {
+    fun validarProductosDisponibles() {
         productosEnCarrito.forEach { it.loteDisponible() }
     }
 
     fun tamanioCarrito(): Int {
         return productosEnCarrito.size
+    }
+
+    fun validarCarritoNoEstaVacio(){
+        if (cantidadProductos() == 0) {
+            throw CarritoVacioException("El carrito esta vacio")
+        }
+    }
+
+    fun validarAlcanzaSaldo(saldoUsuario: Double){
+        if (precioTotal() > saldoUsuario) {
+            throw SaldoInsuficienteException("El saldo es insuficiente")
+        }
     }
 
 }

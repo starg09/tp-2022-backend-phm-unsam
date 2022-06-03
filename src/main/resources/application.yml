@@ -20,6 +20,10 @@ spring:
       host: localhost
 #       port: 28001 # Puerto servidor con sharding
       port: 27017
+    neo4j:
+      uri: bolt://localhost:7687
+      username: neo4j
+      password: phm2022
 
   mongodb:
     embedded:
@@ -29,3 +33,4 @@ logging:
   level:
     org.springframework.data: DEBUG
     org.mongodb.driver.protocol.command: DEBUG
+    org.neo4j: DEBUG

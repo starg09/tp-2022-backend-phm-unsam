@@ -52,6 +52,7 @@ dependencies {
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:$springVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-redis:$springVersion")
+    implementation("org.springframework.boot:spring-boot-starter-data-neo4j:$springVersion")
 
 }
 

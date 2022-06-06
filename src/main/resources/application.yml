@@ -35,5 +35,5 @@ spring:
 logging:
   level:
     org.springframework.data: DEBUG
-    org.mongodb.driver.protocol.command: DEBUG
+    org.mongodb.driver.protocol.command: INFO
     org.neo4j: DEBUG

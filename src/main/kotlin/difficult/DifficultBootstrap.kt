@@ -18,7 +18,7 @@ class DifficultBootstrap : InitializingBean {
     private lateinit var repoUsuarios: RepoUsuarios
 
     @Autowired
-    private lateinit var repoNeo4jUsuarios: RepoNeo4jUsuarios
+    private lateinit var repoUsuariosNeo4j: RepoUsuariosNeo4j
 
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
@@ -68,7 +68,7 @@ class DifficultBootstrap : InitializingBean {
         return repoUsuarios.findByEmail(usuario.email)
             .orElseGet{
                 repoUsuarios.saveAndFlush(usuario);
-                repoNeo4jUsuarios.save(usuario);
+                repoUsuariosNeo4j.save(usuario);
             }
     }
 

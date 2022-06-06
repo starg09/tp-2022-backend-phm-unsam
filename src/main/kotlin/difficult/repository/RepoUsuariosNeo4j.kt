@@ -2,10 +2,11 @@ package difficult.repository
 
 import difficult.domain.Usuario
 import org.springframework.data.neo4j.repository.Neo4jRepository
-import org.springframework.data.neo4j.repository.query.Query
+import org.springframework.stereotype.Repository
 import java.util.*
 
-interface RepoNeo4jUsuarios : Neo4jRepository<Usuario, Int>{
+@Repository
+interface RepoUsuariosNeo4j : Neo4jRepository<Usuario, Int>{
 
     fun findByContraseniaAndEmail(password: String, email: String): Optional<Usuario>
 

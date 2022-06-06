@@ -11,7 +11,7 @@ class Carrito {
     @Id
     var id = 0
 
-    var productosEnCarrito = mutableListOf<ProductoCarrito>()
+    var items = mutableListOf<ItemCarrito>()
 
     fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
         if (cantidad == 0) {
@@ -19,55 +19,55 @@ class Carrito {
         }
         var cantidadFinal = cantidad
         if (this.getNumerosLote().contains(lote.id) && getProductos().contains(producto.id) && lote.cantidadDisponible >= cantidad){
-            cantidadFinal += (productosEnCarrito.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidad ?: 0)
+            cantidadFinal += (items.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidad ?: 0)
             lote.chequearCantidadDisponible(cantidadFinal)
             eliminarProducto(producto.id, lote.id)
 
             //throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
         lote.chequearCantidadDisponible(cantidadFinal)
-        val productoPorAgregar = ProductoCarrito().apply{
+        val productoPorAgregar = ItemCarrito().apply{
             this.producto = producto
             this.cantidad = cantidadFinal
             this.lote = lote
         }
-        productosEnCarrito.add(productoPorAgregar)
+        items.add(productoPorAgregar)
     }
 
     fun getProductos(): List<Int> {
-        return productosEnCarrito.map{it.producto.id}
+        return items.map{it.producto.id}
     }
 
     fun getNumerosLote(): List<Int>{
-        return productosEnCarrito.map{it.lote.id}
+        return items.map{it.lote.id}
     }
 
     fun eliminarProducto(productoABorrarId: Int, loteABorrarId: Int){
-        productosEnCarrito.removeIf { productoABorrarId == it.producto.id && it.lote.id == loteABorrarId}
+        items.removeIf { productoABorrarId == it.producto.id && it.lote.id == loteABorrarId}
     }
 
     fun vaciar(){
-        productosEnCarrito.clear()
+        items.clear()
     }
 
     fun disminurLotes(){
-        productosEnCarrito.forEach { it.disminuirCantidadDisponible() } // TODO: preguntar sobre llamar al service desde aca
+        items.forEach { it.disminuirCantidadDisponible() } // TODO: preguntar sobre llamar al service desde aca
     }
 
     fun cantidadProductos(): Int {
-        return productosEnCarrito.sumOf { it.cantidad }
+        return items.sumOf { it.cantidad }
     }
 
     fun precioTotal(): Double {
-        return productosEnCarrito.sumOf { it.producto.precioTotal() * it.cantidad }
+        return items.sumOf { it.producto.precioTotal() * it.cantidad }
     }
 
     fun validarProductosDisponibles() {
-        productosEnCarrito.forEach { it.loteDisponible() }
+        items.forEach { it.loteDisponible() }
     }
 
     fun tamanioCarrito(): Int {
-        return productosEnCarrito.size
+        return items.size
     }
 
     fun validarCarritoNoEstaVacio(){
@@ -84,7 +84,7 @@ class Carrito {
 
 }
 
-class ProductoCarrito {
+class ItemCarrito {
 
     lateinit var producto : Producto
 
@@ -100,8 +100,8 @@ class ProductoCarrito {
         lote.chequearCantidadDisponible(cantidad)
     }
 
-    fun toProductoCompra(): ProductoCompra {
-        return ProductoCompra().apply{
+    fun toItemCompra(): ItemCompra {
+        return ItemCompra().apply{
             nombreProducto = producto.nombre
             idProducto = producto.id
             numeroLote = lote.id

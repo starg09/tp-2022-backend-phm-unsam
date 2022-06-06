@@ -99,4 +99,14 @@ class ProductoCarrito {
     fun loteDisponible(){
         lote.chequearCantidadDisponible(cantidad)
     }
+
+    fun toProductoCompra(): ProductoCompra {
+        return ProductoCompra().apply{
+            nombreProducto = producto.nombre
+            idProducto = producto.id
+            numeroLote = lote.id
+            precioUnitario = producto.precioTotal()
+            cantidad = cantidad
+        }
+    }
 }

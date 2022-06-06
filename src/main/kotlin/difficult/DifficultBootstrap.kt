@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.ThreadLocalRandom
 
-const val RECREAR_LOTES_EN_MONGO = false
 @Service
 class DifficultBootstrap : InitializingBean {
     @Autowired
@@ -465,7 +464,7 @@ class DifficultBootstrap : InitializingBean {
             usuarioService.vaciarCarrito(dami.id)
             usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
             usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
-            usuarioService.comprar(dami.id)
+            usuarioService.simularCompra(dami.id)
         }
     }
 

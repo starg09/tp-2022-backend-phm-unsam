@@ -123,15 +123,7 @@ class UsuarioService {
 
         val compra = Compra().apply {
             fechaCompra = LocalDate.now()
-            productos.addAll(carrito.productosEnCarrito.map { productoCarrito ->
-                ProductoCompra().apply{
-                    nombreProducto = productoCarrito.producto.nombre
-                    idProducto = productoCarrito.producto.id
-                    numeroLote = productoCarrito.lote.id
-                    precioUnitario = productoCarrito.producto.precioTotal()
-                    cantidad = productoCarrito.cantidad
-                }
-            })
+            productos.addAll(carrito.productosEnCarrito.map { it.toProductoCompra() })
         }
         usuario.compras.add(compra)
         usuario.disminuirSaldo(compra.getImporteTotal())
@@ -139,6 +131,23 @@ class UsuarioService {
         val productosActualizados = carrito.productosEnCarrito.map { it.producto }
         carrito.vaciar()
         repoProductos.saveAll(productosActualizados)
+        repoNeo4jUsuarios.save(usuario)
+        repoUsuarios.save(usuario)
+        saveCarrito(carrito)
+    }
+
+    // Utilizado en bootstrap y testing. Agrega una compra pero sin revisar stock, reducir saldo ni alterar los lotes.
+    @Transactional
+    fun simularCompra(usuarioId: Int) {
+        val usuario = getById(usuarioId)
+        val carrito = getCarrito(usuarioId)
+
+        val compra = Compra().apply {
+            fechaCompra = LocalDate.now()
+            productos.addAll(carrito.productosEnCarrito.map { it.toProductoCompra() })
+        }
+        usuario.compras.add(compra)
+        carrito.vaciar()
         repoNeo4jUsuarios.save(usuario)
         repoUsuarios.save(usuario)
         saveCarrito(carrito)

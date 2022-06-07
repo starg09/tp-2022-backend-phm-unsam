@@ -13,22 +13,22 @@ class Carrito {
 
     var items = mutableListOf<ItemCarrito>()
 
-    fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote){
+    fun agregarProducto(producto: Producto, cantidad: Int, lote: Lote, ignorarStock: Boolean = false){
         if (cantidad == 0) {
             throw AgregarCeroUnidadesCarritoException("¿Para que queres agregar 0 unidades al carrito?")
         }
         var cantidadFinal = cantidad
         if (this.getNumerosLote().contains(lote.id) && getProductos().contains(producto.id) && lote.cantidadDisponible >= cantidad){
-            cantidadFinal += (items.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidad ?: 0)
+            cantidadFinal += (items.find { it.producto.id == producto.id && it.lote.id == lote.id}?.cantidadItem ?: 0)
             lote.chequearCantidadDisponible(cantidadFinal)
             eliminarProducto(producto.id, lote.id)
 
             //throw YaEstaEnElCarritoException("el producto seleccionado ya esta en el carrito")
         }
-        lote.chequearCantidadDisponible(cantidadFinal)
+        if (!ignorarStock) lote.chequearCantidadDisponible(cantidadFinal)
         val productoPorAgregar = ItemCarrito().apply{
             this.producto = producto
-            this.cantidad = cantidadFinal
+            this.cantidadItem = cantidadFinal
             this.lote = lote
         }
         items.add(productoPorAgregar)
@@ -55,11 +55,11 @@ class Carrito {
     }
 
     fun cantidadProductos(): Int {
-        return items.sumOf { it.cantidad }
+        return items.sumOf { it.cantidadItem }
     }
 
     fun precioTotal(): Double {
-        return items.sumOf { it.producto.precioTotal() * it.cantidad }
+        return items.sumOf { it.producto.precioTotal() * it.cantidadItem }
     }
 
     fun validarProductosDisponibles() {
@@ -90,23 +90,23 @@ class ItemCarrito {
 
     lateinit var lote : Lote
 
-    var cantidad : Int = 1
+    var cantidadItem : Int = -1
 
     fun disminuirCantidadDisponible(){
-        producto.lotes.first{loteP -> loteP.id == lote.id}.disminuirCantidadDisponible(cantidad)
+        producto.lotes.first{loteP -> loteP.id == lote.id}.disminuirCantidadDisponible(cantidadItem)
     }
 
     fun loteDisponible(){
-        lote.chequearCantidadDisponible(cantidad)
+        lote.chequearCantidadDisponible(cantidadItem)
     }
 
     fun toItemCompra(): ItemCompra {
         return ItemCompra().apply{
-            nombreProducto = producto.nombre
-            idProducto = producto.id
-            numeroLote = lote.id
-            precioUnitario = producto.precioTotal()
-            cantidad = cantidad
+            this.nombreProducto = producto.nombre
+            this.idProducto = producto.id
+            this.numeroLote = lote.id
+            this.precioUnitario = producto.precioTotal()
+            this.cantidad = cantidadItem
         }
     }
 }

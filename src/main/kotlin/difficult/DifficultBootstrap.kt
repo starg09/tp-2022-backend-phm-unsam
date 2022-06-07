@@ -20,6 +20,7 @@ class DifficultBootstrap : InitializingBean {
     @Autowired
     private lateinit var repoUsuariosNeo4j: RepoUsuariosNeo4j
 
+
     @Autowired
     private lateinit var repoCarrito: RepoCarrito
 
@@ -67,12 +68,15 @@ class DifficultBootstrap : InitializingBean {
     fun guardarSiNoExiste(usuario: Usuario): Usuario {
         return repoUsuarios.findByEmail(usuario.email)
             .orElseGet{
-                repoUsuarios.saveAndFlush(usuario);
-                repoUsuariosNeo4j.save(usuario);
+                val savedUsuario = repoUsuarios.save(usuario)
+                repoUsuariosNeo4j.save(UsuarioNeo4j.fromUsuario(savedUsuario))
+                savedUsuario
             }
     }
 
     fun initUsuarios() {
+
+        repoUsuariosNeo4j.wipeEverything()
 
         dami = Usuario().apply {
             nombre = "Dami"
@@ -462,8 +466,8 @@ class DifficultBootstrap : InitializingBean {
 
         if (usuarioService.comprasUsuario(dami.id).isEmpty()) {
             usuarioService.vaciarCarrito(dami.id)
-            usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id)
-            usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id)
+            usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id, true)
+            usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id, true)
             usuarioService.simularCompra(dami.id)
         }
     }

@@ -13,7 +13,7 @@ class ProductoTests: DescribeSpec( {
             puntaje = 5
             paisOrigen = "Argentina"
             precioBase = 2500.0
-            tipo = PisoNormal()
+            esAltoTransito = false
             medidaX = 50
             medidaZ = 30
         }
@@ -33,7 +33,7 @@ class ProductoTests: DescribeSpec( {
             puntaje = 5
             paisOrigen = "Argentina"
             precioBase = 1000.0
-            tipo = PisoAltoTransito()
+            esAltoTransito = true
             medidaX = 60
             medidaZ = 60
         }
@@ -95,7 +95,7 @@ class ProductoTests: DescribeSpec( {
             puntaje = 5
             paisOrigen = "Argentina"
             precioBase = 2500.0
-            tipo = PisoNormal()
+            esAltoTransito = false
             medidaX = 50
             medidaZ = 30
         }

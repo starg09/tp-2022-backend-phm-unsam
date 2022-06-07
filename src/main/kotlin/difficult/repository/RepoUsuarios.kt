@@ -14,6 +14,6 @@ interface RepoUsuarios : JpaRepository<Usuario, Int> {
 
     override fun findById(id: Int): Optional<Usuario>
 
-    @EntityGraph(attributePaths = ["compras"])
+    @EntityGraph(attributePaths = ["compras", "compras.items"])
     fun findConComprasById(id: Int): Optional<Usuario>
 }

@@ -29,7 +29,7 @@ class UsuarioService {
 
     @Transactional(readOnly = true)
     fun getUsuarios(): MutableIterable<Usuario> {
-        return repoUsuariosNeo4j.findAll()
+        return repoUsuarios.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -75,19 +75,19 @@ class UsuarioService {
             nombre = producto.nombre
             descripcion = producto.descripcion
             lote = entry.lote.id
-            cantidad = entry.cantidad
+            cantidad = entry.cantidadItem
             precio = producto.precioTotal() * cantidad
             id = producto.id
         }
     }
 
     @Transactional
-    fun agregarProductoCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int){
+    fun agregarProductoCarrito(usuarioId: Int, productoId: Int, cantidad: Int, loteNumero: Int, ignorarStock: Boolean = false){
         val producto = getByProductoId(productoId)
         val usuario = getById(usuarioId)
         val lote = producto.lotes.first{ it.id == loteNumero }
         val carrito = getCarrito(usuarioId)
-        carrito.agregarProducto(producto, cantidad, lote)
+        carrito.agregarProducto(producto, cantidad, lote, ignorarStock)
         saveCarrito(carrito)
     }
 
@@ -114,7 +114,7 @@ class UsuarioService {
 
     @Transactional
     fun comprar(usuarioId: Int) {
-        val usuario = getById(usuarioId)
+        var usuario = getById(usuarioId)
         val carrito = getCarrito(usuarioId)
 
         carrito.validarCarritoNoEstaVacio()
@@ -131,15 +131,17 @@ class UsuarioService {
         val productosActualizados = carrito.items.map { it.producto }
         carrito.vaciar()
         repoProductos.saveAll(productosActualizados)
-        repoUsuariosNeo4j.save(usuario)
-        repoUsuarios.save(usuario)
+        usuario = repoUsuarios.save(usuario)
+        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email)
+        usuarioNeo4j.itemsComprados.addAll(ItemCompraNeo4j.getItemsFromCompraForNeo4j(compra))
+        repoUsuariosNeo4j.save(usuarioNeo4j)
         saveCarrito(carrito)
     }
 
     // Utilizado en bootstrap y testing. Agrega una compra pero sin revisar stock, reducir saldo ni alterar los lotes.
     @Transactional
     fun simularCompra(usuarioId: Int) {
-        val usuario = getById(usuarioId)
+        var usuario = getById(usuarioId)
         val carrito = getCarrito(usuarioId)
 
         val compra = Compra().apply {
@@ -148,8 +150,10 @@ class UsuarioService {
         }
         usuario.compras.add(compra)
         carrito.vaciar()
-        repoUsuariosNeo4j.save(usuario)
-        repoUsuarios.save(usuario)
+        usuario = repoUsuarios.save(usuario)
+        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email)
+        usuarioNeo4j.itemsComprados.addAll(ItemCompraNeo4j.getItemsFromCompraForNeo4j(compra))
+        repoUsuariosNeo4j.save(usuarioNeo4j)
         saveCarrito(carrito)
     }
 
@@ -159,7 +163,7 @@ class UsuarioService {
 
     // FIXME: Convertir a getUsuario(idUsuario: Int)
     fun getById(id: Int): Usuario {
-        return repoUsuariosNeo4j.findById(id).orElseThrow {
+        return repoUsuarios.findById(id).orElseThrow {
             UsuarioNoEncontradoException("No se ha encontrado el usuario con id $id")
         }
     }

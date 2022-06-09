@@ -16,7 +16,8 @@ class Compra {
     @JoinColumn(name = "id_compra")
     var items = mutableListOf<ItemCompra>()
 
-    fun getCantidadItems() = items.size
+    fun getCantidadTotalItems() = items.sumOf { it.cantidad }
+    fun getCantidadProductos() = items.size
     fun getImporteTotal() = items.sumOf{it.precioTotal()}
 }
 

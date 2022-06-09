@@ -20,12 +20,20 @@ class CompraNeo4j {
 
     @Property
     var importeTotal: Double = -1.0
+
+    @Property
+    var cantidadTotalItems: Int = -1
+
+    @Property
+    var cantidadProductos: Int = -1
     
     companion object {
         fun fromCompra(compra: Compra): CompraNeo4j {
             return CompraNeo4j().apply {
                 this.fechaCompra = compra.fechaCompra
                 this.importeTotal = compra.getImporteTotal()
+                this.cantidadTotalItems = compra.getCantidadTotalItems()
+                this.cantidadProductos = compra.getCantidadProductos()
             }
         }
 

@@ -9,7 +9,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -24,6 +24,7 @@ spring:
   mongodb:
     embedded:
       version: 6.0
+#      TODO: Desactivar? vvv
   main:
     allow-bean-definition-overriding: true
   neo4j:

@@ -12,6 +12,9 @@ interface RepoUsuarios : JpaRepository<Usuario, Int> {
 
     fun findByEmail(email: String): Optional<Usuario>
 
+    @EntityGraph(attributePaths = ["compras", "compras.items"])
+    fun findConComprasByEmail(email: String): Optional<Usuario>
+
     override fun findById(id: Int): Optional<Usuario>
 
     @EntityGraph(attributePaths = ["compras", "compras.items"])

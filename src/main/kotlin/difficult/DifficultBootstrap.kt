@@ -66,17 +66,19 @@ class DifficultBootstrap : InitializingBean {
 
     //TODO: ¿Hace falta? ¿Es costoso? (consultas cada vez que se arranca spring)
     fun guardarSiNoExiste(usuario: Usuario): Usuario {
-        return repoUsuarios.findByEmail(usuario.email)
+        val usuarioSql = repoUsuarios.findConComprasByEmail(usuario.email)
             .orElseGet{
-                val savedUsuario = repoUsuarios.save(usuario)
-                repoUsuariosNeo4j.save(UsuarioNeo4j.fromUsuario(savedUsuario))
-                savedUsuario
+                repoUsuarios.save(usuario) //TODO: Revisar que devuelva todo, o sino buscar y devolver con el find
             }
+//        val usuarioConCompras = repoUsuarios.findConComprasById(usuarioSql.id)
+        if (repoUsuariosNeo4j.findByEmail(usuario.email).isEmpty())
+            repoUsuariosNeo4j.save(UsuarioNeo4j.fromUsuario(usuarioSql))
+        return usuarioSql
     }
 
     fun initUsuarios() {
 
-        repoUsuariosNeo4j.wipeEverything()
+//        repoUsuariosNeo4j.wipeEverything()
 
         dami = Usuario().apply {
             nombre = "Dami"
@@ -469,6 +471,16 @@ class DifficultBootstrap : InitializingBean {
             usuarioService.agregarProductoCarrito(dami.id, pisoNormal.id, 1, lotePisoNormal.id, true)
             usuarioService.agregarProductoCarrito(dami.id, pinturaMenorRendimiento.id, 1, lotePinturaMenorRendimiento.id, true)
             usuarioService.simularCompra(dami.id)
+            usuarioService.agregarProductoCarrito(dami.id, pisoAltoTransito.id, 2, lotePisoAltoTransito.id, true)
+            usuarioService.agregarProductoCarrito(dami.id, pinturaMayorRendimiento.id, 3, lotePinturaMayorRendimiento.id, true)
+            usuarioService.agregarProductoCarrito(dami.id, combo.id, 1, loteCombo1.id, true)
+            usuarioService.simularCompra(dami.id)
+        }
+        if (usuarioService.comprasUsuario(jill.id).isEmpty()) {
+            usuarioService.vaciarCarrito(jill.id)
+            usuarioService.agregarProductoCarrito(jill.id, combo.id, 2, loteCombo1.id, true)
+            usuarioService.agregarProductoCarrito(jill.id, pinturaMenorRendimiento.id, 4, lotePinturaMenorRendimiento.id, true)
+            usuarioService.simularCompra(jill.id)
         }
     }
 

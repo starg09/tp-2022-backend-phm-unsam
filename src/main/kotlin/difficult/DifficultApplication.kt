@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories
 
 @SpringBootApplication
-@EnableNeo4jRepositories(basePackageClasses = [RepoUsuariosNeo4j::class])
-@EnableJpaRepositories(basePackageClasses = [RepoUsuarios::class])
+//@EnableNeo4jRepositories(basePackageClasses = [RepoUsuariosNeo4j::class])
+//@EnableJpaRepositories(basePackageClasses = [RepoUsuarios::class])
 class BackendTp2022PhmGrupo2Application
 
 fun main(args: Array<String>) {

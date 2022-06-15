@@ -132,8 +132,8 @@ class UsuarioService {
         carrito.vaciar()
         repoProductos.saveAll(productosActualizados)
         usuario = repoUsuarios.save(usuario)
-        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email)
-        usuarioNeo4j.itemsComprados.addAll(ItemCompraNeo4j.getItemsFromCompraForNeo4j(compra))
+        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email).first()
+        usuarioNeo4j.agregarItemsDeCompra(compra)
         repoUsuariosNeo4j.save(usuarioNeo4j)
         saveCarrito(carrito)
     }
@@ -151,8 +151,8 @@ class UsuarioService {
         usuario.compras.add(compra)
         carrito.vaciar()
         usuario = repoUsuarios.save(usuario)
-        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email)
-        usuarioNeo4j.itemsComprados.addAll(ItemCompraNeo4j.getItemsFromCompraForNeo4j(compra))
+        val usuarioNeo4j = repoUsuariosNeo4j.findByEmail(usuario.email).first()
+        usuarioNeo4j.agregarItemsDeCompra(compra)
         repoUsuariosNeo4j.save(usuarioNeo4j)
         saveCarrito(carrito)
     }

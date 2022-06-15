@@ -11,9 +11,16 @@ import java.time.LocalDate
 
 @Node("Usuario")
 class UsuarioNeo4j {
+    fun agregarItemsDeCompra(compra: Compra) {
+        itemsComprados.addAll(ItemCompraNeo4j.getItemsFromCompraForNeo4j(compra))
+    }
+
     @Id
     @GeneratedValue
     var id: Long? = null
+
+    @Property
+    var idSQL: Int = -1
 
     @Property
     lateinit var nombre: String
@@ -32,6 +39,7 @@ class UsuarioNeo4j {
     companion object {
         fun fromUsuario(usuario: Usuario): UsuarioNeo4j {
             val retorno = UsuarioNeo4j().apply {
+                this.idSQL = usuario.id
                 this.nombre = usuario.nombre
                 this.apellido = usuario.apellido
                 this.email = usuario.email

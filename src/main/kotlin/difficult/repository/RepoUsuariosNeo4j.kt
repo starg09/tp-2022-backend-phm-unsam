@@ -3,8 +3,9 @@ package difficult.repository
 import difficult.domain.UsuarioNeo4j
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.Optional
 
 @Repository
 interface RepoUsuariosNeo4j : Neo4jRepository<UsuarioNeo4j, Long>{
@@ -13,7 +14,7 @@ interface RepoUsuariosNeo4j : Neo4jRepository<UsuarioNeo4j, Long>{
 //
     @Query("MATCH (n) DETACH DELETE n")
     fun wipeEverything()
-    fun findByEmail(email: String): UsuarioNeo4j
+    fun findByEmail( email: String): List<UsuarioNeo4j>
 //
 //    override fun findById(id: Int): Optional<UsuarioNeo4j>
 
